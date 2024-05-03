@@ -1,0 +1,59 @@
+{
+    "issuanceKey": {
+        "type": "local",
+        "jwk": "{\"kty\":\"OKP\",\"d\":\"oyR_iKuQQBJPBmHq6lY0BERMdtP-tP32CJfMzSpcIu0\",\"crv\":\"Ed25519\",\"kid\":\"lo1D9v-FURNpUeR69eyEG11dn3S61en6TkClF0-ZvuU\",\"x\":\"07bw9oNvrIk2O5f0PJq_uQbPGLnT7VEXSGu-HgQYWbs\"}"
+    },
+    "issuerDid": "did:jwk:eyJrdHkiOiJPS1AiLCJjcnYiOiJFZDI1NTE5Iiwia2lkIjoibG8xRDl2LUZVUk5wVWVSNjlleUVHMTFkbjNTNjFlbjZUa0NsRjAtWnZ1VSIsIngiOiIwN2J3OW9OdnJJazJPNWYwUEpxX3VRYlBHTG5UN1ZFWFNHdS1IZ1FZV2JzIn0"
+    "vc": {
+        "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "https://www.w3.org/ns/credentials/examples/v1"
+        ],
+        "type": [
+            "VerifiableCredential",
+            "ChMed23APrescriptionCredential"
+        ],
+        "credentialSubject": {
+            "rx": {
+                "patient": {
+                    "id": "1",
+                    "fName": "John",
+                    "lName": "Doe",
+                    "bdt": "1985-11-11",
+                    "gender": "Male"
+                },
+                "hcPatient": {
+                    "gln": "1234",
+                    "fName": "Doogie",
+                    "lName": "Hauser",
+                    "street": "Tellstrasse 1",
+                    "zip": "8000",
+                    "city": "Zürich"
+                },
+                "meds": [
+                    {
+                        "id": "Lixiana",
+                        "idType": 1
+                    }
+                ],
+                "medType": 3,
+                "id": "1",
+                "auth": 1
+            },
+            "id": "[REPLACE WITH CREDENTIAL SUBJECT DID]"
+        },
+        "id": "[REPLACE WITH UUID]",
+        "issuer": "[REPLACE WITH ISSUER DID]",
+        "issuanceDate": "[REPLACE WITH ISSUANCE DATE]",
+        "expirationDate": "[REPLACE WITH EXPIRATION DATE]"
+    },
+    "mapping": {
+        "id": "<uuid>",
+        "issuer": "<issuerDid>",
+        "credentialSubject": {
+            "id": "<subjectDid>"
+        },
+        "issuanceDate": "<timestamp>",
+        "expirationDate": "<timestamp-in:365d>"
+    }
+}

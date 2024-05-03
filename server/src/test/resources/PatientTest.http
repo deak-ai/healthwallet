@@ -1,0 +1,4 @@
+POST http://127.0.0.1:8080/patient
+Content-Type: application/json
+
+{"id":"2","fName":"Jane","lName":"Doe","bdt":"1992-02-03","gender":2}

@@ -1,0 +1,7 @@
+{
+    "issuanceKey": {
+        "type": "local",
+        "jwk": "{\"kty\":\"OKP\",\"d\":\"oyR_iKuQQBJPBmHq6lY0BERMdtP-tP32CJfMzSpcIu0\",\"crv\":\"Ed25519\",\"kid\":\"lo1D9v-FURNpUeR69eyEG11dn3S61en6TkClF0-ZvuU\",\"x\":\"07bw9oNvrIk2O5f0PJq_uQbPGLnT7VEXSGu-HgQYWbs\"}"
+    },
+    "issuerDid": "did:jwk:eyJrdHkiOiJPS1AiLCJjcnYiOiJFZDI1NTE5Iiwia2lkIjoibG8xRDl2LUZVUk5wVWVSNjlleUVHMTFkbjNTNjFlbjZUa0NsRjAtWnZ1VSIsIngiOiIwN2J3OW9OdnJJazJPNWYwUEpxX3VRYlBHTG5UN1ZFWFNHdS1IZ1FZV2JzIn0"
+}
