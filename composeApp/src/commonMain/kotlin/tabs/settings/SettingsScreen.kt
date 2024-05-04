@@ -45,7 +45,7 @@ class SettingsScreen(private val lcs: LoginCredentialsScreen) : Screen {
                 Icon(
                     modifier = Modifier.size(24.dp),
                     painter = rememberVectorPainter(Icons.Default.Info),
-                    contentDescription = "Legal",
+                    contentDescription = "Disclaimer",
                 )
                 Text(
                     modifier = Modifier.padding(16.dp),
