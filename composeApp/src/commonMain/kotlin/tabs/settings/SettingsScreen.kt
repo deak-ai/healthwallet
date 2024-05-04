@@ -23,7 +23,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 
-class SettingsScreen : Screen {
+class SettingsScreen(private val lcs: LoginCredentialsScreen) : Screen {
 
     @Composable
     override fun Content() {
@@ -62,7 +62,7 @@ class SettingsScreen : Screen {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .clickable {
-                        navigator.push(LoginCredentialsScreen())
+                        navigator.push(lcs)
                     },
                 verticalAlignment = Alignment.CenterVertically,
             ) {

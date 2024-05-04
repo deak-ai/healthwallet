@@ -9,6 +9,10 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import org.koin.compose.koinInject
 
 object SettingsTab : Tab {
 
@@ -29,7 +33,9 @@ object SettingsTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = SettingsScreen()) { navigator ->
+        println("Staring setting tab...")
+        Navigator(screen = koinInject<SettingsScreen>())
+        { navigator ->
             SlideTransition(navigator = navigator)
         }
     }

@@ -30,14 +30,13 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 
-class LoginCredentialsScreen : Screen {
+class LoginCredentialsScreen(private val lcvm: LoginCredentialsViewModel) : Screen {
 
     @Composable
     override fun Content() {
 
         val navigator: Navigator = LocalNavigator.currentOrThrow
-
-        val viewModel = navigator.rememberNavigatorScreenModel { LoginCredentialsViewModel() }
+        val viewModel = navigator.rememberNavigatorScreenModel { lcvm }
 
         Scaffold(
             topBar = {
@@ -94,6 +93,8 @@ class LoginCredentialsScreen : Screen {
                 ) {
                     Text("Login")
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(viewModel.cookie)
             }
         }
     }

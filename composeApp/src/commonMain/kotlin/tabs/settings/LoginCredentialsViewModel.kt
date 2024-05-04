@@ -1,13 +1,28 @@
 package tabs.settings
 
+import ai.deak.shw.data.LoginRequest
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
+import io.ktor.client.HttpClient
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import kotlinx.coroutines.launch
 
-class LoginCredentialsViewModel : ScreenModel {
-    var email by mutableStateOf("Email")
-    var password by mutableStateOf("Password")
+
+
+class LoginCredentialsViewModel(
+    private val httpClient: HttpClient
+) : ScreenModel {
+    var email by mutableStateOf("")
+    var password by mutableStateOf("")
+    var cookie by mutableStateOf("")
+
 
     private var _passwordVisibility by mutableStateOf(false)
     val passwordVisibility: Boolean get() = _passwordVisibility
@@ -25,8 +40,17 @@ class LoginCredentialsViewModel : ScreenModel {
         println("LoginViewModel: Disposing... ")
     }
 
-    fun authenticate() {
-        // Authentication logic here
-        println("Authenticating with email: $email and password: $password")
+     fun authenticate() {
+        screenModelScope.launch {
+             // Authentication logic here
+            println("Authenticating with email: $email and password: $password")
+             val response = httpClient.post("https://wallet.walt.id/wallet-api/auth/login") {
+                contentType(ContentType.Application.Json)
+                setBody(LoginRequest(email = email, password = password))
+            }
+            println("Response status: ${response.status} with body: ${response.bodyAsText()}")
+            cookie = response.headers["Set-Cookie"] ?: ""
+            println("Cookie: $cookie")
+        }
     }
 }

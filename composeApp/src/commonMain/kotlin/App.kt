@@ -14,6 +14,8 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.KoinApplication
+import org.koin.compose.KoinContext
 import tabs.home.HomeTab
 import tabs.settings.SettingsTab
 
@@ -21,6 +23,17 @@ import tabs.settings.SettingsTab
 @Composable
 @Preview
 fun App() {
+
+    println("App starting")
+    KoinApplication(application = {
+        modules(koinModule)
+    }) { println("App starting...")
+        AppComposition()
+    }
+}
+
+@Composable
+fun AppComposition() {
     MaterialTheme {
         TabNavigator(
             tab = HomeTab
