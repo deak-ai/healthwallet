@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 
 plugins {
@@ -8,24 +7,6 @@ plugins {
 }
 
 kotlin {
-    /*
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        moduleName = "composeApp"
-        browser {
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(project.projectDir.path)
-                    }
-                }
-            }
-        }
-        binaries.executable()
-    }
-    */
 
     androidTarget {
         compilations.all {
@@ -34,8 +15,6 @@ kotlin {
             }
         }
     }
-    
-    jvm("desktop")
     
     listOf(
         iosX64(),
@@ -49,7 +28,6 @@ kotlin {
     }
     
     sourceSets {
-        val desktopMain by getting
         
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
@@ -60,7 +38,7 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -76,12 +54,9 @@ kotlin {
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.qr.kit)
             implementation(projects.shared)
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-        }
-
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
@@ -129,20 +104,4 @@ android {
         kotlinCompilerExtensionVersion = "1.5.10"
     }
 
-}
-
-compose.desktop {
-    application {
-        mainClass = "MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "ai.deak.shw"
-            packageVersion = "1.0.0"
-        }
-    }
-}
-
-compose.experimental {
-    web.application {}
 }

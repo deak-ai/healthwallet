@@ -1,11 +1,11 @@
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.tab.CurrentTab
@@ -18,6 +18,7 @@ import org.koin.compose.KoinApplication
 import org.koin.compose.KoinContext
 import tabs.home.HomeTab
 import tabs.settings.SettingsTab
+import tabs.vc.VCTab
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -41,8 +42,9 @@ fun AppComposition() {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = {
-                    BottomNavigation {
+                    NavigationBar {
                         TabNavigationItem(HomeTab)
+                        TabNavigationItem(VCTab)
                         TabNavigationItem(SettingsTab)
                     }
                 },
@@ -56,7 +58,7 @@ fun AppComposition() {
 private fun RowScope.TabNavigationItem(tab: Tab) {
     val tabNavigator: TabNavigator = LocalTabNavigator.current
 
-    BottomNavigationItem(
+    NavigationBarItem(
         selected = tabNavigator.current == tab,
         onClick = { tabNavigator.current = tab },
         icon = {

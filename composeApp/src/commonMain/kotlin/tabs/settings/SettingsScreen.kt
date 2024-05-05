@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Info
@@ -49,7 +49,7 @@ class SettingsScreen(private val lcs: LoginCredentialsScreen) : Screen {
                 )
                 Text(
                     modifier = Modifier.padding(16.dp),
-                    text = "Legal"
+                    text = "Disclaimer"
                 )
             }
             Divider(

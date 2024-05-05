@@ -21,7 +21,6 @@ class LoginCredentialsViewModel(
 ) : ScreenModel {
     var email by mutableStateOf("")
     var password by mutableStateOf("")
-    var cookie by mutableStateOf("")
 
 
     private var _passwordVisibility by mutableStateOf(false)
@@ -49,7 +48,7 @@ class LoginCredentialsViewModel(
                 setBody(LoginRequest(email = email, password = password))
             }
             println("Response status: ${response.status} with body: ${response.bodyAsText()}")
-            cookie = response.headers["Set-Cookie"] ?: ""
+            val cookie = response.headers["Set-Cookie"] ?: ""
             println("Cookie: $cookie")
         }
     }

@@ -22,6 +22,7 @@ swagger-ui = "2.7.4"
 kamel = "0.9.4"
 voyager = "1.0.0"
 koin-bom = "3.5.6"
+qr-kit = "1.0.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -62,6 +63,7 @@ koin-core = { module = "io.insert-koin:koin-core" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-ktor = { module = "io.insert-koin:koin-ktor" }
 koin-android = { module = "io.insert-koin:koin-android" }
+qr-kit = { module = "network.chaintech:qr-kit", version.ref ="qr-kit"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

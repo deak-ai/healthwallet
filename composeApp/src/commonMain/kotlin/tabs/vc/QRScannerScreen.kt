@@ -1,27 +1,31 @@
-package tabs.home
+package tabs.vc
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import qrscanner.QrScanner
 
-data class DetailsScreen(
-    val id: Int,
-) : Screen {
+@OptIn(ExperimentalMaterial3Api::class)
+class QRScannerScreen : Screen {
 
     @Composable
     override fun Content() {
@@ -30,7 +34,7 @@ data class DetailsScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Details") },
+                    title = { Text("Scan QR code") },
                     navigationIcon = {
                         Button(onClick = { navigator.pop() }) {
                             Icon(
@@ -46,9 +50,22 @@ data class DetailsScreen(
                 modifier = Modifier.padding(innerPadding),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = "Details item id: $id"
+
+                QrScanner(
+                    modifier = Modifier
+                        .clipToBounds()
+                        .clip(shape = RoundedCornerShape(size = 14.dp)),
+                    flashlightOn = false,
+                    launchGallery = false,
+                    onCompletion = {
+                        println("QR Scan Success: $it")
+                    },
+                    onGalleryCallBackHandler = {
+                        println("GalleryCallbankHandler: $it")
+                    },
+                    onFailure = {
+                        println("QR Scan Failure: $it")
+                    }
                 )
             }
         }
