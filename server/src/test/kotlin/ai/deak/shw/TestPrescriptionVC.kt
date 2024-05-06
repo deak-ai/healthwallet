@@ -1,7 +1,11 @@
 package ai.deak.shw
 
 
-import ai.deak.shw.data.*
+import ai.deak.shw.data.chmed23a.Gender
+import ai.deak.shw.data.chmed23a.HealthcarePerson
+import ai.deak.shw.data.chmed23a.Medicament
+import ai.deak.shw.data.chmed23a.Medication
+import ai.deak.shw.data.chmed23a.Patient
 import kotlinx.serialization.json.Json
 import org.junit.Test
 

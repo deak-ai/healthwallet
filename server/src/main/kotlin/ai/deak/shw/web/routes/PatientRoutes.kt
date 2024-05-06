@@ -1,6 +1,7 @@
 package ai.deak.shw.web.routes
 
-import ai.deak.shw.data.*
+import ai.deak.shw.data.chmed23a.Gender
+import ai.deak.shw.data.chmed23a.Patient
 import io.github.smiley4.ktorswaggerui.dsl.get
 import io.github.smiley4.ktorswaggerui.dsl.post
 import io.github.smiley4.ktorswaggerui.dsl.route

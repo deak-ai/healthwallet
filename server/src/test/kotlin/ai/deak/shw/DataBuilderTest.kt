@@ -1,14 +1,16 @@
 package ai.deak.shw
 
-import ai.deak.shw.data.*
+import ai.deak.shw.data.chmed23a.Gender
+import ai.deak.shw.data.chmed23a.HealthcarePerson
+import ai.deak.shw.data.chmed23a.Medicament
+import ai.deak.shw.data.chmed23a.Medication
+import ai.deak.shw.data.chmed23a.Patient
 import id.walt.credentials.CredentialBuilder
 import id.walt.credentials.CredentialBuilderType.W3CV11CredentialBuilder
-import id.walt.credentials.CredentialBuilderType.W3CV2CredentialBuilder
 import id.walt.crypto.utils.JsonUtils.toJsonObject
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
-import netscape.javascript.JSObject
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.days
 

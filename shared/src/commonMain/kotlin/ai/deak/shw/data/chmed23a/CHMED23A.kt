@@ -1,8 +1,13 @@
-package ai.deak.shw.data
+package ai.deak.shw.data.chmed23a
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
 
+
+/**
+ * Partial test implementation of the 2024 CH EMED spec: https://emediplan.ch/chmed23a-wird-im-august-publiziert/
+ * direct link to spec: https://emediplan.ch/wp-content/uploads/2023/09/20230815_eMediplan_ChMed23A_1.0-AND-eMediplan_ChMed23A_Posology_1.0.pdf
+ */
 
 
 @Serializable

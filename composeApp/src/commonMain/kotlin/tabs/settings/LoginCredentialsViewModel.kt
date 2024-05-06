@@ -1,6 +1,6 @@
 package tabs.settings
 
-import ai.deak.shw.data.LoginRequest
+import ai.deak.shw.repo.LoginRequest
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf

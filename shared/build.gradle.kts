@@ -22,13 +22,24 @@ kotlin {
     iosSimulatorArm64()
     
     jvm()
+
+    tasks.withType<Test>().configureEach {
+        useJUnitPlatform()
+    }
     
     sourceSets {
         commonMain.dependencies {
             // put your Multiplatform dependencies here
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.client.core)
-            //implementation(libs.waltid.verifiable.credentials)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.coroutines.core)
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.ktor.client.cio)
         }
     }
 }
@@ -44,3 +55,4 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }
+
