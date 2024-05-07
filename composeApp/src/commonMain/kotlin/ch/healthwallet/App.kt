@@ -14,6 +14,8 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import ch.healthwallet.di.datastoreModule
+import ch.healthwallet.di.koinModule
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
@@ -28,8 +30,9 @@ fun App() {
 
     println("App starting")
     KoinApplication(application = {
-        modules(koinModule)
-    }) { println("App starting...")
+        modules(koinModule, datastoreModule)
+    }) {
+        println("App starting...")
         AppComposition()
     }
 }

@@ -1,4 +1,4 @@
-package ch.healthwallet
+package ch.healthwallet.di
 
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
@@ -8,6 +8,7 @@ import org.koin.dsl.module
 import ch.healthwallet.tabs.settings.LoginCredentialsScreen
 import ch.healthwallet.tabs.settings.LoginCredentialsViewModel
 import ch.healthwallet.tabs.settings.SettingsScreen
+import org.koin.core.module.dsl.factoryOf
 
 val koinModule = module {
 
@@ -20,8 +21,9 @@ val koinModule = module {
         }
     }
 
-    singleOf(::LoginCredentialsViewModel)
-    singleOf(::LoginCredentialsScreen)
-    singleOf(::SettingsScreen)
+
+    factoryOf(::LoginCredentialsViewModel)
+    factoryOf(::LoginCredentialsScreen)
+    factoryOf(::SettingsScreen)
 
 }

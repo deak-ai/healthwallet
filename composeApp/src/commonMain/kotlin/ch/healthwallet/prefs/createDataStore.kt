@@ -13,4 +13,4 @@ fun createDataStore(producePath: () -> String): DataStore<Preferences> =
             produceFile = { producePath().toPath() }
         )
 
-internal const val dataStoreFileName = "healthwallet.prefs"
+internal const val dataStoreFileName = "healthwallet.preferences_pb"

@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import cafe.adriel.voyager.core.registry.screenModule
+import ch.healthwallet.prefs.AppPrefsRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -17,8 +19,11 @@ import kotlinx.coroutines.launch
 
 
 class LoginCredentialsViewModel(
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
+    private val appPrefsRepo: AppPrefsRepository
 ) : ScreenModel {
+
+    var waltidWalletApi by mutableStateOf("")
     var email by mutableStateOf("")
     var password by mutableStateOf("")
 
@@ -32,6 +37,13 @@ class LoginCredentialsViewModel(
 
     init {
         println("LoginViewModel: Initializing... ")
+        screenModelScope.launch {
+            appPrefsRepo.settings.collect {
+                waltidWalletApi = it.waltidWalletApi
+                email = it.email
+                password = it.password
+            }
+        }
     }
 
     override fun onDispose() {

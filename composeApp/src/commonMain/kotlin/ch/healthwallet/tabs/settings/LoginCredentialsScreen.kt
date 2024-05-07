@@ -43,12 +43,7 @@ class LoginCredentialsScreen(private val lcvm: LoginCredentialsViewModel) : Scre
 
         val navigator: Navigator = LocalNavigator.currentOrThrow
         val viewModel = navigator.rememberNavigatorScreenModel { lcvm }
-        val snackbarHostState = remember { SnackbarHostState() }
-        val scope = rememberCoroutineScope()
         Scaffold(
-            snackbarHost = {
-                           SnackbarHost(hostState = snackbarHostState)
-            },
             topBar = {
                 TopAppBar(
                     title = { Text("Login Credentials") },
@@ -69,6 +64,15 @@ class LoginCredentialsScreen(private val lcvm: LoginCredentialsViewModel) : Scre
                     .padding(16.dp)
                     .padding(innerPadding)
             ) {
+                TextField(
+                    value = viewModel.waltidWalletApi,
+                    onValueChange = { viewModel.waltidWalletApi = it },
+                    label = { Text("Walt.id Wallet API") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                    singleLine = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = viewModel.email,
                     onValueChange = { viewModel.email = it },
