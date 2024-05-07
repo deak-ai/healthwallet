@@ -1,4 +1,4 @@
-package ch.healthwallet.mobile.tabs.settings
+package ch.healthwallet.tabs.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

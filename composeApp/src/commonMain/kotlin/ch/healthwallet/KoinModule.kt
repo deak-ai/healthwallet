@@ -1,13 +1,13 @@
-package ch.healthwallet.mobile
+package ch.healthwallet
 
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.serialization.kotlinx.json.json
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ch.healthwallet.mobile.tabs.settings.LoginCredentialsScreen
-import ch.healthwallet.mobile.tabs.settings.LoginCredentialsViewModel
-import ch.healthwallet.mobile.tabs.settings.SettingsScreen
+import ch.healthwallet.tabs.settings.LoginCredentialsScreen
+import ch.healthwallet.tabs.settings.LoginCredentialsViewModel
+import ch.healthwallet.tabs.settings.SettingsScreen
 
 val koinModule = module {
 

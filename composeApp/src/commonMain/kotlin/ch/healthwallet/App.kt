@@ -1,4 +1,4 @@
-package ch.healthwallet.mobile
+package ch.healthwallet
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,9 +17,9 @@ import cafe.adriel.voyager.navigator.tab.TabNavigator
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
-import ch.healthwallet.mobile.tabs.home.HomeTab
-import ch.healthwallet.mobile.tabs.settings.SettingsTab
-import ch.healthwallet.mobile.tabs.vc.VCTab
+import ch.healthwallet.tabs.home.HomeTab
+import ch.healthwallet.tabs.settings.SettingsTab
+import ch.healthwallet.tabs.vc.VCTab
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalAnimationApi::class)
 
-package ch.healthwallet.mobile.tabs.home
+package ch.healthwallet.tabs.vc
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
@@ -13,12 +13,12 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
 
-object HomeTab : Tab {
+object VCTab : Tab {
 
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Home"
+            val title = "VC"
             val icon = rememberVectorPainter(Icons.Default.Home)
 
             return remember {
@@ -32,7 +32,7 @@ object HomeTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = HomeScreen()) { navigator ->
+        Navigator(screen = VCScreen()) { navigator ->
             SlideTransition(navigator = navigator)
         }
     }

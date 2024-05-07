@@ -1,4 +1,4 @@
-package ch.healthwallet.mobile.tabs.settings
+package ch.healthwallet.tabs.settings
 
 import ch.healthwallet.repo.LoginRequest
 import androidx.compose.runtime.getValue

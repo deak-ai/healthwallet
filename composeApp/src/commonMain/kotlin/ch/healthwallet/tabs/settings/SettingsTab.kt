@@ -1,10 +1,7 @@
-@file:OptIn(ExperimentalAnimationApi::class)
+package ch.healthwallet.tabs.settings
 
-package ch.healthwallet.mobile.tabs.vc
-
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -12,18 +9,19 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
+import org.koin.compose.koinInject
 
-object VCTab : Tab {
+object SettingsTab : Tab {
 
     override val options: TabOptions
         @Composable
         get() {
-            val title = "VC"
-            val icon = rememberVectorPainter(Icons.Default.Home)
+            val title = "Settings"
+            val icon = rememberVectorPainter(Icons.Default.Settings)
 
             return remember {
                 TabOptions(
-                    index = 0u,
+                    index = 1u,
                     title = title,
                     icon = icon
                 )
@@ -32,7 +30,9 @@ object VCTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = VCScreen()) { navigator ->
+        println("Staring setting tab...")
+        Navigator(screen = koinInject<SettingsScreen>())
+        { navigator ->
             SlideTransition(navigator = navigator)
         }
     }

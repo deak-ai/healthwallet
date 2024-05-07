@@ -55,6 +55,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.qr.kit)
+            implementation(libs.androidx.datastore.preferences.core)
             implementation(projects.shared)
         }
         iosMain.dependencies {

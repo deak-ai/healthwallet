@@ -1,4 +1,4 @@
-package ch.healthwallet.mobile.tabs.home
+package ch.healthwallet.tabs.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
