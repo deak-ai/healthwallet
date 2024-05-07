@@ -11,9 +11,14 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import healthwallet.composeapp.generated.resources.Res
+import healthwallet.composeapp.generated.resources.app_name
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
 class HomeScreen : Screen {
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val navigator: Navigator = LocalNavigator.currentOrThrow
@@ -23,9 +28,7 @@ class HomeScreen : Screen {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(text = "Smart Health Wallet")
-
-
+            Text(stringResource(Res.string.app_name))
         }
     }
 }

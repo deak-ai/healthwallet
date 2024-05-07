@@ -14,7 +14,7 @@ fun Application.configureOpenApi() {
         info {
             title = "HealthWallet Server API"
             version = "latest"
-            description = "Interact with the SmartHealthWallet Server API"
+            description = "Interact with the HealthWallet Server API"
         }
         server {
             url = "/"
