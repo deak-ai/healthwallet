@@ -1,4 +1,4 @@
-rootProject.name = "SmartHealthWallet"
+rootProject.name = "HealthWallet"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

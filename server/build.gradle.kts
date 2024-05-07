@@ -4,10 +4,10 @@ plugins {
     application
 }
 
-group = "ai.deak.shw"
+group = "ch.healthwallet"
 version = "1.0.0"
 application {
-    mainClass.set("ai.deak.shw.ApplicationKt")
+    mainClass.set("ch.healthwallet.web.ApplicationKt")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=${extra["development"] ?: "false"}")
 }
 

@@ -6,6 +6,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+**/local.properties
+
 ### IntelliJ IDEA ###
 .idea/
 **/.idea
@@ -21,3 +23,4 @@ out/
 
 ### Mac OS ###
 .DS_Store
+

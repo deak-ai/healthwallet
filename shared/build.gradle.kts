@@ -45,7 +45,7 @@ kotlin {
 }
 
 android {
-    namespace = "ai.deak.shw.shared"
+    namespace = "ch.healthwallet.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
