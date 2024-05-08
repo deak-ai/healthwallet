@@ -3,14 +3,13 @@ package ch.healthwallet.di
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.serialization.kotlinx.json.json
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ch.healthwallet.tabs.settings.LoginCredentialsScreen
-import ch.healthwallet.tabs.settings.LoginCredentialsViewModel
-import ch.healthwallet.tabs.settings.SettingsScreen
+import ch.healthwallet.tabs.settings.WalletSettingsScreen
+import ch.healthwallet.tabs.settings.WalletSettingsViewModel
+import ch.healthwallet.tabs.settings.SettingsTabScreen
 import org.koin.core.module.dsl.factoryOf
 
-val koinModule = module {
+val appModule = module {
 
     single {
         io.ktor.client.HttpClient {
@@ -21,9 +20,8 @@ val koinModule = module {
         }
     }
 
-
-    factoryOf(::LoginCredentialsViewModel)
-    factoryOf(::LoginCredentialsScreen)
-    factoryOf(::SettingsScreen)
+    factoryOf(::WalletSettingsViewModel)
+    factoryOf(::WalletSettingsScreen)
+    factoryOf(::SettingsTabScreen)
 
 }

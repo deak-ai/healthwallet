@@ -31,7 +31,7 @@ object SettingsTab : Tab {
     @Composable
     override fun Content() {
         println("Staring setting tab...")
-        Navigator(screen = koinInject<SettingsScreen>())
+        Navigator(screen = koinInject<SettingsTabScreen>())
         { navigator ->
             SlideTransition(navigator = navigator)
         }

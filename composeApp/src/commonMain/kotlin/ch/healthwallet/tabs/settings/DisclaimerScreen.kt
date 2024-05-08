@@ -24,7 +24,7 @@ import healthwallet.composeapp.generated.resources.Res
 import healthwallet.composeapp.generated.resources.disclaimer
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
-class LegalScreen : Screen {
+class DisclaimerScreen : Screen {
 
     @Composable
     override fun Content() {

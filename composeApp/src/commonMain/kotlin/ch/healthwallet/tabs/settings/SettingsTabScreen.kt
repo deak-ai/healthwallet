@@ -23,7 +23,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 
-class SettingsScreen(private val lcs: LoginCredentialsScreen) : Screen {
+class SettingsTabScreen(private val lcs: WalletSettingsScreen) : Screen {
 
     @Composable
     override fun Content() {
@@ -38,7 +38,7 @@ class SettingsScreen(private val lcs: LoginCredentialsScreen) : Screen {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .clickable {
-                        navigator.push(LegalScreen())
+                        navigator.push(DisclaimerScreen())
                     },
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -69,11 +69,11 @@ class SettingsScreen(private val lcs: LoginCredentialsScreen) : Screen {
                 Icon(
                     modifier = Modifier.size(24.dp),
                     painter = rememberVectorPainter(Icons.Default.AccountBox),
-                    contentDescription = "Login Credentials",
+                    contentDescription = "Wallet Settings",
                 )
                 Text(
                     modifier = Modifier.padding(16.dp),
-                    text = "Login Credentials"
+                    text = "Wallet Settings"
                 )
             }
         }

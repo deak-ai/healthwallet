@@ -7,23 +7,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -36,17 +32,16 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 
 @OptIn(ExperimentalMaterial3Api::class)
-class LoginCredentialsScreen(private val lcvm: LoginCredentialsViewModel) : Screen {
+class WalletSettingsScreen(private val lcvm: WalletSettingsViewModel) : Screen {
 
     @Composable
     override fun Content() {
-
         val navigator: Navigator = LocalNavigator.currentOrThrow
         val viewModel = navigator.rememberNavigatorScreenModel { lcvm }
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Login Credentials") },
+                    title = { Text("Wallet Settings") },
                     navigationIcon = {
                         Button(onClick = { navigator.pop() }) {
                             Icon(
@@ -66,16 +61,17 @@ class LoginCredentialsScreen(private val lcvm: LoginCredentialsViewModel) : Scre
             ) {
                 TextField(
                     value = viewModel.waltidWalletApi,
-                    onValueChange = { viewModel.waltidWalletApi = it },
+                    onValueChange = { viewModel.updateWaltIdWalletApi(it) },
                     label = { Text("Walt.id Wallet API") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
                     singleLine = true
+
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = viewModel.email,
-                    onValueChange = { viewModel.email = it },
+                    onValueChange = { viewModel.updateEmail(it) },
                     label = { Text("Email") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
@@ -83,13 +79,16 @@ class LoginCredentialsScreen(private val lcvm: LoginCredentialsViewModel) : Scre
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
+                    // TODO: password should be stored encrypted
                     value = viewModel.password,
-                    onValueChange = { viewModel.password = it },
+                    onValueChange = { viewModel.updatePassword(it) },
                     label = { Text("Password") },
                     modifier = Modifier.fillMaxWidth(),
                     visualTransformation = if (viewModel.passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                     trailingIcon = {
+                        // TODO: use proper icons (with "eye") for password visibility
+                        // TODO: password visibility should be set false after navigating away
                         val image = if (viewModel.passwordVisibility)
                             Icons.Default.Lock
                         else
@@ -103,11 +102,13 @@ class LoginCredentialsScreen(private val lcvm: LoginCredentialsViewModel) : Scre
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = {
-                        viewModel.authenticate()
+                        viewModel.saveSettings()
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = viewModel.settingsChanged
+
                 ) {
-                    Text("Login")
+                    Text("Save")
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 //Text(viewModel.cookie)
