@@ -14,8 +14,18 @@ class WalletSettingsViewModel(
     private val appPrefsRepo: AppPrefsRepository
 ) : ScreenModel {
 
-    var waltidWalletApi by mutableStateOf("")
     private var lastPrefs: AppPrefs = AppPrefs()
+
+    var waltidWalletApi by mutableStateOf("")
+    var email by mutableStateOf("")
+    var password by mutableStateOf("")
+
+    private var _settingsChanged by mutableStateOf(false)
+    val settingsChanged: Boolean get() = _settingsChanged
+
+
+    private var _passwordVisibility by mutableStateOf(false)
+    val passwordVisibility: Boolean get() = _passwordVisibility
 
     fun updateWaltIdWalletApi(newValue: String) {
         waltidWalletApi = newValue
@@ -31,16 +41,6 @@ class WalletSettingsViewModel(
         password = newValue
         _settingsChanged = newValue != lastPrefs.password
     }
-
-    var email by mutableStateOf("")
-    var password by mutableStateOf("")
-
-    private var _settingsChanged by mutableStateOf(false)
-    val settingsChanged: Boolean get() = _settingsChanged
-
-
-    private var _passwordVisibility by mutableStateOf(false)
-    val passwordVisibility: Boolean get() = _passwordVisibility
 
     fun togglePasswordVisibility() {
         _passwordVisibility = ! _passwordVisibility

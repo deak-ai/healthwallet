@@ -7,6 +7,7 @@ import org.koin.dsl.module
 import ch.healthwallet.tabs.settings.WalletSettingsScreen
 import ch.healthwallet.tabs.settings.WalletSettingsViewModel
 import ch.healthwallet.tabs.settings.SettingsTabScreen
+import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.factoryOf
 
 val appModule = module {
@@ -14,7 +15,10 @@ val appModule = module {
     single {
         io.ktor.client.HttpClient {
             install(ContentNegotiation) {
-                json()
+                json(Json {
+                    encodeDefaults = true
+                    ignoreUnknownKeys = true
+                })
             }
             install(HttpCookies)
         }

@@ -14,6 +14,7 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import ch.healthwallet.dialogs.StartupDialogScreen
 import ch.healthwallet.tabs.home.HomeTab
 import ch.healthwallet.tabs.settings.SettingsTab
 import ch.healthwallet.tabs.vc.VCTab
@@ -24,15 +25,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun App() {
-
     println("App starting")
-
-//    KoinApplication(application = {
-//        modules(koinModule, dataStoreModule)
-//    }) {
-        println("App starting...")
-        AppComposition()
-//    }
+    AppComposition()
 }
 
 
@@ -55,6 +49,7 @@ fun AppComposition() {
                 content = { CurrentTab() },
             )
         }
+        StartupDialogScreen()
     }
 }
 
