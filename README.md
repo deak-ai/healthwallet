@@ -1,4 +1,21 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop, Server.
+# HealthWallet
+
+## Introduction
+
+HealthWallet is an end user app for self-sovereign health data management.
+
+## Features
+
+### Medical prescriptions secured with self-sovereign identity technology
+
+HealthWallet currently implements the features described in https://github.com/Abdagon/health-ssi-2
+
+
+## Technology
+
+### Overview
+
+This is a Kotlin Multiplatform project targeting Android, iOS and Server.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
   It contains several subfolders:
@@ -18,10 +35,17 @@ This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop, Ser
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
 [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
 
-**Note:** Compose/Web is Experimental and may be changed at any time. Use it only for evaluation purposes.
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [GitHub](https://github.com/JetBrains/compose-multiplatform/issues).
 
-You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task.
+### Third-party dependencies
+
+| Library                                                                       | Description                                                                              |
+|-------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| [Kotlin Compose Multiplatform](https://kotlinlang.org/docs/multiplatform.html) | Shared UI for Android and iOS                                                            |
+| [walt.id](https://docs.walt.id/)                                              | SSI/VC implementation with API for wallet, verifier and issuer                           |
+| [Voyager](https://voyager.adriel.cafe)                                        | Provides Navigation and ViewModel (ScreenModel) for Compose Multiplatform                |
+| [Ktor](https://ktor.io/)                                                      | HTTP Server and Client                                                                   |
+| [Koin](https://insert-koin.io/)                                               | Pragmatic Kotlin Multiplatform Dependency Injection Framework                            |
+| [Ktor Swagger UI](https://github.com/SMILEY4/ktor-swagger-ui)                 | Ktor plugin to document routes, generate an OpenApi Specification and serve a Swagger UI |
+| [Kamel Image](https://github.com/Kamel-Media/Kamel) | Asynchronous media loading library for Compose Multiplatform |
+| [QRKit](https://github.com/ChainTechNetwork/QRKitComposeMultiplatform) | Kotlin Multiplatform library for Qr-Scan in your Android or iOS App|

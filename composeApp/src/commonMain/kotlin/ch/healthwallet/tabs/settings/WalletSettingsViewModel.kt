@@ -7,6 +7,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import ch.healthwallet.prefs.AppPrefs
 import ch.healthwallet.prefs.AppPrefsRepository
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.launch
 
 
