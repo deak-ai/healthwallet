@@ -41,7 +41,6 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 
 | Library                                                                       | Description                                                                              |
 |-------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| [Kotlin Compose Multiplatform](https://kotlinlang.org/docs/multiplatform.html) | Shared UI for Android and iOS                                                            |
 | [walt.id](https://docs.walt.id/)                                              | SSI/VC implementation with API for wallet, verifier and issuer                           |
 | [Voyager](https://voyager.adriel.cafe)                                        | Provides Navigation and ViewModel (ScreenModel) for Compose Multiplatform                |
 | [Ktor](https://ktor.io/)                                                      | HTTP Server and Client                                                                   |
