@@ -5,10 +5,10 @@ import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.serialization.kotlinx.json.json
 import org.koin.dsl.module
 import ch.healthwallet.tabs.settings.WalletSettingsScreen
-import ch.healthwallet.tabs.settings.WalletSettingsViewModel
-import ch.healthwallet.tabs.settings.SettingsTabScreen
+import ch.healthwallet.tabs.settings.WalletSettingsScreenModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
 
 val appModule = module {
 
@@ -24,8 +24,7 @@ val appModule = module {
         }
     }
 
-    factoryOf(::WalletSettingsViewModel)
+    singleOf(::WalletSettingsScreenModel)
     factoryOf(::WalletSettingsScreen)
-    factoryOf(::SettingsTabScreen)
 
 }

@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,8 +22,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.koin.compose.koinInject
 
-class SettingsTabScreen(private val lcs: WalletSettingsScreen) : Screen {
+class SettingsTabScreen : Screen {
+
+    init {
+        println("SettingsTabScreen: Initialising...")
+    }
 
     @Composable
     override fun Content() {
@@ -32,7 +37,14 @@ class SettingsTabScreen(private val lcs: WalletSettingsScreen) : Screen {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val navigator: Navigator = LocalNavigator.currentOrThrow
+            val walletSettingsScreen = koinInject<WalletSettingsScreen>()
+            val walletSettingsScreenModel = koinInject<WalletSettingsScreenModel>()
 
+            println("Checking if to force wallet settings...")
+            if (walletSettingsScreenModel.showStartupDialog.value) {
+                navigator.push(walletSettingsScreen)
+                return@Column
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -62,7 +74,7 @@ class SettingsTabScreen(private val lcs: WalletSettingsScreen) : Screen {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .clickable {
-                        navigator.push(lcs)
+                        navigator.push(walletSettingsScreen)
                     },
                 verticalAlignment = Alignment.CenterVertically,
             ) {
