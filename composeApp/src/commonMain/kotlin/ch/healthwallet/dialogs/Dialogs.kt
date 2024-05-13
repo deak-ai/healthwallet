@@ -95,6 +95,7 @@ fun StartupDialog(
     dialogTitle: String,
     dialogText: String,
     icon: ImageVector,
+    confirmText: String,
 ) {
     AlertDialog(
         icon = {
@@ -115,18 +116,18 @@ fun StartupDialog(
                     onConfirmation()
                 }
             ) {
-                Text("Confirm")
+                Text(confirmText)
             }
         },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
-                }
-            ) {
-                Text("Dismiss")
-            }
-        }
+//        dismissButton = {
+//            TextButton(
+//                onClick = {
+//                    onDismissRequest()
+//                }
+//            ) {
+//                Text("Dismiss")
+//            }
+//        }
     )
 }
 

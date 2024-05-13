@@ -11,33 +11,33 @@ import kotlinx.coroutines.flow.map
 class AppPrefsRepository(
     private val dataStore: DataStore<Preferences>
 ) {
-    private val emailKey = stringPreferencesKey("email")
-    private val passwordKey = stringPreferencesKey("password")
-    private val waltidWalletApiKey = stringPreferencesKey("waltid_wallet_api")
-    private val initialSetupDoneKey = booleanPreferencesKey("initial_setup_done")
+    private val waltIdEmailKey = stringPreferencesKey("waltid.email")
+    private val waltIdPasswordKey = stringPreferencesKey("waltid.password")
+    private val waltIdWalletApiKey = stringPreferencesKey("waltid.wallet_api")
+    private val waltIdPrefsValidKey = booleanPreferencesKey("waltid.prefs_valid")
 
     val settings: Flow<AppPrefs> = dataStore.data.map {
         AppPrefs(
-            it[initialSetupDoneKey] ?: AppPrefs.DEFAULT_INITIAL_SETUP_DONE,
-            it[emailKey] ?: AppPrefs.DEFAULT_EMAIL,
-            it[passwordKey] ?: AppPrefs.DEFAULT_PASSWORD,
-            it[waltidWalletApiKey] ?: AppPrefs.DEFAULT_WALTID_WALLET_API
+            it[waltIdPrefsValidKey] ?: AppPrefs.DEFAULT_APP_PREFS_VALID,
+            it[waltIdEmailKey] ?: AppPrefs.DEFAULT_EMAIL,
+            it[waltIdPasswordKey] ?: AppPrefs.DEFAULT_PASSWORD,
+            it[waltIdWalletApiKey] ?: AppPrefs.DEFAULT_WALTID_WALLET_API
         )
     }
 
-    suspend fun initialSetupDone() {
-        dataStore.edit { it[initialSetupDoneKey] = true }
+    suspend fun setAppPrefsValid() {
+        dataStore.edit { it[waltIdPrefsValidKey] = true }
     }
 
     suspend fun saveSettings(
         waltIdWalletApi: String,
-        email: String,
-        password: String
+        waltIdEmail: String,
+        waltIdPassword: String
     ) {
         dataStore.edit {
-            it[emailKey] = email
-            it[passwordKey] = password
-            it[waltidWalletApiKey] = waltIdWalletApi
+            it[waltIdEmailKey] = waltIdEmail
+            it[waltIdPasswordKey] = waltIdPassword
+            it[waltIdWalletApiKey] = waltIdWalletApi
         }
     }
 }

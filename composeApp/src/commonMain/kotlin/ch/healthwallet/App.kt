@@ -29,8 +29,6 @@ fun App() {
     AppComposition()
 }
 
-
-
 @Composable
 fun AppComposition() {
     MaterialTheme {
@@ -48,8 +46,8 @@ fun AppComposition() {
                 },
                 content = { CurrentTab() },
             )
+            StartupDialogScreen()
         }
-        StartupDialogScreen()
     }
 }
 
