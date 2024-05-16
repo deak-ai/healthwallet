@@ -51,16 +51,6 @@ class WalletSettingsScreen() : Screen {
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState)
             },
-            //TODO: figure out why a floatingActionButton is needed for the Snackbar to show
-            floatingActionButton = {
-                ExtendedFloatingActionButton(
-                    text = { Text("Dummy") },
-                    icon = { Icon(Icons.Filled.Info, contentDescription = "") },
-                    onClick = {
-                        println("Floating button pressed")
-                    }
-                )
-            },
             topBar = {
                 TopAppBar(
                     title = { Text("Wallet Settings") },

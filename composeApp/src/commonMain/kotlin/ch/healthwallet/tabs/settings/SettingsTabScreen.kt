@@ -40,8 +40,8 @@ class SettingsTabScreen : Screen {
             val walletSettingsScreen = koinInject<WalletSettingsScreen>()
             val walletSettingsScreenModel = koinInject<WalletSettingsScreenModel>()
 
-            println("Checking if to force wallet settings...")
             if (walletSettingsScreenModel.showStartupDialog.value) {
+                println("ShowStartupDialog set, redirecting to settings...")
                 navigator.push(walletSettingsScreen)
                 return@Column
             }

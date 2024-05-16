@@ -31,20 +31,8 @@ class VCScreen : Screen {
             verticalArrangement = Arrangement.Center,
         ) {
 
-
-
-
             Text(text = "Verifiable Credentials")
-
             Spacer(modifier = Modifier.height(16.dp))
-
-//            FloatingActionButton(
-//                onClick = {
-//                    navigator.push(QRScannerScreen())
-//                },
-//            ) {
-//                Icon(Icons.Filled.Add, "Scan QR code.")
-//            }
             ExtendedFloatingActionButton(
                 onClick = { navigator.push(QRScannerScreen()) },
                 icon = { Icon(Icons.Filled.Add, "Import VC from QR") },

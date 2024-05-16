@@ -125,7 +125,7 @@ class WalletSettingsScreenModel(
 
     override fun onDispose() {
         super.onDispose()
-        println("WalletSettingsViewModel: Disposing... ")
+        println("WalletSettingsScreenModel: Disposing... ")
     }
 
     fun saveSettings() {

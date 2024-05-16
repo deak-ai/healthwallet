@@ -1,7 +1,9 @@
 package ch.healthwallet
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -44,9 +46,13 @@ fun AppComposition() {
                         TabNavigationItem(SettingsTab)
                     }
                 },
-                content = { CurrentTab() },
+                content = { innerPadding ->
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        CurrentTab()
+                        StartupDialogScreen()
+                    }
+                }
             )
-            StartupDialogScreen()
         }
     }
 }
