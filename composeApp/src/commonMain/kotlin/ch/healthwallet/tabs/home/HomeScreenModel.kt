@@ -1,5 +1,6 @@
 package ch.healthwallet.tabs.home
 
+import androidx.compose.material3.SnackbarHostState
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import ch.healthwallet.prefs.AppPrefs
@@ -27,24 +28,52 @@ class HomeScreenModel(
     private val _vcList = MutableStateFlow(emptyList<VerifiedCredential>())
     val vcList: StateFlow<List<VerifiedCredential>> = _vcList.asStateFlow()
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+
     init {
         println("HomeScreenModel: Initialising... ")
         screenModelScope.launch {
-            appPrefsRepo.settings.collect {
-                _appPrefs.value = it
-                fetchVerifiableCredentials(it)
+            appPrefsRepo.settings.collect { settings ->
+                _appPrefs.value = settings
+                if (!settings.isDefault()) {
+                    fetchVerifiableCredentials(settings)
+                } else {
+                    setErrorMessage(AppPrefs.WALLET_SETTINGS_NOT_SET)
+                }
             }
         }
     }
 
     fun refresh() {
         screenModelScope.launch {
-            fetchVerifiableCredentials(appPrefs.value)
+            val prefs = _appPrefs.value
+            if (!prefs.isDefault()) {
+                fetchVerifiableCredentials(prefs)
+            } else {
+                appPrefsRepo.settings.collect { settings ->
+                    if (!settings.isDefault()) {
+                        _appPrefs.value = settings
+                        fetchVerifiableCredentials(settings)
+                    } else {
+                        setErrorMessage(AppPrefs.WALLET_SETTINGS_NOT_SET)
+                    }
+                }
+            }
         }
     }
 
-    // TODO: this is a quick "hack" without  to get the app to work, will need improvements
+    // Clear error message after it's displayed
+    fun clearErrorMessage() {
+        _errorMessage.value = null
+    }
+
+    private fun setErrorMessage(message: String) {
+        println(message)
+        _errorMessage.value = message
+    }
     private suspend fun fetchVerifiableCredentials(appPrefs: AppPrefs) {
+        println("fetchVerifiableCredentials")
         val repo:WaltIdWalletRepository =
             WaltIdWalletRepositoryImpl(httpClient, appPrefs.waltIdWalletApi)
         val loginResult = repo.login(
@@ -53,16 +82,26 @@ class HomeScreenModel(
                 password = appPrefs.waltIdPassword
             )
         )
-        if (loginResult.isSuccess) {
-            val walletsResult = repo.getWallets()
-            val walletList = walletsResult.getOrThrow()
-            val walletId = walletList.wallets.first().id
-            val queryResult = repo.queryCredentials(CredentialsQuery(walletId))
-            _vcList.update {
-                queryResult.getOrThrow()
-            }
-        } else {
-            throw loginResult.exceptionOrNull()!!
+
+        loginResult.getOrElse {
+            setErrorMessage("Failed to login: ${it.message}")
+            return
+        }
+        val walletsResult = repo.getWallets()
+        val walletList = walletsResult.getOrElse {
+            setErrorMessage("Failed to get wallets: ${it.message}")
+            return
+        }
+
+        val walletId = walletList.wallets.first().id
+        val queryResult = repo.queryCredentials(CredentialsQuery(walletId))
+
+        val queryResponse = queryResult.getOrElse {
+            setErrorMessage("Failed to query credentials: ${it.message}")
+            return
+        }
+        _vcList.update {
+            queryResponse
         }
     }
 

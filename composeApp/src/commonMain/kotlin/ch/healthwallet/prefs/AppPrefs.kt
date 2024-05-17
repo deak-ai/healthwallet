@@ -11,6 +11,9 @@ data class AppPrefs(
         const val DEFAULT_EMAIL = ""
         const val DEFAULT_PASSWORD = ""
         const val DEFAULT_WALTID_WALLET_API = "https://wallet.walt.id"
+        const val WALLET_SETTINGS_NOT_SET = "Wallet settings not set"
     }
+
+    fun isDefault(): Boolean = this == AppPrefs()
 
 }
