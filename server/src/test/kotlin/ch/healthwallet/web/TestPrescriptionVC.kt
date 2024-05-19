@@ -6,7 +6,7 @@ import ch.healthwallet.data.chmed23a.Medicament
 import ch.healthwallet.data.chmed23a.Medication
 import ch.healthwallet.data.chmed23a.Patient
 import kotlinx.serialization.json.Json
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestPrescriptionVC {
 
