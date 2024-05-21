@@ -12,13 +12,13 @@ fun Application.configureOpenApi() {
             forwardRoot = true
         }
         info {
-            title = "HealthWallet Server API"
+            title = "HealthSSI Practice Information System API"
             version = "latest"
-            description = "Interact with the HealthWallet Server API"
+            description = "Interact with the HealthSSI PIS API"
         }
         server {
             url = "/"
-            description = "HealthWallet Server"
+            description = "HealthSSI PIS"
         }
 
         securityScheme("authenticated") {

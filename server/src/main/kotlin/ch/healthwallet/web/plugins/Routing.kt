@@ -1,6 +1,7 @@
 package ch.healthwallet.web.plugins
 
 import Greeting
+import ch.healthwallet.web.routes.medicationRouting
 import ch.healthwallet.web.routes.patientRouting
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -13,8 +14,9 @@ fun Application.configureRouting() {
     install(DoubleReceive)
     routing {
         get("/") {
-            call.respondText("Ktor: ${Greeting().greet()}")
+            call.respondText("Welcome to the HealthSSI PIS API")
         }
         patientRouting()
+        medicationRouting()
     }
 }

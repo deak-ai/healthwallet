@@ -4,25 +4,24 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
-
 @Serializable
 data class MedicationDTO(
-    @SerialName("Patient")
-    val patient: PatientDTO,
-    @SerialName("Medicaments")
-    val medicaments: List<MedicamentDTO>,
     @SerialName("MedType")
-    val medType: Int = 3, // 1: MedicationPlan, 2: PolymedicationCheck (PMC), 3: Prescription (Rx)
+    val medType: Int = 3, // default is 3: Prescription (Rx)
     @SerialName("Id")
-    val medId: String,
+    val medId: String? = null,
     @SerialName("Auth")
     val author: String,
     @SerialName("Zsr")
-    val zsrNumber: String?,
+    val zsrNumber: String? = null,
     @SerialName("Dt")
-    val creationDate: String,
+    val creationDate: String? = null,
     @SerialName("Rmk")
-    val remarks: String?
+    val remarks: String? = null,
+    @SerialName("Medicaments")
+    val medicaments: List<MedicamentDTO>,
+    @SerialName("Patient")
+    val patient: PatientDTO
 )
 
 
@@ -35,13 +34,23 @@ data class PatientDTO(
     @SerialName("BDt")
     val birthDate: String, // Format: yyyy-mm-dd (ISO 86018 Date
     @SerialName("Gender")
-    val gender: Int? // 1: Male, 2: Female
+    val gender: Int? = null, // 1: Male, 2: Female
+    @SerialName("Ids")
+    val ids : List<PatientIdDTO>? = null
+)
+
+@Serializable
+data class PatientIdDTO(
+    @SerialName("Type")
+    val type: Int,
+    @SerialName("Val")
+    val value: String
 )
 
 @Serializable
 data class MedicamentDTO(
     @SerialName("Id")
-    val medicamentId: String, // If IdType: ‘None’ then free text description.
+    val medId: String, // If IdType: ‘None’ then free text description.
     @SerialName("IdType")
-    val medicamentIdType: Int  // 1: None, 2: GTIN, 3: Pharmacode, 4: Product number (not for Rx)
+    val medIdType: Int  // 1: None, 2: GTIN, 3: Pharmacode, 4: Product number (not for Rx)
 )
