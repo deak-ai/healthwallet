@@ -5,6 +5,15 @@ import ch.healthwallet.data.chmed16a.PatientDTO
 
 interface PisDbRepository {
 
+    companion object {
+        val SSI_EMEDIPLAN_TABLES = setOf(
+            PatientIdsTable,
+            PatientsTable,
+            MedicamentsTable,
+            MedicationsTable
+        )
+    }
+
     fun createOrUpdatePatient(patient: PatientDTO): PatientDTO
 
     fun getPatients(): List<PatientDTO>

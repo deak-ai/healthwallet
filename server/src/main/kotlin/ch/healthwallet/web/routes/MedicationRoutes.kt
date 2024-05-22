@@ -25,7 +25,7 @@ fun Route.medicationRouting() {
             if (medications.isNotEmpty()) {
                 call.respond(medications)
             } else {
-                call.respondText("No patients found", status = HttpStatusCode.OK)
+                call.respondText("No medications found", status = HttpStatusCode.OK)
             }
         }
         get("/{id}", {
@@ -38,11 +38,11 @@ fun Route.medicationRouting() {
                 "Missing id",
                 status = HttpStatusCode.BadRequest
             )
-            val patient = pisDbRepo.getMedicationById(id) ?: return@get call.respondText(
+            val mediation = pisDbRepo.getMedicationById(id) ?: return@get call.respondText(
                     "No medication with ID $id",
                     status = HttpStatusCode.NotFound
                 )
-            call.respond(patient)
+            call.respond(mediation)
         }
         post("",{
             summary = "Create a new medication prescription"
@@ -57,7 +57,7 @@ fun Route.medicationRouting() {
             }
             response {
                 HttpStatusCode.Created to {
-                    description = "Patient created response with system id (type = 2)"
+                    description = "Medication created response with new patient"
                     body<MedicationDTO> {
                         example("Sample Medication prescription response with a new patient",
                             MedicationExamples.createMedicationWithNewPatientResponse

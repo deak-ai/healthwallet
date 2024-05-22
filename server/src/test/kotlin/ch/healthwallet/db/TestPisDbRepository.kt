@@ -54,28 +54,15 @@ class TestPisDbRepository {
     private lateinit var patientId2:String
     private lateinit var medicationId: String
 
-    companion object {
-        val SSI_EMEDIPLAN_TABLES = setOf(
-            PatientIdsTable,
-            PatientsTable,
-            MedicamentsTable,
-            MedicationsTable
-        )
-    }
+
 
     @BeforeAll
     fun setup() {
         pisDbRepo = PisDbRepositoryImpl()
-        // Database.connect("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;",driver = "org.h2.Driver")
-        Database.connect(
-            "jdbc:postgresql://localhost:5432/healthssi_pis",
-            driver = "org.postgresql.Driver",
-            user = "pgupis",
-            password = "************"
-        )
+        Database.connect("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;",driver = "org.h2.Driver")
         transaction {
-            SchemaUtils.drop(*SSI_EMEDIPLAN_TABLES.toTypedArray())
-            SchemaUtils.create(*SSI_EMEDIPLAN_TABLES.toTypedArray())
+            SchemaUtils.drop(*PisDbRepository.SSI_EMEDIPLAN_TABLES.toTypedArray())
+            SchemaUtils.create(*PisDbRepository.SSI_EMEDIPLAN_TABLES.toTypedArray())
         }
     }
 

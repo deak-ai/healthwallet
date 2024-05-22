@@ -22,6 +22,7 @@ dependencies {
     implementation(libs.ktor.swagger.ui)
     implementation(libs.ktor.server.auto.head.response)
     implementation(libs.ktor.server.double.receive)
+    implementation(libs.ktor.server.config.yaml)
     implementation(libs.koin.core)
     implementation(libs.koin.core.coroutines)
     implementation(libs.koin.ktor)
@@ -32,11 +33,11 @@ dependencies {
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.kotlin.datetime)
     implementation(libs.postgres.jdbc)
+    implementation(libs.h2.database)
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)
-    testImplementation(libs.h2.database)
 }
 
 tasks.test {
