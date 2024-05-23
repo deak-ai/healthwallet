@@ -2,7 +2,7 @@ package ch.healthwallet.web.routes
 
 object MedicationExamples {
 
-    val createMedicationWithNewPatientRequest = """
+    val createMedicationPrescriptionRequest = """
         {
             "Auth": "GLN543210",
             "Medicaments": [
@@ -10,17 +10,11 @@ object MedicationExamples {
                     "Id": "7680332730610",
                     "IdType": 2
                 }
-            ],
-            "Patient": {
-                "FName": "Mina",
-                "LName": "Meier",
-                "BDt": "1999-12-17",
-                "Gender": 2
-            }
+            ]
         }
     """.trimIndent()
 
-    val createMedicationWithNewPatientResponse = """
+    val createMedicationPrescriptionResponse = """
         {
             "Id": "7ea2d353-2642-40da-ab87-23d6b39eb066",
             "Auth": "GLN543210",
@@ -42,9 +36,7 @@ object MedicationExamples {
                     }
                 ]
             }
-        }
-        
-        
+        }      
     """.trimIndent()
 
 }

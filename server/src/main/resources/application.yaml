@@ -4,6 +4,8 @@ ktor:
   application:
     modules:
       - ch.healthwallet.web.ApplicationKt.module
+services:
+  issuer: "https://issuer.healthwallet.li"
 db:
   url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;"
   driver: "org.h2.Driver"

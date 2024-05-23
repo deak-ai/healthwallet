@@ -36,6 +36,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.qrcode.kotlin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

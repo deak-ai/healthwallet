@@ -94,7 +94,7 @@ class PisDbRepositoryImpl() :PisDbRepository {
 
     override fun createMedication(medication: MedicationDTO): MedicationDTO {
         return transaction {
-            val patientDAO = getOrCreatePatientDAO(medication.patient)
+            val patientDAO = getOrCreatePatientDAO(medication.patient!!)
             val medicationDAO = MedicationDAO.new {
                 patient = patientDAO
                 medType = medication.medType

@@ -1,0 +1,72 @@
+{
+  "issuerKey": {
+    "type": "jwk",
+    "jwk": "{\"kty\":\"EC\",\"d\":\"LOcVh6_257_Sp7wT3QoW68aBxiTiQPvROMAgXf_OiK4\",\"crv\":\"P-256\",\"kid\":\"yBY9dQqR499tSTxcCgG8JeJ9SYsDZSafQ1404LamPQw\",\"x\":\"VsgZ-a8X9ZtogkUTd0sKNbQidxc2IEzpZUYBe07O3u4\",\"y\":\"d58TT0QtkuxOuFYN1OjNlgzEUDmWmYioAzAJdYf8ftM\"}"
+  },
+  "issuerDid": "did:jwk:eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2Iiwia2lkIjoieUJZOWRRcVI0OTl0U1R4Y0NnRzhKZUo5U1lzRFpTYWZRMTQwNExhbVBRdyIsIngiOiJWc2daLWE4WDladG9na1VUZDBzS05iUWlkeGMySUV6cFpVWUJlMDdPM3U0IiwieSI6ImQ1OFRUMFF0a3V4T3VGWU4xT2pObGd6RVVEbVdtWWlvQXpBSmRZZjhmdE0ifQ",
+  "credentialConfigurationId": "SwissMedicalPrescription_jwt_vc_json",
+  "credentialData": {
+    "@context": [
+      "https://www.w3.org/2018/credentials/v1"
+    ],
+    "id": "[INSERT VC UUID]",
+    "type": [
+      "VerifiableCredential",
+      "SwissMedicalPrescription"
+    ],
+    "issuer": {
+      "id": "[INSERT ISSUER DID]",
+      "name": "CHEMED16A ePrescription",
+      "url": "https://emediplan.ch/",
+      "image": "https://cdn-icons-png.freepik.com/512/1145/1145785.png"
+    },
+    "issuanceDate": "[INSERT DATE-TIME FROM WHEN THE VC IS VALID]",
+    "issued": "[INSERT DATE-TIME WHEN THIS VC WAS ISSUED]",
+    "expirationDate": "[INSERT DATE-TIME UNTIL WHEN THIS VC IS VALID]",
+    "credentialSubject": {
+      "id": "[INSERT SUBJECT DID]",
+      "prescription": {
+        "MedType": 3,
+        "Id": "13dc576f-e7a6-4abd-a2c5-81e3d49d8487",
+        "Auth": "GLN123456",
+        "Zsr": null,
+        "Dt": "2024-05-22T09:43:08+02:00",
+        "Rmk": null,
+        "Medicaments": [
+          {
+            "Id": "7680501410985",
+            "IdType": 2
+          }
+        ],
+        "Patient": {
+          "FName": "Jane",
+          "LName": "Doe",
+          "BDt": "1985-05-01",
+          "Gender": 2,
+          "Ids": [
+            {
+              "Type": 1,
+              "Val": "GSHV123456"
+            },
+            {
+              "Type": 2,
+              "Val": "2"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mapping": {
+    "id": "<uuid>",
+    "issuer": {
+      "id": "<issuerDid>"
+    },
+    "credentialSubject": {
+      "id": "<subjectDid>"
+    },
+    "issuanceDate": "<timestamp>",
+    "issued": "<timestamp>",
+    "expirationDate": "<timestamp-in:365d>"
+  }
+}

@@ -30,6 +30,7 @@ exposed = "0.50.1"
 h2 = "2.2.224"
 pg-jdbc = "42.7.3"
 kotlinx-datetime = "0.6.0"
+qrcode-kotlin = "4.1.1"
 
 
 [libraries]
@@ -57,6 +58,7 @@ ktor-server-auto-head-response = { module = "io.ktor:ktor-server-auto-head-respo
 ktor-server-double-receive = { module = "io.ktor:ktor-server-double-receive-jvm", version.ref = "ktor" }
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
 ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor" }
+ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-serialization-kotlinx-json-jmv = { module = "io.ktor:ktor-serialization-kotlinx-json-jvm", version.ref = "ktor" }
 ktor-swagger-ui = { module = "io.github.smiley4:ktor-swagger-ui", version.ref = "swagger-ui" }
@@ -90,6 +92,7 @@ exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datet
 h2-database = { module = "com.h2database:h2", version.ref = "h2" }
 postgres-jdbc = { module = "org.postgresql:postgresql", version.ref = "pg-jdbc"}
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime"}
+qrcode-kotlin = { module = "io.github.g0dkar:qrcode-kotlin", version.ref = "qrcode-kotlin"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

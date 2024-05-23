@@ -1,5 +1,6 @@
 package ch.healthwallet.web.routes
 
+import ch.healthwallet.data.chmed16a.MedicationDTO
 import ch.healthwallet.data.chmed16a.PatientDTO
 import ch.healthwallet.db.PisDbRepository
 import io.github.smiley4.ktorswaggerui.dsl.get
@@ -17,7 +18,7 @@ fun Route.patientRouting() {
 
     val pisDbRepo by inject<PisDbRepository>()
 
-    route("/patient", {
+    route("/patients", {
         tags = listOf("Patient API")
     }) {
         get {
@@ -35,7 +36,7 @@ fun Route.patientRouting() {
             }
         }) {
             val id = call.parameters.get("id") ?: return@get call.respondText(
-                "Missing id",
+                "Missing patient id",
                 status = HttpStatusCode.BadRequest
             )
             val patient = pisDbRepo.getPatient(id.toInt()) ?: return@get call.respondText(
@@ -78,6 +79,56 @@ fun Route.patientRouting() {
             val patientResponse = pisDbRepo.createOrUpdatePatient(patientRequest)
             call.respond(HttpStatusCode.Created, patientResponse)
         }
+        post("/{id}/medications", {
+            summary = "Create a new medication prescription for a patient"
+            description = "Creates a new electronic prescription for a patient."
+            request {
+                pathParameter<String>("id") {
+                    description = "The system id (type 2) of the patient (Int)"
+                    required = true
+                }
+                body<MedicationDTO>() {
+                    description = "Request to create a new medication prescription"
+                    example("Sample edication prescription",
+                        MedicationExamples.createMedicationPrescriptionRequest
+                    )
+                    required = true
+                }
+            }
+            response {
+                HttpStatusCode.Created to {
+                    description = "Medication prescription created response"
+                    body<MedicationDTO> {
+                        example("Sample Medication prescription response including patient",
+                            MedicationExamples.createMedicationPrescriptionResponse
+                        )
+                    }
+                }
+            }
+        }) {
+            val id = call.parameters.get("id") ?: return@post call.respondText(
+                "Missing patient id",
+                status = HttpStatusCode.BadRequest
+            )
+            val patient = pisDbRepo.getPatient(id.toInt()) ?: return@post call.respondText(
+                "No patient with id $id",
+                status = HttpStatusCode.NotFound
+            )
+
+            val medicationDTO = call.receive<MedicationDTO>()
+
+            val medicationRequest = medicationDTO.copy(patient = patient)
+
+            val medicationResponse = pisDbRepo.createMedication(medicationRequest)
+            call.respond(HttpStatusCode.Created, medicationResponse)
+        }
+
+
+
+
+
+
+
 //        delete("{id?}") {
 //            val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.BadRequest)
 //            if (patientStorage.removeIf { it.id == id }) {

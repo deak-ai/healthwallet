@@ -25,6 +25,9 @@ object PatientsTable : IntIdTable() {
     val lastName = varchar("last_name", 100)
     val birthDate = varchar("birth_date", 10) // ISO 8601 date format
     val gender = integer("gender").nullable()
+    init {
+        uniqueIndex("unique_patient_index", firstName, lastName, birthDate)
+    }
 }
 
 object PatientIdsTable : IntIdTable() {

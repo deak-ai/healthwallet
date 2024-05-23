@@ -21,7 +21,7 @@ data class MedicationDTO(
     @SerialName("Medicaments")
     val medicaments: List<MedicamentDTO>,
     @SerialName("Patient")
-    val patient: PatientDTO
+    val patient: PatientDTO? = null,
 )
 
 

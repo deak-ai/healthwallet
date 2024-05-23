@@ -17,7 +17,7 @@ fun Route.medicationRouting() {
 
     val pisDbRepo by inject<PisDbRepository>()
 
-    route("/medication", {
+    route("/medications", {
         tags = listOf("Medication API")
     }) {
         get {
@@ -38,37 +38,11 @@ fun Route.medicationRouting() {
                 "Missing id",
                 status = HttpStatusCode.BadRequest
             )
-            val mediation = pisDbRepo.getMedicationById(id) ?: return@get call.respondText(
+            val medication = pisDbRepo.getMedicationById(id) ?: return@get call.respondText(
                     "No medication with ID $id",
                     status = HttpStatusCode.NotFound
                 )
-            call.respond(mediation)
-        }
-        post("",{
-            summary = "Create a new medication prescription"
-            request {
-                body<MedicationDTO>() {
-                    description = "Request to create a new Medication prescription"
-                    example("Sample Medication prescription request with a new patient",
-                        MedicationExamples.createMedicationWithNewPatientRequest
-                    )
-                    required = true
-                }
-            }
-            response {
-                HttpStatusCode.Created to {
-                    description = "Medication created response with new patient"
-                    body<MedicationDTO> {
-                        example("Sample Medication prescription response with a new patient",
-                            MedicationExamples.createMedicationWithNewPatientResponse
-                        )
-                    }
-                }
-            }
-        }) {
-            val medicationRequest = call.receive<MedicationDTO>()
-            val medicationResponse = pisDbRepo.createMedication(medicationRequest)
-            call.respond(HttpStatusCode.Created, medicationResponse)
+            call.respond(medication)
         }
     }
 }
