@@ -32,7 +32,7 @@ class ITestWaltIdIssuerRepository {
             }
 
         }
-        val issuerRequest =
+        val issueRequest =
             OpenId4VcJwtIssueRequest(
                 issuerKey = IssuerKey(
                     jwk = "{\"kty\":\"EC\"," +
@@ -75,7 +75,7 @@ class ITestWaltIdIssuerRepository {
     @Test
     fun `Calling openId4VcJwtIssue with valid request returns 200 and credential offer`() {
         runTest {
-            val result = repo.openId4VcJwtIssue(issuerRequest)
+            val result = repo.openId4VcJwtIssue(issueRequest)
             assertTrue(result.isSuccess)
             val credentialOffer = result.getOrNull()
             assertNotNull(credentialOffer)
@@ -86,7 +86,7 @@ class ITestWaltIdIssuerRepository {
     @Test
     fun `Calling openId4VcJwtIssue with invalid issuerKey returns failure result`() {
         runTest {
-            val invalidRequest = issuerRequest.copy(IssuerKey(jwk = "dummy"))
+            val invalidRequest = issueRequest.copy(IssuerKey(jwk = "dummy"))
             val result = repo.openId4VcJwtIssue(invalidRequest)
             assertTrue(result.isFailure)
             val exception = result.exceptionOrNull()

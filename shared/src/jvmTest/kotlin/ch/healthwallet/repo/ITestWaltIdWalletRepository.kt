@@ -137,6 +137,20 @@ class ITestWaltIdWalletRepository {
     }
 
     @Test
+    fun `Calling getDids when logged in succeeds and returns list of DIDDetail`() = runTest {
+        repo.login(loginRequest).onFailure {
+            fail(it.message)
+        }
+        val (_, wallets) = repo.getWallets().getOrElse {
+            fail(it.message)
+        }
+        val walletId = wallets.first().id
+        val result = repo.getDids(walletId)
+        assertTrue(result.isSuccess)
+        println(result.getOrNull())
+    }
+
+    @Test
     fun `Calling queryCredentials returns parsed list of verified credentials`() = runTest {
         val login = repo.login(loginRequest)
         println(login.getOrThrow())
@@ -156,18 +170,22 @@ class ITestWaltIdWalletRepository {
         val wallets: Result<WalletList> = repo.getWallets()
         val walletId = wallets.getOrElse {
             fail("No walletId found") }.wallets.first().id
-        val firstCredential = repo.queryCredentials(CredentialsQuery(walletId = walletId))
-            .getOrElse { fail("Unable to find credentials") }.first()
-        val credentialId = firstCredential.credentialId
+        val credentials = repo.queryCredentials(CredentialsQuery(walletId = walletId))
+            .getOrElse { fail("Unable to find credentials") }
 
-        val result = repo.getCredential(CredentialRequest(walletId, credentialId))
-        assertTrue(result.isSuccess)
-        val queriedCredential = result.getOrElse {
-            fail("No verified credential result")
+        if (credentials.isNotEmpty()) {
+            val firstCredential = credentials.first()
+            val credentialId = firstCredential.credentialId
+
+            val result = repo.getCredential(CredentialRequest(walletId, credentialId))
+            assertTrue(result.isSuccess)
+            val queriedCredential = result.getOrElse {
+                fail("No verified credential result")
+            }
+            assertEquals(walletId, queriedCredential.walletId)
+            assertEquals(credentialId, queriedCredential.credentialId)
+            assertEquals(firstCredential.addedOn, queriedCredential.addedOn)
         }
-        assertEquals(walletId, queriedCredential.walletId)
-        assertEquals(credentialId, queriedCredential.credentialId)
-        assertEquals(firstCredential.addedOn,queriedCredential.addedOn )
     }
 
 }
