@@ -8,6 +8,8 @@ build/
 
 **/local.properties
 
+**/.env
+
 ### IntelliJ IDEA ###
 .idea/
 **/.idea

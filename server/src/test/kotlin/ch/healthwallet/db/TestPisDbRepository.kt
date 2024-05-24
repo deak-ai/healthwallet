@@ -54,12 +54,19 @@ class TestPisDbRepository {
     private lateinit var patientId2:String
     private lateinit var medicationId: String
 
-
+    private fun getEnvOrDefault(envVar: String, defaultValue: String): String {
+        return System.getenv(envVar) ?: defaultValue
+    }
 
     @BeforeAll
     fun setup() {
         pisDbRepo = PisDbRepositoryImpl()
-        Database.connect("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;",driver = "org.h2.Driver")
+        Database.connect(
+            getEnvOrDefault("DB_URL", "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;"),
+            driver = getEnvOrDefault("DB_DRIVER", "org.h2.Driver"),
+            user = getEnvOrDefault("DB_USER", ""),
+            password = getEnvOrDefault("DB_PASSWORD", "")
+        )
         transaction {
             SchemaUtils.drop(*PisDbRepository.SSI_EMEDIPLAN_TABLES.toTypedArray())
             SchemaUtils.create(*PisDbRepository.SSI_EMEDIPLAN_TABLES.toTypedArray())
