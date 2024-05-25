@@ -50,9 +50,9 @@ class VCScreen : Screen {
             )
             is VCScanState.ConfirmCredential -> ConfirmationDialog(
                 title = "Import Prescription?",
-                message = "Details: "+ (state as VCScanState.ConfirmCredential).credentialInfo,
-                onAccept = { vcScreenModel.handleEvent(VCEvent.AcceptCredential) },
-                onReject = { vcScreenModel.handleEvent(VCEvent.RejectCredential) }
+                message = "Details: "+ (state as VCScanState.ConfirmCredential).credentialRequest,
+                onAccept = { vcScreenModel.handleEvent(VCEvent.AcceptCredential((state as VCScanState.ConfirmCredential).credentialRequest)) },
+                onReject = { vcScreenModel.handleEvent(VCEvent.RejectCredential((state as VCScanState.ConfirmCredential).credentialRequest)) }
             )
             is VCScanState.Error -> ErrorScreen((state as VCScanState.Error).message) { vcScreenModel.handleEvent(VCEvent.RejectCredentialOffer) }
             is VCScanState.CredentialImported -> {

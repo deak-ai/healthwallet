@@ -2,6 +2,9 @@ package ch.healthwallet.tabs.vc
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import ch.healthwallet.repo.CredentialRequest
+import ch.healthwallet.repo.OfferRequest
+import ch.healthwallet.repo.WaltIdWalletRepository
 import io.ktor.http.Parameters
 import io.ktor.http.Url
 import kotlinx.coroutines.delay
@@ -10,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class VCScreenModel(
-
+    private val waltIdWalletRepo: WaltIdWalletRepository
 ):ScreenModel {
 
     private val _state = MutableStateFlow<VCScanState>(VCScanState.Initial)
@@ -22,8 +25,8 @@ class VCScreenModel(
             is VCEvent.ScanError -> _state.value = VCScanState.Error(event.message)
             is VCEvent.UseCredentialOffer -> confirmOffer(event.offer)
             is VCEvent.RejectCredentialOffer -> _state.value = VCScanState.Initial
-            is VCEvent.AcceptCredential -> acceptCredential()
-            is VCEvent.RejectCredential -> rejectCredential()
+            is VCEvent.AcceptCredential -> acceptCredential(event.credentialRequest)
+            is VCEvent.RejectCredential -> rejectCredential(event.credentialRequest)
             is VCEvent.BackHome -> backHome()
         }
     }
@@ -52,9 +55,23 @@ class VCScreenModel(
             _state.value = VCScanState.Processing
             try {
                 println("Obtaining prescription...")
-                delay(1000)
+
+                waltIdWalletRepo.login().getOrThrow()
+
+                val (_, wallets) = waltIdWalletRepo.getWallets().getOrThrow()
+                val walletId = wallets.first().id
+
+                val did = waltIdWalletRepo.getDids(walletId).getOrThrow().
+                    firstOrNull { it.default }?.did
+                        ?: throw Exception("No default DID found")
+
+                val offerRequest = OfferRequest(did, walletId, offer)
+                val credentialId = waltIdWalletRepo.useOfferRequest(offerRequest).getOrThrow()
+                    .first().credentialId
+
                 println("Obtained prescription")
-                _state.value = VCScanState.ConfirmCredential("Triatec")
+
+                _state.value = VCScanState.ConfirmCredential(CredentialRequest(walletId, credentialId))
 
             } catch (e: Exception) {
                 _state.value = VCScanState.Error(e.message ?: "Processing Error")
@@ -62,12 +79,12 @@ class VCScreenModel(
         }
     }
 
-    private fun acceptCredential() {
+    private fun acceptCredential(credentialRequest: CredentialRequest) {
         screenModelScope.launch {
             _state.value = VCScanState.Processing
             try {
                 println("Importing prescription")
-                delay(1000)
+                waltIdWalletRepo.acceptCredential(credentialRequest)
                 println("Imported prescription")
                 _state.value = VCScanState.CredentialImported
             } catch (e: Exception) {
@@ -76,12 +93,13 @@ class VCScreenModel(
         }
     }
 
-    private fun rejectCredential() {
+    private fun rejectCredential(credentialRequest: CredentialRequest) {
         screenModelScope.launch {
             _state.value = VCScanState.Processing
             try {
                 println("Rejecting prescription")
-                delay(1000)
+               waltIdWalletRepo.rejectCredential(credentialRequest,
+                   "Rejected by user")
                 println("Rejected prescription")
                 _state.value = VCScanState.Initial
             } catch (e: Exception) {

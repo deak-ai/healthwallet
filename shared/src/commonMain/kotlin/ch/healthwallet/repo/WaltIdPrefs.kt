@@ -1,6 +1,6 @@
-package ch.healthwallet.prefs
+package ch.healthwallet.repo
 
-data class AppPrefs(
+data class WaltIdPrefs(
     val waltIdPrefsValid: Boolean = DEFAULT_APP_PREFS_VALID,
     val waltIdEmail: String = DEFAULT_EMAIL,
     val waltIdPassword: String = DEFAULT_PASSWORD,
@@ -14,6 +14,6 @@ data class AppPrefs(
         const val WALLET_SETTINGS_NOT_SET = "Wallet settings not set"
     }
 
-    fun isDefault(): Boolean = this == AppPrefs()
+    fun isDefault(): Boolean = this == WaltIdPrefs()
 
 }

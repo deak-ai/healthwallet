@@ -7,6 +7,8 @@ import io.ktor.client.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlin.test.Ignore
@@ -19,7 +21,7 @@ class ITestWaltIdIssuerRepository {
     companion object {
         val repo: WaltIdIssuerRepository = WaltIdIssuerRepositoryImpl(
             createHttpClient(),
-            "https://issuer.healthwallet.li"
+            MutableStateFlow(WaltIdPrefs(waltIdWalletApi = "https://issuer.healthwallet.li")).asStateFlow()
         )
 
         private fun createHttpClient() = HttpClient() {
@@ -71,7 +73,6 @@ class ITestWaltIdIssuerRepository {
             )
     }
 
-    @Ignore
     @Test
     fun `Calling openId4VcJwtIssue with valid request returns 200 and credential offer`() {
         runTest {

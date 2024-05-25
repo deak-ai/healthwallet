@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import ch.healthwallet.prefs.AppPrefs
+import ch.healthwallet.repo.WaltIdPrefs
 import ch.healthwallet.prefs.AppPrefsRepository
 import ch.healthwallet.repo.LoginRequest
 import ch.healthwallet.repo.WaltIdWalletRepository
@@ -23,10 +23,8 @@ import kotlinx.coroutines.launch
 
 class WalletSettingsScreenModel(
     private val appPrefsRepo: AppPrefsRepository,
-    private val httpClient: HttpClient
+    private val waltIdWalletRepo: WaltIdWalletRepository
 ) : ScreenModel {
-
-    private var lastPrefs: AppPrefs = AppPrefs()
 
     private val _showStartupDialog = MutableStateFlow(false)
     val showStartupDialog: StateFlow<Boolean> = _showStartupDialog.asStateFlow()
@@ -92,35 +90,30 @@ class WalletSettingsScreenModel(
 
     fun updateWaltIdWalletApi(newValue: String) {
         waltidWalletApi = newValue
-        _settingsChanged = newValue != lastPrefs.waltIdWalletApi
+        _settingsChanged = newValue != appPrefsRepo.appPrefs.value.waltIdWalletApi
     }
 
     fun updateWaltIdEmail(newValue: String) {
         waltIdEmail = newValue
-        _settingsChanged = newValue != lastPrefs.waltIdEmail
+        _settingsChanged = newValue != appPrefsRepo.appPrefs.value.waltIdEmail
     }
 
     fun updateWaltIdPassword(newValue: String) {
         waltIdPassword = newValue
-        _settingsChanged = newValue != lastPrefs.waltIdPassword
+        _settingsChanged = newValue != appPrefsRepo.appPrefs.value.waltIdPassword
     }
 
     fun togglePasswordVisibility() {
         _passwordVisibility = ! _passwordVisibility
     }
 
-
     init {
         println("WalletSettingsScreenModel: Initialising... ")
-        screenModelScope.launch {
-            appPrefsRepo.settings.collect {
-                lastPrefs = it
-                waltidWalletApi = it.waltIdWalletApi
-                waltIdEmail = it.waltIdEmail
-                waltIdPassword = it.waltIdPassword
-                _showStartupDialog.value = !it.waltIdPrefsValid
-            }
-        }
+        val prefs = appPrefsRepo.appPrefs.value
+        waltidWalletApi = prefs.waltIdWalletApi
+        waltIdEmail = prefs.waltIdEmail
+        waltIdPassword = prefs.waltIdPassword
+        _showStartupDialog.value = !prefs.waltIdPrefsValid
     }
 
     override fun onDispose() {
@@ -139,10 +132,8 @@ class WalletSettingsScreenModel(
 
     fun testConnection(snackbarHostState: SnackbarHostState) {
         screenModelScope.launch {
-            val waltIdWalletRepo: WaltIdWalletRepository = WaltIdWalletRepositoryImpl(
-                httpClient, waltidWalletApi)
 
-            val result = waltIdWalletRepo.login(LoginRequest(email = waltIdEmail, password = waltIdPassword))
+            val result = waltIdWalletRepo.login()
 
             if (result.isSuccess) {
                 showSnackbar(

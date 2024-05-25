@@ -1,9 +1,9 @@
 package ch.healthwallet.repo
 
 interface WaltIdWalletRepository {
-    suspend fun login(loginRequest: LoginRequest): Result<LoginResponse>
+    suspend fun login(): Result<LoginResponse>
 
-    suspend fun createUser(createRequest : CreateUserRequest): Result<Boolean>
+    suspend fun createUser(): Result<Boolean>
 
     suspend fun getUserId(): Result<String>
 

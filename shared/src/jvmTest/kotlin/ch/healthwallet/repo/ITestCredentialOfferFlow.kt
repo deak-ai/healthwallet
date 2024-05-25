@@ -4,6 +4,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
@@ -25,16 +27,16 @@ class ITestCredentialOfferFlow {
         }
 
         val walletRepo: WaltIdWalletRepository = WaltIdWalletRepositoryImpl(
-            httpClient,
-            "https://wallet.healthwallet.li"
+            httpClient, MutableStateFlow(ITestWaltIdWalletRepository.waltIdPrefs.value.
+            copy(waltIdWalletApi = "https://wallet.healthwallet.li"))
         )
 
         val issuerRepo: WaltIdIssuerRepository = WaltIdIssuerRepositoryImpl(
-            httpClient,
-            "https://issuer.healthwallet.li"
+            httpClient,MutableStateFlow(ITestWaltIdWalletRepository.waltIdPrefs.value.
+            copy(waltIdWalletApi = "https://issuer.healthwallet.li"))
         )
 
-        val loginRequest = ITestWaltIdWalletRepository.loginRequest
+
         val issueRequest = ITestWaltIdIssuerRepository.issueRequest
 
     }
@@ -117,7 +119,7 @@ class ITestCredentialOfferFlow {
     }
 
     private suspend fun login():String {
-        walletRepo.login(loginRequest).onFailure {
+        walletRepo.login().onFailure {
             fail(it.message)
         }
         val (_, wallets) = walletRepo.getWallets().getOrElse {
