@@ -7,6 +7,7 @@ import org.koin.dsl.module
 import ch.healthwallet.tabs.settings.WalletSettingsScreen
 import ch.healthwallet.tabs.settings.WalletSettingsScreenModel
 import ch.healthwallet.tabs.home.HomeScreenModel
+import ch.healthwallet.tabs.vc.VCScreenModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -29,5 +30,6 @@ val appModule = module {
     singleOf(::HomeScreenModel)
     singleOf(::WalletSettingsScreenModel)
     factoryOf(::WalletSettingsScreen)
+    singleOf(::VCScreenModel)
 
 }

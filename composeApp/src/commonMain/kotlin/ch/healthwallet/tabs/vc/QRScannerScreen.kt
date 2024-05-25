@@ -22,11 +22,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import qrscanner.QrScanner
 
 @OptIn(ExperimentalMaterial3Api::class)
-class QRScannerScreen : Screen {
+class QRScannerScreen(private val screenModel: VCScreenModel) : Screen {
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val navigator: Navigator = LocalNavigator.currentOrThrow
@@ -57,14 +59,16 @@ class QRScannerScreen : Screen {
                         .clip(shape = RoundedCornerShape(size = 14.dp)),
                     flashlightOn = false,
                     launchGallery = false,
-                    onCompletion = {
-                        println("QR Scan Success: $it")
+                    onCompletion = { qrCode ->
+                        screenModel.handleEvent(VCEvent.QrCodeScanned(qrCode))
+                        navigator.pop()
                     },
                     onGalleryCallBackHandler = {
                         println("GalleryCallbankHandler: $it")
                     },
-                    onFailure = {
-                        println("QR Scan Failure: $it")
+                    onFailure = { error ->
+                        screenModel.handleEvent(VCEvent.ScanError(error))
+                        navigator.pop()
                     }
                 )
             }

@@ -16,11 +16,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.Koin
+import org.koin.core.component.KoinComponent
+
 
 class HomeScreenModel(
     private val httpClient: HttpClient,
     private val appPrefsRepo: AppPrefsRepository
-):ScreenModel {
+):ScreenModel, KoinComponent {
 
     private val _appPrefs = MutableStateFlow(AppPrefs())
     val appPrefs: StateFlow<AppPrefs> = _appPrefs.asStateFlow()
@@ -72,6 +75,8 @@ class HomeScreenModel(
         println(message)
         _errorMessage.value = message
     }
+
+
     private suspend fun fetchVerifiableCredentials(appPrefs: AppPrefs) {
         println("fetchVerifiableCredentials")
         val repo:WaltIdWalletRepository =
