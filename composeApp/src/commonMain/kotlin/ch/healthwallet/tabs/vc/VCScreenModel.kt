@@ -42,6 +42,7 @@ class VCScreenModel(
     private fun handleQrCodeScanned(qrCode: String) {
         screenModelScope.launch {
             try {
+                println("Scanning QR code")
                 val offer = parseQrCodeString(qrCode)
                 _state.value = VCScanState.ConfirmOffer(offer)
             } catch (e: IllegalArgumentException) {
@@ -61,11 +62,17 @@ class VCScreenModel(
                 val (_, wallets) = waltIdWalletRepo.getWallets().getOrThrow()
                 val walletId = wallets.first().id
 
+                println("Found walletid $walletId")
+
                 val did = waltIdWalletRepo.getDids(walletId).getOrThrow().
                     firstOrNull { it.default }?.did
                         ?: throw Exception("No default DID found")
 
+                println("Got default DID: $did")
+
                 val offerRequest = OfferRequest(did, walletId, offer)
+
+                println("Building offer request: $offerRequest")
                 val credentialId = waltIdWalletRepo.useOfferRequest(offerRequest).getOrThrow()
                     .first().credentialId
 
@@ -116,7 +123,7 @@ class VCScreenModel(
             throw IllegalArgumentException(
                 "QR Code is not a valid OpenID for VC Credential Offer")
         }
-        return offer
+        return qrCode
     }
 
     private fun getOffer(params: Parameters): String? {
