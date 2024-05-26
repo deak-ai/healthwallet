@@ -1,0 +1,13 @@
+ktor:
+  deployment:
+    port: "$HTTP_PORT:8080"
+  application:
+    modules:
+      - ch.healthwallet.web.ApplicationKt.module
+services:
+  issuer: "https://issuer.healthwallet.li"
+db:
+  url: "jdbc:postgresql://localhost:5432/healthssi_pis"
+  driver: "org.postgresql.Driver"
+  user: "$DB_USER"
+  password: "$DB_PASSWORD"

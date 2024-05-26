@@ -49,6 +49,17 @@ data class Wallet(
 )
 
 @Serializable
+data class DidDetail(
+    val alias: String,
+    val createdOn: String,
+    val default: Boolean,
+    val did: String,
+    val document: String,
+    val keyId: String
+)
+
+
+@Serializable
 data class CredentialsQuery(
     @SerialName("id")
     val walletId: String,
@@ -73,10 +84,21 @@ data class VerifiedCredential(
     //  val manifest: Any,
 )
 
-@Serializable
 data class CredentialRequest(
     val walletId: String,
     val credentialId: String
+)
+
+data class OfferRequest(
+    val did: String,
+    val walletId: String,
+    val credentialOffer: String,
+    val acceptPending: Boolean = true
+)
+
+@Serializable
+data class RejectNote(
+    val note: String,
 )
 
 

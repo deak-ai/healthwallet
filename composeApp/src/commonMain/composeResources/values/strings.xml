@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">HealthWallet</string>
     <string name="disclaimer">HealthWallet is a demonstration tool designed for simulation purposes only. It is not intended for the management, diagnosis, or treatment of any health conditions. The information and functionality provided by this app should not be used as a substitute for professional healthcare advice or services. We make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the app or the information contained on the app for any purpose. Any reliance you place on such information is therefore strictly at your own risk.</string>
+    <string name="qr_error_parse">"QR Code is not a valid OpenID for VC Credential Offer"</string>
 </resources>

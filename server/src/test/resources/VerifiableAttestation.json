@@ -1,0 +1,6 @@
+{
+  "credentialSchema": {
+    "id": "https://api-pilot.ebsi.eu/trusted-schemas-registry/v2/schemas/zGr1f1vZz3bk4PDAsYjM3eA76eMGdZ4XiQysU2HJjadc4",
+    "type": "FullJsonSchemaValidator2021"
+  }
+}

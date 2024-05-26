@@ -1,0 +1,41 @@
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1"
+  ],
+  "id": "[INSERT VC UUID]",
+  "type": [
+    "VerifiableCredential",
+    "SwissMedicalPrescription"
+  ],
+  "issuer": {
+    "id": "[INSERT ISSUER DID]",
+    "name": "CHEMED16A ePrescription",
+    "url": "https://emediplan.ch/",
+    "image": "https://cdn-icons-png.freepik.com/512/1145/1145785.png"
+  },
+  "issuanceDate": "[INSERT DATE-TIME FROM WHEN THE VC IS VALID]",
+  "expirationDate" : "[INSERT DATE-TIME UNTIL WHEN THIS VC IS VALID]",
+  "credentialSubject": {
+    "id": "[INSERT SUBJECT DID]",
+    "prescription": {
+      "MedType": 3,
+      "Id": "13dc576f-e7a6-4abd-a2c5-81e3d49d8487",
+      "Auth": "GLN123456",
+      "Zsr": null,
+      "Dt": "2024-05-22T09:43:08+02:00",
+      "Rmk": null,
+      "Medicaments": [
+        {
+          "Id": "7680501410985",
+          "IdType": 2
+        }
+      ],
+      "Patient": {
+        "FName": "Jane",
+        "LName": "Doe",
+        "BDt": "1985-05-01",
+        "Gender": 2
+      }
+    }
+  }
+}

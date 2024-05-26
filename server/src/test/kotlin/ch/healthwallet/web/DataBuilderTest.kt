@@ -11,7 +11,7 @@ import id.walt.crypto.utils.JsonUtils.toJsonObject
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.days
 
 class DataBuilderTest {
