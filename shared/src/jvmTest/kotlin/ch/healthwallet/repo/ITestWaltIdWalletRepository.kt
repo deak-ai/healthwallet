@@ -3,11 +3,14 @@ package ch.healthwallet.repo
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.util.toMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
+import org.junit.jupiter.api.TestFactory
 import java.util.UUID
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -122,13 +125,7 @@ class ITestWaltIdWalletRepository {
 
     @Test
     fun `Calling getDids when logged in succeeds and returns list of DIDDetail`() = runTest {
-        repo.login().onFailure {
-            fail(it.message)
-        }
-        val (_, wallets) = repo.getWallets().getOrElse {
-            fail(it.message)
-        }
-        val walletId = wallets.first().id
+        val walletId = getWalletId()
         val result = repo.getDids(walletId)
         assertTrue(result.isSuccess)
         println(result.getOrNull())
@@ -136,11 +133,7 @@ class ITestWaltIdWalletRepository {
 
     @Test
     fun `Calling queryCredentials returns parsed list of verified credentials`() = runTest {
-        val login = repo.login()
-        println(login.getOrThrow())
-        val wallets: Result<WalletList> = repo.getWallets()
-        val walletId = wallets.getOrElse {
-            fail("No walletId found") }.wallets.first().id
+        val walletId = getWalletId()
 
         val result = repo.queryCredentials(CredentialsQuery(walletId = walletId))
         println(result.getOrNull())
@@ -148,28 +141,85 @@ class ITestWaltIdWalletRepository {
     }
 
     @Test
-    fun `Calling getCredential with valid parameters returns verified credential`() = runTest {
+    fun `Calling getCredential with valid parameters returns verified credential`() {
+        runTest {
+            val walletId = getWalletId()
+            val credentials = repo.queryCredentials(CredentialsQuery(walletId = walletId))
+                .getOrElse { fail("Unable to find credentials") }
+
+            if (credentials.isNotEmpty()) {
+                val firstCredential = credentials.first()
+                val credentialId = firstCredential.credentialId
+
+                val result = repo.getCredential(CredentialRequest(walletId, credentialId))
+                assertTrue(result.isSuccess)
+                val queriedCredential = result.getOrElse {
+                    fail("No verified credential result")
+                }
+                assertEquals(walletId, queriedCredential.walletId)
+                assertEquals(credentialId, queriedCredential.credentialId)
+                assertEquals(firstCredential.addedOn, queriedCredential.addedOn)
+            }
+        }
+    }
+
+    private suspend fun getWalletId(): String {
         val login = repo.login()
         println(login.getOrThrow())
         val wallets: Result<WalletList> = repo.getWallets()
         val walletId = wallets.getOrElse {
-            fail("No walletId found") }.wallets.first().id
-        val credentials = repo.queryCredentials(CredentialsQuery(walletId = walletId))
-            .getOrElse { fail("Unable to find credentials") }
+            fail("No walletId found")
+        }.wallets.first().id
+        return walletId
+    }
 
-        if (credentials.isNotEmpty()) {
-            val firstCredential = credentials.first()
-            val credentialId = firstCredential.credentialId
-
-            val result = repo.getCredential(CredentialRequest(walletId, credentialId))
-            assertTrue(result.isSuccess)
-            val queriedCredential = result.getOrElse {
-                fail("No verified credential result")
+    @Test
+    fun `Resolving presentation and matching definition returns list of credentials and can be used`() {
+        runTest {
+            val request = "openid4vp://authorize?response_type=vp_token&client_id=&response_mode=direct_post&state=tPECMRcJkVdO&presentation_definition_uri=http%3A%2F%2Fverifier-api%3A7003%2Fopenid4vc%2Fpd%2FtPECMRcJkVdO&client_id_scheme=redirect_uri&response_uri=http%3A%2F%2Fverifier-api%3A7003%2Fopenid4vc%2Fverify%2FtPECMRcJkVdO"
+            val walletId = getWalletId()
+            val result = repo.resolvePresentationRequest(walletId, Url(request))
+            val url = result.getOrElse {
+                fail("Failed to resolve presentation: $it")
             }
-            assertEquals(walletId, queriedCredential.walletId)
-            assertEquals(credentialId, queriedCredential.credentialId)
-            assertEquals(firstCredential.addedOn, queriedCredential.addedOn)
+            printUrl(url)
+            val pd = url.parameters.get("presentation_definition")
+                ?:fail("No presentation definition")
+            val pf = Json.decodeFromString<PresentationFilter>(pd)
+            val vcResult = repo.matchCredentials(walletId, pf)
+            val credentials = vcResult.getOrElse {
+                fail("Failed to match credentials: $it")
+            }
+            println(credentials)
+
+            val useRequest = UsePresentationRequest(
+                presentationRequest = url.toString(),
+                selectedCredentials = listOf(credentials.first().credentialId)
+            )
+            val useResult = repo.usePresentationRequest(walletId, useRequest)
+            val claimedCredentials = useResult.getOrElse {
+                fail("Failed to use presentation: $it")
+            }
+            println(claimedCredentials)
+
         }
+    }
+
+
+    @Test
+    fun `Serializing PresentationFilter returns non-empty string`() {
+        val pf = PresentationFilter()
+        val json = pf.serialize()
+        assertTrue(json.contains(WaltIdPrefs.DEFAULT_VC_NAME))
+    }
+
+
+    private fun printUrl(url: Url) {
+        println(url)
+        val reqParams = url.parameters.toMap()
+        println(url.protocol.name)
+        println(url.host)
+        println(reqParams)
     }
 
 }

@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class OpenId4VcJwtIssueRequest(
     val issuerKey: IssuerKey,
     val issuerDid: String,
-    val credentialConfigurationId:String = "SwissMedicalPrescription_jwt_vc_json",
+    val credentialConfigurationId:String = WaltIdPrefs.DEFAULT_VC_NAME+"_jwt_vc_json",
     val credentialData: CredentialDataV1,
     val mapping: Mapping = Mapping()
 )
@@ -24,7 +24,7 @@ data class CredentialDataV1(
     @SerialName("@context")
     val context: List<String> = listOf("https://www.w3.org/2018/credentials/v1"),
     val id: String = "[INSERT VC UUID]",
-    val type: List<String> = listOf("VerifiableCredential", "SwissMedicalPrescription"),
+    val type: List<String> = listOf("VerifiableCredential", WaltIdPrefs.DEFAULT_VC_NAME),
     val issuer: Issuer = Issuer(),
     val issuanceDate: String = "[INSERT DATE-TIME FROM WHEN THE VC IS VALID]",
     val issued: String = "[INSERT DATE-TIME WHEN THIS VC WAS ISSUED]",

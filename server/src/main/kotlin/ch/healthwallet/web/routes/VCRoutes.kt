@@ -19,7 +19,7 @@ fun Route.vcRouting() {
     val issuanceService by inject<PrescriptionVCIssuanceService>()
 
     route("/vc", {
-        tags = listOf("Verifiable Credential API")
+        tags = listOf("Prescription VC Issuance API")
     }) {
         post("/issue", {
             summary = "Issue a medication prescription VC using OID4VCI"
@@ -64,6 +64,7 @@ fun Route.vcRouting() {
             }
             call.respond(HttpStatusCode.OK, credentialOffer)
         }
+        // TODO: move away
         post("/qrcode", {
             summary = "Turn a string (e.g. OID4VC credential offer) into a QR code"
             request {

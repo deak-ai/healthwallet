@@ -7,6 +7,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.Result
 
 class WaltIdIssuerRepositoryImpl(
     private val httpClient: HttpClient,

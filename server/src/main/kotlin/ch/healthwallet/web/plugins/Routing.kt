@@ -2,7 +2,9 @@ package ch.healthwallet.web.plugins
 
 import ch.healthwallet.web.routes.medicationRouting
 import ch.healthwallet.web.routes.patientRouting
+import ch.healthwallet.web.routes.utilsRouting
 import ch.healthwallet.web.routes.vcRouting
+import ch.healthwallet.web.routes.vpRouting
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.autohead.*
@@ -25,6 +27,8 @@ fun Application.configureRouting() {
         patientRouting()
         medicationRouting()
         vcRouting()
+        vpRouting()
+        utilsRouting()
     }
     install(StatusPages) {
         exception<SQLException> { call, cause ->

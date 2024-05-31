@@ -3,6 +3,7 @@ package ch.healthwallet.vc
 import ch.healthwallet.db.PisDbRepository
 import ch.healthwallet.repo.*
 import java.util.*
+import kotlin.Result
 
 class PrescriptionVCIssuanceServiceImpl(
     private val waltIdIssuerRepo: WaltIdIssuerRepository,
