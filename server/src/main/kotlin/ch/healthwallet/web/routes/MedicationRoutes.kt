@@ -1,13 +1,10 @@
 package ch.healthwallet.web.routes
 
-import ch.healthwallet.data.chmed16a.MedicationDTO
 import ch.healthwallet.db.PisDbRepository
 import io.github.smiley4.ktorswaggerui.dsl.get
-import io.github.smiley4.ktorswaggerui.dsl.post
 import io.github.smiley4.ktorswaggerui.dsl.route
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
@@ -43,6 +40,22 @@ fun Route.medicationRouting() {
                     status = HttpStatusCode.NotFound
                 )
             call.respond(medication)
+        }
+        get("/refdata/{gtin}", {
+            summary = "Gets a medication refdata based on its GTIN"
+            request {
+                pathParameter<String>("gtin") { required = true }
+            }
+        }) {
+            val gtin = call.parameters["gtin"] ?: return@get call.respondText(
+                "Missing GTIN",
+                status = HttpStatusCode.BadRequest
+            )
+            val refData = pisDbRepo.findMedicamentRefDataByGTIN(gtin) ?: return@get call.respondText(
+                "No medication refdata with GTIN $gtin",
+                status = HttpStatusCode.NotFound
+            )
+            call.respond(refData)
         }
     }
 }

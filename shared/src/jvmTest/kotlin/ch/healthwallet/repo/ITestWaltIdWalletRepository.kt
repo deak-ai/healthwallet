@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.TestFactory
+import kotlin.Result
 import java.util.UUID
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -29,7 +29,7 @@ class ITestWaltIdWalletRepository {
                 waltIdWalletApi = "http://localhost:7001"
             ))
 
-        val httpClient = HttpClient() {
+        private val httpClient = HttpClient() {
             install(HttpCookies)
             install(ContentNegotiation) {
                 json(Json {

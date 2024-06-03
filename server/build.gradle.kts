@@ -41,6 +41,8 @@ dependencies {
     implementation(libs.postgres.jdbc)
     implementation(libs.h2.database)
     implementation(libs.qrcode.kotlin)
+    implementation(libs.xmlutil.core)
+    implementation(libs.xmlutil.serialization)
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)
     testImplementation(libs.junit.jupiter.api)

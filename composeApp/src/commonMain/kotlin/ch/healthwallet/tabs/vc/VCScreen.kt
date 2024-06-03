@@ -1,17 +1,26 @@
 package ch.healthwallet.tabs.vc
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,6 +28,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -26,8 +38,6 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import cafe.adriel.voyager.transitions.SlideTransition
-import ch.healthwallet.tabs.home.HomeScreen
 import ch.healthwallet.tabs.home.HomeTab
 import org.koin.compose.koinInject
 
@@ -42,26 +52,45 @@ class VCScreen : Screen {
         when (state) {
             is VCScanState.Initial -> InitialScreen(navigator, vcScreenModel)
             is VCScanState.Processing -> ProcessingScreen()
-            is VCScanState.ConfirmOffer -> ConfirmationDialog(
+
+            // credential offer states
+            is VCScanState.ImportCredentialAsPending -> ConfirmationDialog(
                 title = "Check Prescription Offer?",
-                message = "Details: " + (state as VCScanState.ConfirmOffer).offerInfo,
-                onAccept = { vcScreenModel.handleEvent(VCEvent.UseCredentialOffer((state as VCScanState.ConfirmOffer).offerInfo)) },
-                onReject = { vcScreenModel.handleEvent(VCEvent.RejectCredentialOffer) }
+                message = "Details: " + (state as VCScanState.ImportCredentialAsPending).credentialOfferUrl,
+                onAccept = { vcScreenModel.handleEvent(VCEvent.UseCredentialOffer((state as VCScanState.ImportCredentialAsPending).credentialOfferUrl)) },
+                onReject = { vcScreenModel.handleEvent(VCEvent.Reset) }
             )
-            is VCScanState.ConfirmCredential -> ConfirmationDialog(
+            is VCScanState.AcceptCredential -> ConfirmationDialog(
                 title = "Import Prescription?",
-                message = "Details: "+ (state as VCScanState.ConfirmCredential).credentialRequest,
-                onAccept = { vcScreenModel.handleEvent(VCEvent.AcceptCredential((state as VCScanState.ConfirmCredential).credentialRequest)) },
-                onReject = { vcScreenModel.handleEvent(VCEvent.RejectCredential((state as VCScanState.ConfirmCredential).credentialRequest)) }
+                message = "Details: "+ (state as VCScanState.AcceptCredential).credentialRequest,
+                onAccept = { vcScreenModel.handleEvent(VCEvent.AcceptCredential((state as VCScanState.AcceptCredential).credentialRequest)) },
+                onReject = { vcScreenModel.handleEvent(VCEvent.RejectCredential((state as VCScanState.AcceptCredential).credentialRequest)) }
             )
-            is VCScanState.Error -> ErrorScreen((state as VCScanState.Error).message) { vcScreenModel.handleEvent(VCEvent.RejectCredentialOffer) }
+            is VCScanState.Error -> ErrorScreen((state as VCScanState.Error).message) { vcScreenModel.handleEvent(VCEvent.Reset) }
             is VCScanState.CredentialImported -> {
                 // Switch to Home tab
                 LaunchedEffect(Unit) {
                     tabNavigator.current = HomeTab
-                    vcScreenModel.handleEvent(VCEvent.BackHome)
+                    vcScreenModel.handleEvent(VCEvent.Reset)
                 }
             }
+
+            // presentation states
+            is VCScanState.ProcessPresentationRequest -> ConfirmationDialog(
+                title = "Import Prescription?",
+                message = "Details: "+ (state as VCScanState.ProcessPresentationRequest).verifyUrl,
+                onAccept = { vcScreenModel.handleEvent(VCEvent.SelectCredential((state as VCScanState.ProcessPresentationRequest).verifyUrl)) },
+                onReject = { vcScreenModel.handleEvent(VCEvent.Reset) }
+            )
+
+            is VCScanState.PresentationCompleted -> {
+                // Switch to Home tab
+                LaunchedEffect(Unit) {
+                    tabNavigator.current = HomeTab
+                    vcScreenModel.handleEvent(VCEvent.Reset)
+                }
+            }
+
         }
     }
 
@@ -73,12 +102,12 @@ class VCScreen : Screen {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(text = "Verifiable Credentials")
+            Text(text = "Manage Prescriptions")
             Spacer(modifier = Modifier.height(16.dp))
             ExtendedFloatingActionButton(
                 onClick = { navigator.push(QRScannerScreen(vcScreenModel)) },
-                icon = { Icon(Icons.Filled.Add, "Import VC from QR") },
-                text = { Text(text = "Import VC") },
+                icon = { Icon(Icons.Filled.Add, "Scan a QR Code") },
+                text = { Text(text = "Scan a QR Code") },
             )
         }
     }
@@ -120,8 +149,38 @@ class VCScreen : Screen {
 
     @Composable
     fun ProcessingScreen() {
-        // Your processing screen UI
-        CircularProgressIndicator()
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            //CircularProgressIndicator()
+            AnimatedInfiniteProgressIndicator()
+        }
     }
 
+    @Composable
+    fun AnimatedInfiniteProgressIndicator(
+        modifier: Modifier = Modifier,
+        color: Color = MaterialTheme.colorScheme.primary,
+        strokeWidth: Float = 4f
+    ) {
+        val infiniteTransition = rememberInfiniteTransition()
+        val angle by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1000, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart
+            )
+        )
+        Canvas(modifier = modifier.size(48.dp)) {
+            drawArc(
+                color = color,
+                startAngle = angle,
+                sweepAngle = 270f,
+                useCenter = false,
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+            )
+        }
+    }
 }

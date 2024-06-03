@@ -10,6 +10,7 @@ import io.ktor.util.toMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,24 +26,37 @@ class ITestWaltIdVerifierRepository {
                 WaltIdPrefs(waltIdWalletApi = "https://verifier.healthwallet.li")).asStateFlow()
         )
 
+        @OptIn(ExperimentalSerializationApi::class)
         private fun createHttpClient() = HttpClient() {
             install(HttpCookies)
             install(ContentNegotiation) {
                 json(Json {
                     encodeDefaults = true
                     ignoreUnknownKeys = true
+                    explicitNulls = false
                 })
             }
         }
 
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
+    private val json = Json {
+        prettyPrint = true
+        encodeDefaults = true
+        ignoreUnknownKeys = true
+        //explicitNulls = false
+    }
+
     @Test
     fun `Calling Verifier API with Presentation definition returns valid OIDC4VP Url`() {
         runTest {
-            val result = repo.verify(VerifyRequest())
+            val verifyRequest = VerifyRequest(statusCallbackUri = "https://pis.healthwallet.li/vp/status")
+            println(json.encodeToString(VerifyRequest.serializer(), verifyRequest))
+            val result = repo.verify(verifyRequest)
+
             val url = result.getOrElse {
-                fail("No Url in result, ${it}")
+                fail("No Url in result, $it")
             }
             printUrl(url)
         }

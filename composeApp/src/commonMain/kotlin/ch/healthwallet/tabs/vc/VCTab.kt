@@ -4,7 +4,8 @@ package ch.healthwallet.tabs.vc
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+
+import androidx.compose.material.icons.outlined.QrCode2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -18,8 +19,8 @@ object VCTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "VC"
-            val icon = rememberVectorPainter(Icons.Default.Home)
+            val title = "QR"
+            val icon = rememberVectorPainter(Icons.Outlined.QrCode2)
 
             return remember {
                 TabOptions(

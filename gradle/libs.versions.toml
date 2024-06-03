@@ -10,11 +10,11 @@ androidx-core-ktx = "1.12.0"
 androidx-espresso-core = "3.5.1"
 androidx-material = "1.11.0"
 androidx-test-junit = "1.1.5"
-compose = "1.6.2"
-compose-plugin = "1.6.0"
+compose = "1.6.7"
+compose-plugin = "1.6.2"
 junit = "4.13.2"
 junit5 = "5.10.1"
-kotlin = "1.9.22"
+kotlin = "1.9.23"
 ktor = "2.3.9"
 logback = "1.5.3"
 kotlinx-serialization = "1.6.3"
@@ -31,6 +31,7 @@ h2 = "2.2.224"
 pg-jdbc = "42.7.3"
 kotlinx-datetime = "0.6.0"
 qrcode-kotlin = "4.1.1"
+xmlutil = "0.86.3"
 
 
 [libraries]
@@ -60,7 +61,6 @@ ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negoti
 ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor" }
 ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-ktor-serialization-kotlinx-json-jmv = { module = "io.ktor:ktor-serialization-kotlinx-json-jvm", version.ref = "ktor" }
 ktor-swagger-ui = { module = "io.github.smiley4:ktor-swagger-ui", version.ref = "swagger-ui" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
 waltid-verifiable-credentials = { module = "id.walt.credentials:waltid-verifiable-credentials", version.ref = "waltid" }
@@ -93,6 +93,9 @@ h2-database = { module = "com.h2database:h2", version.ref = "h2" }
 postgres-jdbc = { module = "org.postgresql:postgresql", version.ref = "pg-jdbc"}
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime"}
 qrcode-kotlin = { module = "io.github.g0dkar:qrcode-kotlin", version.ref = "qrcode-kotlin"}
+xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core", version.ref = "xmlutil"}
+xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil"}
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
