@@ -9,6 +9,7 @@ version = "1.0.0"
 application {
     mainClass.set("ch.healthwallet.web.ApplicationKt")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=${extra["development"] ?: "false"}")
+    copySpec().from("src/main/resources").into("lib")
 }
 
 dependencies {
@@ -43,6 +44,7 @@ dependencies {
     implementation(libs.qrcode.kotlin)
     implementation(libs.xmlutil.core)
     implementation(libs.xmlutil.serialization)
+    implementation(libs.mssql.jdbc)
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)
     testImplementation(libs.junit.jupiter.api)

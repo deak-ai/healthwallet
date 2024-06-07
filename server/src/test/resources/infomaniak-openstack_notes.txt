@@ -1,0 +1,45 @@
+https://docs.infomaniak.cloud/documentation/00.getting-started/02.Connect_project/
+
+$ openstack keypair create --public-key ~/.ssh/my.pub my-keypair
+
+$ openstack server create --image "Ubuntu 22.04 LTS Jammy Jellyfish" --flavor a8-ram16-disk20-perf1 --key-name my-keypair --network ext-net1 healthwallet-poc-server
+
+$ openstack server show healthwallet-poc-server
+
+$ openstack security group rule create --ingress --protocol tcp --dst-port 22 --ethertype IPv4 --remote-ip xxx.xxx.xxx.xxx/32 default
+
+$ ssh -i ~/.ssh/my ubuntu@yyy.yyy.yyy.yyy
+
+
+ubuntu@healthwallet-poc-server:~$ sudo apt-get update
+
+$ sudo apt-get upgrade
+
+
+https://docs.docker.com/engine/install/ubuntu/
+
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+
+
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+https://docs.docker.com/engine/install/linux-postinstall/
+
+sudo cloudflared service uninstall
+
+curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb &&
+
+sudo dpkg -i cloudflared.deb &&
+
+sudo cloudflared service install <key>>

@@ -32,6 +32,7 @@ pg-jdbc = "42.7.3"
 kotlinx-datetime = "0.6.0"
 qrcode-kotlin = "4.1.1"
 xmlutil = "0.86.3"
+mssql = "12.6.2.jre11"
 
 
 [libraries]
@@ -95,6 +96,7 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 qrcode-kotlin = { module = "io.github.g0dkar:qrcode-kotlin", version.ref = "qrcode-kotlin"}
 xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core", version.ref = "xmlutil"}
 xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil"}
+mssql-jdbc = { module = "com.microsoft.sqlserver:mssql-jdbc", version.ref = "mssql"}
 
 
 [plugins]

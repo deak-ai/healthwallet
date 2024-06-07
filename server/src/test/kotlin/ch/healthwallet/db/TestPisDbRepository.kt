@@ -81,25 +81,7 @@ class TestPisDbRepository {
     @Test
     @Order(1)
     fun `load and check static data`() {
-        val fileContent = File("src/main/resources/refdata/Articles_ALL_ALL_20240429170557.xml").readText()
-        val article: Article = XML.decodeFromString(Article.serializer(), fileContent)
-
-        // Insert data into the database
-        transaction {
-            article.items.forEach { item ->
-                MedicamentRefDataDAO.new {
-                    dt = item.date
-                    atype = item.atype
-                    gtin = item.gtin
-                    swmcAuthnr = item.swmcAuthnr
-                    nameDe = item.nameDe
-                    nameFr = item.nameFr
-                    atc = item.atc
-                    authHolderName = item.authHolderName
-                    authHolderGln = item.authHolderGln
-                }
-            }
-        }
+        initializeMedicamentsRefDataTable("src/main/resources/refdata/Articles_ALL_ALL_20240429170557.xml")
 
         transaction {
             MedicamentRefDataDAO.all().forEach {
@@ -108,6 +90,8 @@ class TestPisDbRepository {
         }
 
     }
+
+
 
     private fun createAndCheck(patient: PatientDTO,
                                systemIdValue: String?,

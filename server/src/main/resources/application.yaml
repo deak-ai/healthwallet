@@ -12,6 +12,7 @@ db:
   driver: "org.h2.Driver"
   user: "nouser"
   password: "nopassword"
+  medrefdata: "$DB_MEDREFDATA:server/src/main/resources/refdata/Articles_ALL_ALL_20240429170557.xml"
 
 
 
