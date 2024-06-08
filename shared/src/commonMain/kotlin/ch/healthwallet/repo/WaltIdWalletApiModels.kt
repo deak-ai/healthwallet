@@ -71,7 +71,7 @@ data class CredentialsQuery(
 )
 
 @Serializable
-data class VerifiedCredential(
+data class VerifiableCredential(
     @SerialName("id")
     val credentialId: String,
     @SerialName("wallet")

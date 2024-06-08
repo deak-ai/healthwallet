@@ -2,27 +2,26 @@ package ch.healthwallet.tabs.vc
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import ch.healthwallet.data.chmed16a.MedicamentRefDataDTO
+import ch.healthwallet.data.chmed16a.extractMedicamentId
 import ch.healthwallet.repo.CredentialRequest
 import ch.healthwallet.repo.OfferRequest
-import ch.healthwallet.repo.PisServerRepository
 import ch.healthwallet.repo.UsePresentationRequest
-import ch.healthwallet.repo.VerifiedCredential
+import ch.healthwallet.repo.VerifiableCredential
 import ch.healthwallet.repo.WalletList
 import ch.healthwallet.repo.WaltIdWalletRepository
+import ch.healthwallet.util.RefDataCache
 import io.ktor.http.Parameters
 import io.ktor.http.Url
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 
 private const val QR_ERROR = "QR Code is not a valid OpenID Credential Offer or Presentation"
 
 class VCScreenModel(
     private val waltIdWalletRepo: WaltIdWalletRepository,
-    private val pisServerRepo: PisServerRepository
+    private val refDataCache: RefDataCache
 ):ScreenModel {
 
     private val _state = MutableStateFlow<VCScanState>(VCScanState.Initial)
@@ -34,14 +33,8 @@ class VCScreenModel(
             is VCEvent.QrCodeScanned -> handleQrCodeScanned(event.qrCode)
             is VCEvent.ScanError -> handleError(event.message)
             is VCEvent.Reset -> reset()
-
-            // verifiable credential import events (receiving prescriptions)
-            is VCEvent.UseCredentialOffer -> confirmOffer(event.offer)
             is VCEvent.AcceptCredential -> acceptCredential(event.credentialRequest)
             is VCEvent.RejectCredential -> rejectCredential(event.credentialRequest)
-
-            // verifiable presentation events (showing prescriptions)
-            is VCEvent.SelectCredential -> selectCredential(event.verifyUrl)
         }
     }
 
@@ -52,47 +45,6 @@ class VCScreenModel(
         return walletId
     }
 
-    private fun selectCredential( verifyUrl: String) {
-        screenModelScope.launch {
-            
-            try {
-            
-                val walletId = getWalletId()
-                val result = waltIdWalletRepo.resolvePresentationRequest(
-                     walletId, Url(verifyUrl))
-                
-                val url = result.getOrThrow()
-                
-                val pd = url.parameters["presentation_definition"]
-                    ?:throw IllegalStateException("No presentation definition")
-                
-                // passing string version of presentation definition directly
-                val vcResult = waltIdWalletRepo.matchCredentials(walletId, pd)
-                
-                val credentials = vcResult.getOrThrow()
-                
-                // using first matching credential
-                // TODO: provide selection choice to user
-                val useRequest = UsePresentationRequest(
-                    presentationRequest = url.toString(),
-                    selectedCredentials = listOf(credentials.first().credentialId)
-                )
-                val useResult = waltIdWalletRepo.usePresentationRequest(walletId, useRequest)
-                val claimedCredentials = useResult.getOrThrow()
-                println(claimedCredentials)
-
-                _state.value = VCScanState.PresentationCompleted
-
-                
-             } catch (t: Throwable) {
-                val
-                        message = "Failed to present prescription VC: $t"
-                println(message)
-                _state.value = VCScanState.Error(message)
-            }
-
-        }
-    }
 
 
     private fun handleError(message: String) {
@@ -117,8 +69,8 @@ class VCScreenModel(
                 println("Checking QR code")
                 val qrType = getQrCodeType(qrCode)
                 when (qrType) {
-                    QRType.VC -> _state.value = VCScanState.ImportPrescriptionAsPending(qrCode)
-                    QRType.VP -> _state.value = VCScanState.ProcessPresentationRequest(qrCode)
+                    QRType.VC -> confirmOffer(qrCode)
+                    QRType.VP -> selectCredential(qrCode)
                 }
             } catch (e: IllegalArgumentException) {
                 _state.value = VCScanState.Error(e.message ?: QR_ERROR)
@@ -126,56 +78,105 @@ class VCScreenModel(
         }
     }
 
-    private fun confirmOffer(offer: String) {
+
+    fun onPrescriptionSelected(ps: PrescriptionSelection) {
         screenModelScope.launch {
-            _state.value = VCScanState.Processing
-            try {
-                println("Obtaining prescription...")
-
-                waltIdWalletRepo.login().getOrThrow()
-
-                val (_, wallets) = waltIdWalletRepo.getWallets().getOrThrow()
-                val walletId = wallets.first().id
-
-                println("Found walletid $walletId")
-
-                val did = waltIdWalletRepo.getDids(walletId).getOrThrow().
-                    firstOrNull { it.default }?.did
-                        ?: throw Exception("No default DID found")
-
-                println("Got default DID: $did")
-
-                val offerRequest = OfferRequest(did, walletId, offer)
-
-                println("Building offer request: $offerRequest")
-                val vc: VerifiedCredential = waltIdWalletRepo.useOfferRequest(offerRequest).getOrThrow()
-                    .first()
-                val credentialId = vc.credentialId
-
-                val gtin = extractMedicamentId(vc)
-                val medRefData = gtin?.let {
-                    pisServerRepo.findMedicamentRefDataByGTIN(gtin).getOrThrow()
-                } ?: throw IllegalStateException("No medicament id found")
-
-                println("Obtained prescription")
-
-                _state.value = VCScanState.AcceptPrescription(medRefData,
-                    CredentialRequest(walletId, credentialId))
-
-            } catch (e: Exception) {
-                _state.value = VCScanState.Error(e.message ?: "Processing Error")
-            }
+            val useRequest = UsePresentationRequest(
+                presentationRequest = ps.url.toString(),
+                selectedCredentials = listOf(ps.credentialId)
+            )
+            val useResult = waltIdWalletRepo.usePresentationRequest(ps.walletId, useRequest)
+            val claimedCredentials = useResult.getOrThrow()
+            println(claimedCredentials)
+            _state.value = VCScanState.PresentationCompleted
         }
     }
 
-    private fun extractMedicamentId(vc: VerifiedCredential):String? {
-        return vc.parsedDocument["credentialSubject"]?.jsonObject
-            ?.get("prescription")?.jsonObject
-            ?.get("Medicaments")?.jsonArray
-            ?.get(0)?.jsonObject
-            ?.get("Id")?.jsonPrimitive
-            ?.content
+    data class PrescriptionSelection(
+        val walletId: String,
+        val credentialId: String,
+        val url: Url,
+        val medicament: MedicamentRefDataDTO
+    )
+
+    private suspend fun selectCredential(verifyUrl: String) {
+        try {
+            val walletId = getWalletId()
+            val result = waltIdWalletRepo.resolvePresentationRequest(
+                walletId, Url(verifyUrl))
+
+            val url = result.getOrThrow()
+
+            val pd = url.parameters["presentation_definition"]
+                ?:throw IllegalStateException("No presentation definition")
+
+            // passing string version of presentation definition directly
+            val vcResult = waltIdWalletRepo.matchCredentials(walletId, pd)
+
+            val credentials = vcResult.getOrThrow()
+
+            val medis = credentials.map {
+                PrescriptionSelection(
+                    walletId,
+                    it.credentialId,
+                    url,
+                    refDataCache.get(
+                        extractMedicamentId(it)
+                        ?: throw IllegalStateException("No medicament id found")
+                ))
+            }
+
+            _state.value = VCScanState.SelectCredential(medis)
+
+        } catch (t: Throwable) {
+            val message = "Failed to present prescription VC: $t"
+            println(message)
+            _state.value = VCScanState.Error(message)
+        }
     }
+
+
+    private suspend fun confirmOffer(offer: String) {
+        _state.value = VCScanState.Processing
+        try {
+            println("Obtaining prescription...")
+
+            waltIdWalletRepo.login().getOrThrow()
+
+            val (_, wallets) = waltIdWalletRepo.getWallets().getOrThrow()
+            val walletId = wallets.first().id
+
+            println("Found walletid $walletId")
+
+            val did = waltIdWalletRepo.getDids(walletId).getOrThrow().
+                firstOrNull { it.default }?.did
+                    ?: throw Exception("No default DID found")
+
+            println("Got default DID: $did")
+
+            val offerRequest = OfferRequest(did, walletId, offer)
+
+            println("Building offer request: $offerRequest")
+            val vc: VerifiableCredential = waltIdWalletRepo.useOfferRequest(offerRequest).getOrThrow()
+                .first()
+            val credentialId = vc.credentialId
+
+            val gtin = extractMedicamentId(vc)
+            val medRefData = gtin?.let {
+                refDataCache.get(gtin)
+            } ?: throw IllegalStateException("No medicament id found")
+
+            println("Obtained prescription")
+
+            _state.value = VCScanState.AcceptPrescription(medRefData,
+                CredentialRequest(walletId, credentialId))
+
+        } catch (e: Exception) {
+            _state.value = VCScanState.Error(e.message ?: "Processing Error")
+        }
+
+    }
+
 
     private fun acceptCredential(credentialRequest: CredentialRequest) {
         screenModelScope.launch {

@@ -106,7 +106,7 @@ class WaltIdWalletRepositoryImpl(
     }
 
     override suspend fun queryCredentials(credentialsQuery: CredentialsQuery):
-            Result<List<VerifiedCredential>> {
+            Result<List<VerifiableCredential>> {
         return try {
             val baseUrl = prefsFlow.value.waltIdWalletApi
             val response: HttpResponse = httpClient.get(
@@ -117,14 +117,14 @@ class WaltIdWalletRepositoryImpl(
                 parameter("sortBy", credentialsQuery.sortBy)
                 parameter("descending", credentialsQuery.sortDescending)
             }
-            Result.success(response.body<List<VerifiedCredential>>())
+            Result.success(response.body<List<VerifiableCredential>>())
         } catch (t: Throwable) {
             Result.failure(t)
         }
     }
 
     override suspend fun getCredential(credentialRequest: CredentialRequest):
-            Result<VerifiedCredential> {
+            Result<VerifiableCredential> {
         return try {
             val baseUrl = prefsFlow.value.waltIdWalletApi
             val response: HttpResponse = httpClient.get(
@@ -132,13 +132,13 @@ class WaltIdWalletRepositoryImpl(
                         "/credentials/${credentialRequest.credentialId}") {
                 expectSuccess = true
             }
-            Result.success(response.body<VerifiedCredential>())
+            Result.success(response.body<VerifiableCredential>())
         } catch (t: Throwable) {
             Result.failure(t)
         }
     }
 
-    override suspend fun useOfferRequest(offerRequest: OfferRequest): Result<List<VerifiedCredential>> {
+    override suspend fun useOfferRequest(offerRequest: OfferRequest): Result<List<VerifiableCredential>> {
         return try {
             val baseUrl = prefsFlow.value.waltIdWalletApi
             val response: HttpResponse = httpClient.post(
@@ -149,7 +149,7 @@ class WaltIdWalletRepositoryImpl(
                     setBody(offerRequest.credentialOffer)
                     expectSuccess = true
                 }
-            Result.success(response.body<List<VerifiedCredential>>())
+            Result.success(response.body<List<VerifiableCredential>>())
         } catch (t: Throwable) {
             Result.failure(t)
         }
@@ -205,7 +205,7 @@ class WaltIdWalletRepositoryImpl(
     override suspend fun matchCredentials(
         walletId: String,
         presentationFilter: PresentationFilter
-    ): Result<List<VerifiedCredential>> {
+    ): Result<List<VerifiableCredential>> {
 
         return try {
             matchCredentials(walletId,presentationFilter.serialize())
@@ -217,7 +217,7 @@ class WaltIdWalletRepositoryImpl(
     override suspend fun matchCredentials(
         walletId: String,
         presentationFilter: String
-    ): Result<List<VerifiedCredential>> {
+    ): Result<List<VerifiableCredential>> {
         return try {
             val baseUrl = prefsFlow.value.waltIdWalletApi
             val response = httpClient.post("$baseUrl/wallet-api/wallet/$walletId" +
@@ -226,7 +226,7 @@ class WaltIdWalletRepositoryImpl(
                 setBody(presentationFilter)
                 expectSuccess = true
             }
-            Result.success(response.body<List<VerifiedCredential>>())
+            Result.success(response.body<List<VerifiableCredential>>())
         } catch (t: Throwable) {
             Result.failure(t)
         }

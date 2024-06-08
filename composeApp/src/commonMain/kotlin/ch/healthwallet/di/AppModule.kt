@@ -9,6 +9,7 @@ import ch.healthwallet.tabs.home.HomeScreenModel
 import ch.healthwallet.tabs.settings.WalletSettingsScreen
 import ch.healthwallet.tabs.settings.WalletSettingsScreenModel
 import ch.healthwallet.tabs.vc.VCScreenModel
+import ch.healthwallet.util.RefDataCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.serialization.kotlinx.json.json
@@ -32,9 +33,9 @@ val appModule = module {
     }
 
     single<WaltIdWalletRepository> { WaltIdWalletRepositoryImpl(get(), get<AppPrefsRepository>().appPrefs) }
-    //single<WaltIdIssuerRepository> { WaltIdIssuerRepositoryImpl(get(), get<AppPrefsRepository>().appPrefs) }
     single<PisServerRepository> { PisServerRepositoryImpl(get(), get<AppPrefsRepository>().appPrefs) }
 
+    singleOf(::RefDataCache)
     singleOf(::HomeScreenModel)
     singleOf(::WalletSettingsScreenModel)
     factoryOf(::WalletSettingsScreen)

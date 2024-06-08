@@ -1,5 +1,5 @@
 
-package ch.healthwallet.dialogs
+package ch.healthwallet.comps
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

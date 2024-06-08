@@ -3,21 +3,26 @@ package ch.healthwallet.tabs.vc
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +43,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import ch.healthwallet.comps.VcTile
 import ch.healthwallet.tabs.home.HomeTab
 import org.koin.compose.koinInject
 
@@ -54,9 +60,7 @@ class VCScreen : Screen {
             is VCScanState.Processing -> ProcessingScreen()
 
             // credential offer states
-            is VCScanState.ImportPrescriptionAsPending ->
-                vcScreenModel.handleEvent(VCEvent.UseCredentialOffer((state as VCScanState.ImportPrescriptionAsPending).credentialOfferUrl))
-            is VCScanState.AcceptPrescription -> ConfirmationDialog(
+             is VCScanState.AcceptPrescription -> ConfirmationDialog(
                 title = "Import Prescription?",
                 message = (state as VCScanState.AcceptPrescription).medRefData.nameDe,
                 onAccept = { vcScreenModel.handleEvent(VCEvent.AcceptCredential((state as VCScanState.AcceptPrescription).credentialRequest)) },
@@ -72,12 +76,9 @@ class VCScreen : Screen {
             }
 
             // presentation states
-            is VCScanState.ProcessPresentationRequest -> ConfirmationDialog(
-                title = "Show Prescription?",
-                message = "Details: "+ (state as VCScanState.ProcessPresentationRequest).verifyUrl,
-                onAccept = { vcScreenModel.handleEvent(VCEvent.SelectCredential((state as VCScanState.ProcessPresentationRequest).verifyUrl)) },
-                onReject = { vcScreenModel.handleEvent(VCEvent.Reset) }
-            )
+            is VCScanState.SelectCredential -> SelectCredentialScreen(
+                (state as VCScanState.SelectCredential).prescriptions
+            ) { ps -> vcScreenModel.onPrescriptionSelected(ps) }
 
             is VCScanState.PresentationCompleted -> {
                 // Switch to Home tab
@@ -87,6 +88,28 @@ class VCScreen : Screen {
                 }
             }
 
+        }
+    }
+
+
+
+    @Composable
+    fun SelectCredentialScreen(
+        prescriptions: List<VCScreenModel.PrescriptionSelection>,
+        onPrescriptionSelected: (VCScreenModel.PrescriptionSelection) -> Unit
+    ) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(prescriptions) { ps ->
+                Text(
+                    text = ps.medicament.nameDe,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onPrescriptionSelected(ps) }
+                        .padding(16.dp)
+                )
+                //VcTile(ps.medicament)
+            }
         }
     }
 

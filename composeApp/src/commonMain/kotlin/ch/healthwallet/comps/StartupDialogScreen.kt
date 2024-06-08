@@ -1,4 +1,4 @@
-package ch.healthwallet.dialogs
+package ch.healthwallet.comps
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
