@@ -1,6 +1,7 @@
 package ch.healthwallet.repo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
@@ -101,7 +102,70 @@ data class RejectNote(
     val note: String,
 )
 
+@Serializable
+data class PresentationFilter(
+    @SerialName("input_descriptors")
+    val inputDescriptors: List<InputDescriptor> = listOf(InputDescriptor())
+)
 
+private val json = Json {
+    encodeDefaults = true
+}
+
+fun PresentationFilter.serialize(): String =
+    json.encodeToString(PresentationFilter.serializer(), this)
+
+
+@Serializable
+data class InputDescriptor(
+    val id: String = AppPrefs.DEFAULT_VC_NAME,
+    val format: Format = Format(),
+    val constraints: Constraints = Constraints()
+)
+
+@Serializable
+data class Format(
+    @SerialName("jwt_vc_json")
+    val jwtVcJson: JwtVcJson = JwtVcJson()
+)
+
+@Serializable
+data class JwtVcJson(
+    val alg: List<String> = listOf("EdDSA")
+)
+
+@Serializable
+data class Constraints(
+    val fields: List<Field> = listOf(Field())
+)
+
+
+@Serializable
+data class Field(
+    val path: List<String> = listOf("$.type"),
+    val filter: Filter = Filter()
+)
+
+@Serializable
+data class Filter(
+    val type: String = "string",
+    val pattern: String = AppPrefs.DEFAULT_VC_NAME
+)
+
+
+@Serializable
+data class UsePresentationRequest(
+    val presentationRequest: String,
+    val selectedCredentials: List<String>,
+    val disclosures: Disclosures? = null
+)
+
+@Serializable
+data class Disclosures(
+    val additionalProp1: List<String>,
+    val additionalProp2: List<String>,
+    val additionalProp3: List<String>
+)
 
 
 

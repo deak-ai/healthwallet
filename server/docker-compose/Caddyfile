@@ -1,0 +1,40 @@
+{
+	auto_https off
+	admin off
+}
+
+# Wallet API
+:{$WALLET_BACKEND_PORT} {
+    reverse_proxy http://wallet-api:{$WALLET_BACKEND_PORT}
+}
+
+# Issuer API
+:{$ISSUER_API_PORT} {
+    reverse_proxy http://issuer-api:{$ISSUER_API_PORT}
+}
+
+# Verifier API
+:{$VERIFIER_API_PORT} {
+    reverse_proxy http://verifier-api:{$VERIFIER_API_PORT}
+}
+
+# Web Wallet Frontend
+:{$WALLET_FRONTEND_PORT} {
+    reverse_proxy http://waltid-web-wallet:{$WALLET_FRONTEND_PORT} # frontend
+    reverse_proxy /wallet-api/* http://wallet-api:{$WALLET_BACKEND_PORT} # backend
+}
+
+# Web Portal
+:{$WEB_PORTAL_PORT} {
+    reverse_proxy http://web-portal:{$WEB_PORTAL_PORT}
+}
+
+# VC Repo
+:{$VC_REPO_PORT} {
+    reverse_proxy http://vc-repo:{$VC_REPO_PORT}
+}
+
+# VC Repo
+:{$HEALTHWALLET_PIS_PORT} {
+    reverse_proxy http://healthwallet-pis:{$HEALTHWALLET_PIS_PORT}
+}

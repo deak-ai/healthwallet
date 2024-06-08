@@ -1,5 +1,6 @@
 package ch.healthwallet.db
 
+import ch.healthwallet.data.chmed16a.MedicamentRefDataDTO
 import ch.healthwallet.data.chmed16a.MedicationDTO
 import ch.healthwallet.data.chmed16a.PatientDTO
 import ch.healthwallet.data.chmed16a.PatientIdDTO
@@ -135,6 +136,21 @@ class PisDbRepositoryImpl() :PisDbRepository {
             val medication: MedicationDAO? =
                 MedicationDAO.find { MedicationsTable.medId eq medicationId }.singleOrNull()
             medication?.toDTO()
+        }
+    }
+
+    override fun findMedicamentRefDataBySubstring(substring: String): List<MedicamentRefDataDTO> {
+        return transaction {
+            MedicamentRefDataDAO.find { MedicamentsRefDataTable.nameDe like "%$substring%" }
+                .map { it.toDTO() }
+        }
+    }
+
+    override fun findMedicamentRefDataByGTIN(gtin: String): MedicamentRefDataDTO? {
+        return transaction {
+            MedicamentRefDataDAO.find { MedicamentsRefDataTable.gtin eq gtin }
+                .map { it.toDTO() }
+                .singleOrNull()
         }
     }
 

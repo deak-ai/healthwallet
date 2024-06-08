@@ -6,8 +6,10 @@ ktor:
       - ch.healthwallet.web.ApplicationKt.module
 services:
   issuer: "https://issuer.healthwallet.li"
+  verifier: "https://verifier.healthwallet.li"
 db:
-  url: "jdbc:postgresql://localhost:5432/healthssi_pis"
-  driver: "org.postgresql.Driver"
+  url: "$DB_URL:jdbc:postgresql://localhost:5432/healthssi_pis"
+  driver: "$DB_DRIVER:org.postgresql.Driver"
   user: "$DB_USER"
   password: "$DB_PASSWORD"
+  medrefdata: "$DB_MEDREFDATA:server/src/main/resources/refdata/Articles_ALL_ALL_20240429170557.xml"
