@@ -54,17 +54,13 @@ class VCScreen : Screen {
             is VCScanState.Processing -> ProcessingScreen()
 
             // credential offer states
-            is VCScanState.ImportCredentialAsPending -> ConfirmationDialog(
-                title = "Check Prescription Offer?",
-                message = "Details: " + (state as VCScanState.ImportCredentialAsPending).credentialOfferUrl,
-                onAccept = { vcScreenModel.handleEvent(VCEvent.UseCredentialOffer((state as VCScanState.ImportCredentialAsPending).credentialOfferUrl)) },
-                onReject = { vcScreenModel.handleEvent(VCEvent.Reset) }
-            )
-            is VCScanState.AcceptCredential -> ConfirmationDialog(
+            is VCScanState.ImportPrescriptionAsPending ->
+                vcScreenModel.handleEvent(VCEvent.UseCredentialOffer((state as VCScanState.ImportPrescriptionAsPending).credentialOfferUrl))
+            is VCScanState.AcceptPrescription -> ConfirmationDialog(
                 title = "Import Prescription?",
-                message = "Details: "+ (state as VCScanState.AcceptCredential).credentialRequest,
-                onAccept = { vcScreenModel.handleEvent(VCEvent.AcceptCredential((state as VCScanState.AcceptCredential).credentialRequest)) },
-                onReject = { vcScreenModel.handleEvent(VCEvent.RejectCredential((state as VCScanState.AcceptCredential).credentialRequest)) }
+                message = (state as VCScanState.AcceptPrescription).medRefData.nameDe,
+                onAccept = { vcScreenModel.handleEvent(VCEvent.AcceptCredential((state as VCScanState.AcceptPrescription).credentialRequest)) },
+                onReject = { vcScreenModel.handleEvent(VCEvent.RejectCredential((state as VCScanState.AcceptPrescription).credentialRequest)) }
             )
             is VCScanState.Error -> ErrorScreen((state as VCScanState.Error).message) { vcScreenModel.handleEvent(VCEvent.Reset) }
             is VCScanState.CredentialImported -> {
@@ -77,7 +73,7 @@ class VCScreen : Screen {
 
             // presentation states
             is VCScanState.ProcessPresentationRequest -> ConfirmationDialog(
-                title = "Import Prescription?",
+                title = "Show Prescription?",
                 message = "Details: "+ (state as VCScanState.ProcessPresentationRequest).verifyUrl,
                 onAccept = { vcScreenModel.handleEvent(VCEvent.SelectCredential((state as VCScanState.ProcessPresentationRequest).verifyUrl)) },
                 onReject = { vcScreenModel.handleEvent(VCEvent.Reset) }

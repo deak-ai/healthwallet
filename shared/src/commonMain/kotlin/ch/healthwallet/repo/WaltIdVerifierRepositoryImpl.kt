@@ -15,12 +15,12 @@ import kotlin.Result
 
 class WaltIdVerifierRepositoryImpl(
     private val httpClient: HttpClient,
-    private val prefsFlow : StateFlow<WaltIdPrefs>
+    private val prefsFlow : StateFlow<AppPrefs>
 ):WaltIdVerifierRepository {
     override suspend fun verify(verifyRequest: VerifyRequest): Result<Url> {
         return try {
             val appPrefs = prefsFlow.value
-            val baseUrl = appPrefs.waltIdWalletApi
+            val baseUrl = appPrefs.waltIdVerifierApi
             val response: HttpResponse = httpClient.post(
                 "$baseUrl/openid4vc/verify") {
                 contentType(ContentType.Application.Json)

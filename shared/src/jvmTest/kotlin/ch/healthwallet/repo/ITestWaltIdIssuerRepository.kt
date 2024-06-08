@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -21,7 +20,7 @@ class ITestWaltIdIssuerRepository {
     companion object {
         val repo: WaltIdIssuerRepository = WaltIdIssuerRepositoryImpl(
             createHttpClient(),
-            MutableStateFlow(WaltIdPrefs(waltIdWalletApi = "https://issuer.healthwallet.li")).asStateFlow()
+            MutableStateFlow(AppPrefs()).asStateFlow()
         )
 
         private fun createHttpClient() = HttpClient() {

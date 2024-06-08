@@ -16,7 +16,7 @@ import kotlin.Result
 
 class WaltIdWalletRepositoryImpl(
     private val httpClient: HttpClient,
-    private val prefsFlow : StateFlow<WaltIdPrefs>
+    private val prefsFlow : StateFlow<AppPrefs>
 ): WaltIdWalletRepository {
 
     override suspend fun login(): Result<LoginResponse> {

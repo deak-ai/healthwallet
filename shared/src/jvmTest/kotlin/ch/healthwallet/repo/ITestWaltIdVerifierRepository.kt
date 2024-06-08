@@ -23,7 +23,7 @@ class ITestWaltIdVerifierRepository {
         val repo: WaltIdVerifierRepository = WaltIdVerifierRepositoryImpl(
             createHttpClient(),
             MutableStateFlow(
-                WaltIdPrefs(waltIdWalletApi = "https://verifier.healthwallet.li")).asStateFlow()
+                AppPrefs()).asStateFlow()
         )
 
         @OptIn(ExperimentalSerializationApi::class)

@@ -5,7 +5,6 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
@@ -27,13 +26,13 @@ class ITestCredentialOfferFlow {
         }
 
         val walletRepo: WaltIdWalletRepository = WaltIdWalletRepositoryImpl(
-            httpClient, MutableStateFlow(ITestWaltIdWalletRepository.waltIdPrefs.value.
-            copy(waltIdWalletApi = "https://wallet.healthwallet.li"))
+            httpClient, MutableStateFlow(ITestWaltIdWalletRepository.appPrefs.value.
+            copy())
         )
 
         val issuerRepo: WaltIdIssuerRepository = WaltIdIssuerRepositoryImpl(
-            httpClient,MutableStateFlow(ITestWaltIdWalletRepository.waltIdPrefs.value.
-            copy(waltIdWalletApi = "https://issuer.healthwallet.li"))
+            httpClient,MutableStateFlow(ITestWaltIdWalletRepository.appPrefs.value.
+            copy())
         )
 
 
@@ -101,14 +100,19 @@ class ITestCredentialOfferFlow {
         val credentialOffer = issueResult.getOrThrow()
 
         // import credential offer into wallet as pending
-        val credentialId = walletRepo.useOfferRequest(
+        val vc = walletRepo.useOfferRequest(
             OfferRequest(
                 did = did, walletId = walletId,
                 credentialOffer = credentialOffer, acceptPending = pending
             )
         ).getOrElse {
             fail(it.message)
-        }.firstOrNull()?.credentialId ?: fail("No credential found")
+        }.firstOrNull()
+        val credentialId = vc?.credentialId ?: fail("No credential found")
+
+
+        println(vc)
+
         return Pair(walletId, credentialId)
     }
 

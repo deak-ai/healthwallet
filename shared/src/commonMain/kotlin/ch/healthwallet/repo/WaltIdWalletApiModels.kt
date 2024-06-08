@@ -118,7 +118,7 @@ fun PresentationFilter.serialize(): String =
 
 @Serializable
 data class InputDescriptor(
-    val id: String = WaltIdPrefs.DEFAULT_VC_NAME,
+    val id: String = AppPrefs.DEFAULT_VC_NAME,
     val format: Format = Format(),
     val constraints: Constraints = Constraints()
 )
@@ -149,7 +149,7 @@ data class Field(
 @Serializable
 data class Filter(
     val type: String = "string",
-    val pattern: String = WaltIdPrefs.DEFAULT_VC_NAME
+    val pattern: String = AppPrefs.DEFAULT_VC_NAME
 )
 
 

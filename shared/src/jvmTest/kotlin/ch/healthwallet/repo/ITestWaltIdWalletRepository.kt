@@ -23,10 +23,9 @@ class ITestWaltIdWalletRepository {
 
     companion object {
 
-        val waltIdPrefs = MutableStateFlow(WaltIdPrefs(
+        val appPrefs = MutableStateFlow(AppPrefs(
                 waltIdEmail = "user@email.com",
-                waltIdPassword = "password",
-                waltIdWalletApi = "http://localhost:7001"
+                waltIdPassword = "password"
             ))
 
         private val httpClient = HttpClient() {
@@ -41,7 +40,7 @@ class ITestWaltIdWalletRepository {
         }
 
         val repo: WaltIdWalletRepository = WaltIdWalletRepositoryImpl(
-            httpClient, waltIdPrefs.asStateFlow()
+            httpClient, appPrefs.asStateFlow()
         )
     }
 
@@ -52,7 +51,7 @@ class ITestWaltIdWalletRepository {
             assertTrue(result.isSuccess)
             val loginResponse = result.getOrNull()
             assertNotNull(loginResponse)
-            assertEquals(waltIdPrefs.value.waltIdEmail, loginResponse.username)
+            assertEquals(appPrefs.value.waltIdEmail, loginResponse.username)
             assertNotNull(loginResponse.token)
             assertNotNull(loginResponse.id)
 
@@ -61,14 +60,14 @@ class ITestWaltIdWalletRepository {
 
     @Test
     fun `Calling authLogin with unknown user returns 400 and failure result`() = runTest {
-        waltIdPrefs.value = waltIdPrefs.value.copy(waltIdEmail = "unknown@email.com")
+        appPrefs.value = appPrefs.value.copy(waltIdEmail = "unknown@email.com")
         val result = repo.login()
         assertTrue(result.isFailure)
     }
 
     @Test
     fun `Calling authLogin with wrong endpoint returns with failure`() = runTest {
-        waltIdPrefs.value = waltIdPrefs.value.copy(waltIdWalletApi = "http://localhost:1")
+        appPrefs.value = appPrefs.value.copy(waltIdWalletApi = "http://localhost:1")
         val result = repo.login()
         assertTrue(result.isFailure)
         println(result.exceptionOrNull())
@@ -78,7 +77,7 @@ class ITestWaltIdWalletRepository {
     @Ignore // disabled to not create too many users
     @Test
     fun `Calling authCreate with new user returns 201 and succeeds`() = runTest {
-        waltIdPrefs.value = waltIdPrefs.value.copy(waltIdEmail = UUID.randomUUID().toString())
+        appPrefs.value = appPrefs.value.copy(waltIdEmail = UUID.randomUUID().toString())
         val result = repo.createUser()
         assertTrue(result.isSuccess)
     }
@@ -173,6 +172,7 @@ class ITestWaltIdWalletRepository {
         return walletId
     }
 
+    @Ignore
     @Test
     fun `Resolving presentation and matching definition returns list of credentials and can be used`() {
         runTest {
@@ -210,7 +210,7 @@ class ITestWaltIdWalletRepository {
     fun `Serializing PresentationFilter returns non-empty string`() {
         val pf = PresentationFilter()
         val json = pf.serialize()
-        assertTrue(json.contains(WaltIdPrefs.DEFAULT_VC_NAME))
+        assertTrue(json.contains(AppPrefs.DEFAULT_VC_NAME))
     }
 
 

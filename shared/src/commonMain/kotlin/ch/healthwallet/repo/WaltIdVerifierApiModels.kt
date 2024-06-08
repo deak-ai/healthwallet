@@ -18,7 +18,7 @@ data class VerifyRequest(
 @Serializable
 data class PresentationDefinition(
     @SerialName("request_credentials")
-    val requestCredentials: List<String> = listOf(WaltIdPrefs.DEFAULT_VC_NAME)
+    val requestCredentials: List<String> = listOf(AppPrefs.DEFAULT_VC_NAME)
 )
 
 
