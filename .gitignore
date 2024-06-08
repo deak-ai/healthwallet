@@ -26,3 +26,5 @@ out/
 ### Mac OS ###
 .DS_Store
 
+server/docker-compose/postgres-data
+
