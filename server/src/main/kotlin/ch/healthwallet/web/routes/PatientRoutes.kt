@@ -89,7 +89,7 @@ fun Route.patientRouting() {
                 }
                 body<MedicationDTO>() {
                     description = "Request to create a new medication prescription"
-                    example("Sample edication prescription",
+                    example("Sample medication prescription",
                         MedicationExamples.createMedicationPrescriptionRequest
                     )
                     required = true

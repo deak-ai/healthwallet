@@ -2,7 +2,7 @@ package ch.healthwallet.tabs.home
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import ch.healthwallet.repo.WaltIdPrefs
+import ch.healthwallet.repo.AppPrefs
 import ch.healthwallet.prefs.AppPrefsRepository
 import ch.healthwallet.repo.CredentialsQuery
 import ch.healthwallet.repo.VerifiedCredential
@@ -36,7 +36,7 @@ class HomeScreenModel(
         if (!appPrefsRepo.appPrefs.value.isDefault()) {
             fetchVerifiableCredentials()
         } else {
-            setErrorMessage(WaltIdPrefs.WALLET_SETTINGS_NOT_SET)
+            setErrorMessage(AppPrefs.WALLET_SETTINGS_NOT_SET)
         }
     }
 

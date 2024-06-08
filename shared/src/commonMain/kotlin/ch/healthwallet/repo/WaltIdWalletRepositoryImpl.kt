@@ -9,12 +9,14 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
+import io.ktor.http.Url
 import io.ktor.http.contentType
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.Result
 
 class WaltIdWalletRepositoryImpl(
     private val httpClient: HttpClient,
-    private val prefsFlow : StateFlow<WaltIdPrefs>
+    private val prefsFlow : StateFlow<AppPrefs>
 ): WaltIdWalletRepository {
 
     override suspend fun login(): Result<LoginResponse> {
@@ -177,6 +179,72 @@ class WaltIdWalletRepositoryImpl(
                 expectSuccess = true
             }
             Result.success(true)
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
+
+    override suspend fun resolvePresentationRequest(
+        walletId: String,
+        presentationRequest: Url
+    ): Result<Url> {
+        return try {
+            val baseUrl = prefsFlow.value.waltIdWalletApi
+            val response = httpClient.post("$baseUrl/wallet-api/wallet/$walletId" +
+                    "/exchange/resolvePresentationRequest") {
+                contentType(ContentType.Text.Plain)
+                setBody(presentationRequest.toString())
+                expectSuccess = true
+            }
+            Result.success(Url(response.body<String>()))
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
+
+    override suspend fun matchCredentials(
+        walletId: String,
+        presentationFilter: PresentationFilter
+    ): Result<List<VerifiedCredential>> {
+
+        return try {
+            matchCredentials(walletId,presentationFilter.serialize())
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
+
+    override suspend fun matchCredentials(
+        walletId: String,
+        presentationFilter: String
+    ): Result<List<VerifiedCredential>> {
+        return try {
+            val baseUrl = prefsFlow.value.waltIdWalletApi
+            val response = httpClient.post("$baseUrl/wallet-api/wallet/$walletId" +
+                    "/exchange/matchCredentialsForPresentationDefinition") {
+                contentType(ContentType.Application.Json)
+                setBody(presentationFilter)
+                expectSuccess = true
+            }
+            Result.success(response.body<List<VerifiedCredential>>())
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
+
+    override suspend fun usePresentationRequest(
+        walletId: String,
+        usePresentationRequest: UsePresentationRequest
+    ): Result<String> {
+        return try {
+            val baseUrl = prefsFlow.value.waltIdWalletApi
+            val response = httpClient.post("$baseUrl/wallet-api/wallet/$walletId" +
+                    "/exchange/usePresentationRequest") {
+                contentType(ContentType.Application.Json)
+                setBody(usePresentationRequest)
+                expectSuccess = true
+            }
+            Result.success(response.body<String>())
         } catch (t: Throwable) {
             Result.failure(t)
         }

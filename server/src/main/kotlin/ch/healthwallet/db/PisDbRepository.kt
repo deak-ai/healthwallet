@@ -1,5 +1,6 @@
 package ch.healthwallet.db
 
+import ch.healthwallet.data.chmed16a.MedicamentRefDataDTO
 import ch.healthwallet.data.chmed16a.MedicationDTO
 import ch.healthwallet.data.chmed16a.PatientDTO
 
@@ -10,7 +11,8 @@ interface PisDbRepository {
             PatientIdsTable,
             PatientsTable,
             MedicamentsTable,
-            MedicationsTable
+            MedicationsTable,
+            MedicamentsRefDataTable
         )
     }
 
@@ -27,5 +29,9 @@ interface PisDbRepository {
     fun getMedicationByInternalId(medicationId: Int): MedicationDTO?
 
     fun getMedicationById(medicationId: String): MedicationDTO?
+
+    fun findMedicamentRefDataBySubstring(substring: String): List<MedicamentRefDataDTO>
+
+    fun findMedicamentRefDataByGTIN(gtin: String): MedicamentRefDataDTO?
 
 }

@@ -3,11 +3,14 @@ package ch.healthwallet.repo
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.util.toMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
+import kotlin.Result
 import java.util.UUID
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -20,13 +23,12 @@ class ITestWaltIdWalletRepository {
 
     companion object {
 
-        val waltIdPrefs = MutableStateFlow(WaltIdPrefs(
+        val appPrefs = MutableStateFlow(AppPrefs(
                 waltIdEmail = "user@email.com",
-                waltIdPassword = "password",
-                waltIdWalletApi = "http://localhost:7001"
+                waltIdPassword = "password"
             ))
 
-        val httpClient = HttpClient() {
+        private val httpClient = HttpClient() {
             install(HttpCookies)
             install(ContentNegotiation) {
                 json(Json {
@@ -38,7 +40,7 @@ class ITestWaltIdWalletRepository {
         }
 
         val repo: WaltIdWalletRepository = WaltIdWalletRepositoryImpl(
-            httpClient, waltIdPrefs.asStateFlow()
+            httpClient, appPrefs.asStateFlow()
         )
     }
 
@@ -49,7 +51,7 @@ class ITestWaltIdWalletRepository {
             assertTrue(result.isSuccess)
             val loginResponse = result.getOrNull()
             assertNotNull(loginResponse)
-            assertEquals(waltIdPrefs.value.waltIdEmail, loginResponse.username)
+            assertEquals(appPrefs.value.waltIdEmail, loginResponse.username)
             assertNotNull(loginResponse.token)
             assertNotNull(loginResponse.id)
 
@@ -58,14 +60,14 @@ class ITestWaltIdWalletRepository {
 
     @Test
     fun `Calling authLogin with unknown user returns 400 and failure result`() = runTest {
-        waltIdPrefs.value = waltIdPrefs.value.copy(waltIdEmail = "unknown@email.com")
+        appPrefs.value = appPrefs.value.copy(waltIdEmail = "unknown@email.com")
         val result = repo.login()
         assertTrue(result.isFailure)
     }
 
     @Test
     fun `Calling authLogin with wrong endpoint returns with failure`() = runTest {
-        waltIdPrefs.value = waltIdPrefs.value.copy(waltIdWalletApi = "http://localhost:1")
+        appPrefs.value = appPrefs.value.copy(waltIdWalletApi = "http://localhost:1")
         val result = repo.login()
         assertTrue(result.isFailure)
         println(result.exceptionOrNull())
@@ -75,7 +77,7 @@ class ITestWaltIdWalletRepository {
     @Ignore // disabled to not create too many users
     @Test
     fun `Calling authCreate with new user returns 201 and succeeds`() = runTest {
-        waltIdPrefs.value = waltIdPrefs.value.copy(waltIdEmail = UUID.randomUUID().toString())
+        appPrefs.value = appPrefs.value.copy(waltIdEmail = UUID.randomUUID().toString())
         val result = repo.createUser()
         assertTrue(result.isSuccess)
     }
@@ -122,13 +124,7 @@ class ITestWaltIdWalletRepository {
 
     @Test
     fun `Calling getDids when logged in succeeds and returns list of DIDDetail`() = runTest {
-        repo.login().onFailure {
-            fail(it.message)
-        }
-        val (_, wallets) = repo.getWallets().getOrElse {
-            fail(it.message)
-        }
-        val walletId = wallets.first().id
+        val walletId = getWalletId()
         val result = repo.getDids(walletId)
         assertTrue(result.isSuccess)
         println(result.getOrNull())
@@ -136,11 +132,7 @@ class ITestWaltIdWalletRepository {
 
     @Test
     fun `Calling queryCredentials returns parsed list of verified credentials`() = runTest {
-        val login = repo.login()
-        println(login.getOrThrow())
-        val wallets: Result<WalletList> = repo.getWallets()
-        val walletId = wallets.getOrElse {
-            fail("No walletId found") }.wallets.first().id
+        val walletId = getWalletId()
 
         val result = repo.queryCredentials(CredentialsQuery(walletId = walletId))
         println(result.getOrNull())
@@ -148,28 +140,86 @@ class ITestWaltIdWalletRepository {
     }
 
     @Test
-    fun `Calling getCredential with valid parameters returns verified credential`() = runTest {
+    fun `Calling getCredential with valid parameters returns verified credential`() {
+        runTest {
+            val walletId = getWalletId()
+            val credentials = repo.queryCredentials(CredentialsQuery(walletId = walletId))
+                .getOrElse { fail("Unable to find credentials") }
+
+            if (credentials.isNotEmpty()) {
+                val firstCredential = credentials.first()
+                val credentialId = firstCredential.credentialId
+
+                val result = repo.getCredential(CredentialRequest(walletId, credentialId))
+                assertTrue(result.isSuccess)
+                val queriedCredential = result.getOrElse {
+                    fail("No verified credential result")
+                }
+                assertEquals(walletId, queriedCredential.walletId)
+                assertEquals(credentialId, queriedCredential.credentialId)
+                assertEquals(firstCredential.addedOn, queriedCredential.addedOn)
+            }
+        }
+    }
+
+    private suspend fun getWalletId(): String {
         val login = repo.login()
         println(login.getOrThrow())
         val wallets: Result<WalletList> = repo.getWallets()
         val walletId = wallets.getOrElse {
-            fail("No walletId found") }.wallets.first().id
-        val credentials = repo.queryCredentials(CredentialsQuery(walletId = walletId))
-            .getOrElse { fail("Unable to find credentials") }
+            fail("No walletId found")
+        }.wallets.first().id
+        return walletId
+    }
 
-        if (credentials.isNotEmpty()) {
-            val firstCredential = credentials.first()
-            val credentialId = firstCredential.credentialId
-
-            val result = repo.getCredential(CredentialRequest(walletId, credentialId))
-            assertTrue(result.isSuccess)
-            val queriedCredential = result.getOrElse {
-                fail("No verified credential result")
+    @Ignore
+    @Test
+    fun `Resolving presentation and matching definition returns list of credentials and can be used`() {
+        runTest {
+            val request = "openid4vp://authorize?response_type=vp_token&client_id=&response_mode=direct_post&state=tPECMRcJkVdO&presentation_definition_uri=http%3A%2F%2Fverifier-api%3A7003%2Fopenid4vc%2Fpd%2FtPECMRcJkVdO&client_id_scheme=redirect_uri&response_uri=http%3A%2F%2Fverifier-api%3A7003%2Fopenid4vc%2Fverify%2FtPECMRcJkVdO"
+            val walletId = getWalletId()
+            val result = repo.resolvePresentationRequest(walletId, Url(request))
+            val url = result.getOrElse {
+                fail("Failed to resolve presentation: $it")
             }
-            assertEquals(walletId, queriedCredential.walletId)
-            assertEquals(credentialId, queriedCredential.credentialId)
-            assertEquals(firstCredential.addedOn, queriedCredential.addedOn)
+            printUrl(url)
+            val pd = url.parameters.get("presentation_definition")
+                ?:fail("No presentation definition")
+            val pf = Json.decodeFromString<PresentationFilter>(pd)
+            val vcResult = repo.matchCredentials(walletId, pf)
+            val credentials = vcResult.getOrElse {
+                fail("Failed to match credentials: $it")
+            }
+            println(credentials)
+
+            val useRequest = UsePresentationRequest(
+                presentationRequest = url.toString(),
+                selectedCredentials = listOf(credentials.first().credentialId)
+            )
+            val useResult = repo.usePresentationRequest(walletId, useRequest)
+            val claimedCredentials = useResult.getOrElse {
+                fail("Failed to use presentation: $it")
+            }
+            println(claimedCredentials)
+
         }
+    }
+
+
+    @Test
+    fun `Serializing PresentationFilter returns non-empty string`() {
+        val pf = PresentationFilter()
+        val json = pf.serialize()
+        assertTrue(json.contains(AppPrefs.DEFAULT_VC_NAME))
+    }
+
+
+    private fun printUrl(url: Url) {
+        println(url)
+        val reqParams = url.parameters.toMap()
+        println(url.protocol.name)
+        println(url.host)
+        println(reqParams)
     }
 
 }

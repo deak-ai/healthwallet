@@ -9,12 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import ch.healthwallet.repo.WaltIdPrefs
 import ch.healthwallet.prefs.AppPrefsRepository
-import ch.healthwallet.repo.LoginRequest
 import ch.healthwallet.repo.WaltIdWalletRepository
-import ch.healthwallet.repo.WaltIdWalletRepositoryImpl
-import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

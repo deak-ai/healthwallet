@@ -19,7 +19,7 @@ fun Route.vcRouting() {
     val issuanceService by inject<PrescriptionVCIssuanceService>()
 
     route("/vc", {
-        tags = listOf("Verifiable Credential API")
+        tags = listOf("Prescription VC Issuance API")
     }) {
         post("/issue", {
             summary = "Issue a medication prescription VC using OID4VCI"
@@ -64,30 +64,6 @@ fun Route.vcRouting() {
             }
             call.respond(HttpStatusCode.OK, credentialOffer)
         }
-        post("/qrcode", {
-            summary = "Turn a string (e.g. OID4VC credential offer) into a QR code"
-            request {
-                body<String>() {
-                    description = "Request to convert a credential offer to a QR code"
-                    example(
-                        "Credential Offer Example",
-                        VCExamples.vcPrescriptionIssueResponse
-                    )
-                    required = true
-                }
-            }
-            response {
-                HttpStatusCode.OK to {
-                    description = "Medication prescription VC OID4VC compliant credential offer"
-                    body<ByteArray> {}
-                }
-            }
-        }) {
 
-            val requestString = call.receive<String>()
-            val qrBytes = generateQRCode(requestString)
-            call.respondBytes(qrBytes, ContentType.Image.PNG, HttpStatusCode.OK)
-
-        }
     }
 }

@@ -1,0 +1,35 @@
+{
+  "id": "tPECMRcJkVdO",
+  "verificationResult": true,
+  "policyResults": {
+    "results": [
+      {
+        "credential": "VerifiablePresentation",
+        "policies": [
+          {
+            "policy": "signature",
+            "description": "Checks a JWT credential by verifying its cryptographic signature using the key referenced by the DID in `iss`.",
+            "is_success": true,
+            "result": {}
+          }
+        ]
+      },
+      {
+        "credential": "SwissMedicalPrescription",
+        "policies": [
+          {
+            "policy": "signature",
+            "description": "Checks a JWT credential by verifying its cryptographic signature using the key referenced by the DID in `iss`.",
+            "is_success": true,
+            "result": {}
+          }
+        ]
+      }
+    ],
+    "success": true,
+    "time": "0.0130s",
+    "policies_run": 2,
+    "policies_failed": 0,
+    "policies_succeeded": 2
+  }
+}

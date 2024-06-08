@@ -1,13 +1,18 @@
 package ch.healthwallet.db
 
 import ch.healthwallet.data.chmed16a.MedicamentDTO
+import ch.healthwallet.data.chmed16a.MedicamentRefDataDTO
 import ch.healthwallet.data.chmed16a.MedicationDTO
 import ch.healthwallet.data.chmed16a.PatientDTO
 import ch.healthwallet.data.chmed16a.PatientIdDTO
+import kotlinx.datetime.format
+import kotlinx.datetime.toJavaLocalDateTime
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.kotlin.datetime.datetime
+import java.time.format.DateTimeFormatter
 
 
 object MedicationsTable : IntIdTable() {
@@ -40,6 +45,18 @@ object MedicamentsTable : IntIdTable() {
     val medicationId = reference("medication_id", MedicationsTable)
     val medId = varchar("med_id", 128)
     val medIdType = integer("med_id_type")
+}
+
+object MedicamentsRefDataTable : IntIdTable() {
+    val dt = datetime("dt")
+    val atype = varchar("atype", 50)
+    val gtin = varchar("gtin", 20)
+    val swmcAuthnr = varchar("swmc_authnr", 20)
+    val nameDe = varchar("name_de", 255)
+    val nameFr = varchar("name_fr", 255)
+    val atc = varchar("atc", 10).nullable()
+    val authHolderName = varchar("auth_holder_name", 255)
+    val authHolderGln = varchar("auth_holder_gln", 20).nullable()
 }
 
 
@@ -114,4 +131,32 @@ fun MedicamentDAO.toDTO(): MedicamentDTO = MedicamentDTO(
     medIdType = medIdType
 )
 
+class MedicamentRefDataDAO(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<MedicamentRefDataDAO>(MedicamentsRefDataTable)
 
+    var dt by MedicamentsRefDataTable.dt
+    var atype by MedicamentsRefDataTable.atype
+    var gtin by MedicamentsRefDataTable.gtin
+    var swmcAuthnr by MedicamentsRefDataTable.swmcAuthnr
+    var nameDe by MedicamentsRefDataTable.nameDe
+    var nameFr by MedicamentsRefDataTable.nameFr
+    var atc by MedicamentsRefDataTable.atc
+    var authHolderName by MedicamentsRefDataTable.authHolderName
+    var authHolderGln by MedicamentsRefDataTable.authHolderGln
+
+}
+
+fun MedicamentRefDataDAO.toDTO(): MedicamentRefDataDTO {
+    return MedicamentRefDataDTO(
+        atype = this.atype,
+        gtin = this.gtin,
+        swmcAuthnr = this.swmcAuthnr,
+        nameDe = this.nameDe,
+        nameFr = this.nameFr,
+        atc = this.atc,
+        authHolderName = this.authHolderName,
+        authHolderGln = this.authHolderGln,
+        date = this.dt.toJavaLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+    )
+}

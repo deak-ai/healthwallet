@@ -38,6 +38,10 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.qrcode.kotlin)
         }
+        jvmMain.dependencies {
+            implementation(libs.xmlutil.core)
+            implementation(libs.xmlutil.serialization)
+        }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)

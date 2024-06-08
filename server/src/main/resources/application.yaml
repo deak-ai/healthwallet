@@ -6,11 +6,13 @@ ktor:
       - ch.healthwallet.web.ApplicationKt.module
 services:
   issuer: "https://issuer.healthwallet.li"
+  verifier: "https://verifier.healthwallet.li"
 db:
   url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;"
   driver: "org.h2.Driver"
   user: "nouser"
   password: "nopassword"
+  medrefdata: "$DB_MEDREFDATA:server/src/main/resources/refdata/Articles_ALL_ALL_20240429170557.xml"
 
 
 
