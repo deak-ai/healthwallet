@@ -18,4 +18,6 @@ sealed class VCScanState {
 
     data class SelectCredential(val prescriptions: List<VCScreenModel.PrescriptionSelection>) : VCScanState()
 
+    data object NoMatchingPrescriptions : VCScanState()
+
 }

@@ -25,6 +25,7 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -80,6 +81,11 @@ class VCScreen : Screen {
             }
 
             // presentation states
+            is VCScanState.NoMatchingPrescriptions -> {
+                NoMatchingPrescriptionsDialog(
+                    onDismiss = { vcScreenModel.handleEvent(VCEvent.Reset) }
+                )
+            }
             is VCScanState.SelectCredential -> SelectCredentialScreen(
                 (state as VCScanState.SelectCredential).prescriptions,
                 null
@@ -96,6 +102,22 @@ class VCScreen : Screen {
 
         }
     }
+
+
+    @Composable
+    fun NoMatchingPrescriptionsDialog(onDismiss: () -> Unit) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(text = "No Matching Prescriptions") },
+            text = { Text(text = "There are no matching prescriptions to present.") },
+            confirmButton = {
+                TextButton(onClick = onDismiss) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+
 
 
     @Composable

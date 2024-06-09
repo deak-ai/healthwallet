@@ -127,7 +127,11 @@ class VCScreenModel(
                 ))
             }
 
-            _state.value = VCScanState.SelectCredential(medis)
+            if (medis.isEmpty()) {
+                _state.value = VCScanState.NoMatchingPrescriptions
+            } else {
+                _state.value = VCScanState.SelectCredential(medis)
+            }
 
         } catch (t: Throwable) {
             val message = "Failed to present prescription VC: $t"
