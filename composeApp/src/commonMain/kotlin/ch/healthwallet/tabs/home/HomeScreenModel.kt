@@ -32,6 +32,9 @@ class HomeScreenModel(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
+    private val _snackbarMessage = MutableStateFlow<String?>(null)
+    val snackbarMessage: StateFlow<String?> = _snackbarMessage.asStateFlow()
+
     init {
         println("HomeScreenModel: Initialising... ")
         screenModelScope.launch {
@@ -53,14 +56,22 @@ class HomeScreenModel(
         }
     }
 
-    // Clear error message after it's displayed
     fun clearErrorMessage() {
         _errorMessage.value = null
     }
 
+
     private fun setErrorMessage(message: String) {
         println(message)
         _errorMessage.value = message
+    }
+
+    fun clearSnackbarMessage() {
+        _snackbarMessage.value = null
+    }
+
+    fun setSnackbarMessage(message: String) {
+        _snackbarMessage.value = message
     }
 
 

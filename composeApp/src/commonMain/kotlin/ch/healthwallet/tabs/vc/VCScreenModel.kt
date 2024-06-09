@@ -100,6 +100,7 @@ class VCScreenModel(
     )
 
     private suspend fun selectCredential(verifyUrl: String) {
+        _state.value = VCScanState.Processing
         try {
             val walletId = getWalletId()
             val result = waltIdWalletRepo.resolvePresentationRequest(

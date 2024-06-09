@@ -7,13 +7,11 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,6 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +44,8 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import ch.healthwallet.comps.VcTile
+import ch.healthwallet.composables.SelectableVcTile
+import ch.healthwallet.tabs.home.HomeScreenModel
 import ch.healthwallet.tabs.home.HomeTab
 import org.koin.compose.koinInject
 
@@ -54,6 +56,7 @@ class VCScreen : Screen {
         val navigator: Navigator = LocalNavigator.currentOrThrow
         val tabNavigator: TabNavigator = LocalTabNavigator.current
         val vcScreenModel = koinInject<VCScreenModel>()
+        val homeScreenModel = koinInject<HomeScreenModel>()
         val state by vcScreenModel.state.collectAsState()
         when (state) {
             is VCScanState.Initial -> InitialScreen(navigator, vcScreenModel)
@@ -67,6 +70,7 @@ class VCScreen : Screen {
                 onReject = { vcScreenModel.handleEvent(VCEvent.RejectCredential((state as VCScanState.AcceptPrescription).credentialRequest)) }
             )
             is VCScanState.Error -> ErrorScreen((state as VCScanState.Error).message) { vcScreenModel.handleEvent(VCEvent.Reset) }
+
             is VCScanState.CredentialImported -> {
                 // Switch to Home tab
                 LaunchedEffect(Unit) {
@@ -77,13 +81,15 @@ class VCScreen : Screen {
 
             // presentation states
             is VCScanState.SelectCredential -> SelectCredentialScreen(
-                (state as VCScanState.SelectCredential).prescriptions
+                (state as VCScanState.SelectCredential).prescriptions,
+                null
             ) { ps -> vcScreenModel.onPrescriptionSelected(ps) }
 
             is VCScanState.PresentationCompleted -> {
                 // Switch to Home tab
                 LaunchedEffect(Unit) {
                     tabNavigator.current = HomeTab
+                    homeScreenModel.setSnackbarMessage("Prescription presented successfully.")
                     vcScreenModel.handleEvent(VCEvent.Reset)
                 }
             }
@@ -92,26 +98,50 @@ class VCScreen : Screen {
     }
 
 
-
     @Composable
     fun SelectCredentialScreen(
         prescriptions: List<VCScreenModel.PrescriptionSelection>,
-        onPrescriptionSelected: (VCScreenModel.PrescriptionSelection) -> Unit
+        selectedPrescription: VCScreenModel.PrescriptionSelection?,
+        onSubmit: (VCScreenModel.PrescriptionSelection) -> Unit
     ) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(prescriptions) { ps ->
-                Text(
-                    text = ps.medicament.nameDe,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onPrescriptionSelected(ps) }
-                        .padding(16.dp)
-                )
-                //VcTile(ps.medicament)
+        var selected by remember { mutableStateOf(selectedPrescription) }
+
+        Column(modifier = Modifier.fillMaxSize()) {
+            Text(
+                text = "Please select Prescription",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(prescriptions) { prescription ->
+                    SelectableVcTile(
+                        selection = prescription,
+                        isSelected = prescription == selected,
+                        onSelected = {
+                            selected = prescription
+                        }
+                    )
+                }
+            }
+            Button(
+                onClick = {
+                    selected?.let {
+                        onSubmit(it)
+                    }
+                },
+                enabled = selected != null,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(16.dp)
+            ) {
+                Text("Submit")
             }
         }
     }
+
 
 
     @Composable
