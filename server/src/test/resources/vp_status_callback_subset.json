@@ -1,5 +1,52 @@
 {
-  "id": "tPECMRcJkVdO",
+  "id": "iNTR2aZek3g1",
+  "presentationDefinition": {
+    "input_descriptors": [
+      {
+        "id": "SwissMedicalPrescription",
+        "format": {
+          "jwt_vc_json": {
+            "alg": [
+              "EdDSA"
+            ]
+          }
+        },
+        "constraints": {
+          "fields": [
+            {
+              "path": [
+                "$.type"
+              ],
+              "filter": {
+                "type": "string",
+                "pattern": "SwissMedicalPrescription"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "tokenResponse": {
+    "vp_token": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCIsImtpZCI6ImRpZDpqd2s6ZXlKcmRIa2lPaUpQUzFBaUxDSmpjbllpT2lKRlpESTFOVEU1SWl3aWEybGtJam9pWVZCVFRGaFVTVTVHZEVZMk5FbEpiamxrTW5CSFdEUnNZbU52WTJoWlEzWk5SekpZUkdaSWRXZzFXU0lzSW5naU9pSnVSSFZsYzBkWVVFbzBOV1pTTlROaE5UbFRZV2xSYWxKamRtNWlMVEZ0ZFdKTmFtVmhSSGgzYVV0SkluMCMwIn0.eyJzdWIiOiJkaWQ6andrOmV5SnJkSGtpT2lKUFMxQWlMQ0pqY25ZaU9pSkZaREkxTlRFNUlpd2lhMmxrSWpvaVlWQlRURmhVU1U1R2RFWTJORWxKYmpsa01uQkhXRFJzWW1OdlkyaFpRM1pOUnpKWVJHWklkV2cxV1NJc0luZ2lPaUp1UkhWbGMwZFlVRW8wTldaU05UTmhOVGxUWVdsUmFsSmpkbTVpTFRGdGRXSk5hbVZoUkhoM2FVdEpJbjAiLCJuYmYiOjE3MTgwMjA4MTIsImlhdCI6MTcxODAyMDg3MiwianRpIjoiMSIsImlzcyI6ImRpZDpqd2s6ZXlKcmRIa2lPaUpQUzFBaUxDSmpjbllpT2lKRlpESTFOVEU1SWl3aWEybGtJam9pWVZCVFRGaFVTVTVHZEVZMk5FbEpiamxrTW5CSFdEUnNZbU52WTJoWlEzWk5SekpZUkdaSWRXZzFXU0lzSW5naU9pSnVSSFZsYzBkWVVFbzBOV1pTTlROaE5UbFRZV2xSYWxKamRtNWlMVEZ0ZFdKTmFtVmhSSGgzYVV0SkluMCIsIm5vbmNlIjoiIiwiYXVkIjoiIiwidnAiOnsiQGNvbnRleHQiOlsiaHR0cHM6Ly93d3cudzMub3JnLzIwMTgvY3JlZGVudGlhbHMvdjEiXSwidHlwZSI6WyJWZXJpZmlhYmxlUHJlc2VudGF0aW9uIl0sImlkIjoiMSIsImhvbGRlciI6ImRpZDpqd2s6ZXlKcmRIa2lPaUpQUzFBaUxDSmpjbllpT2lKRlpESTFOVEU1SWl3aWEybGtJam9pWVZCVFRGaFVTVTVHZEVZMk5FbEpiamxrTW5CSFdEUnNZbU52WTJoWlEzWk5SekpZUkdaSWRXZzFXU0lzSW5naU9pSnVSSFZsYzBkWVVFbzBOV1pTTlROaE5UbFRZV2xSYWxKamRtNWlMVEZ0ZFdKTmFtVmhSSGgzYVV0SkluMCIsInZlcmlmaWFibGVDcmVkZW50aWFsIjpbImV5SmhiR2NpT2lKRlV6STFOaUlzSW5SNWNDSTZJa3BYVkNJc0ltdHBaQ0k2SW1ScFpEcHFkMnM2WlhsS2NtUklhMmxQYVVwR1VYbEpjMGx0VG5sa2FVazJTV3hCZEUxcVZUSkphWGRwWVRKc2EwbHFiMmxsVlVwYVQxZFNVbU5XU1RCUFZHd3dWVEZTTkZrd1RtNVNlbWhMV2xWdk5WVXhiSHBTUm5CVVdWZGFVazFVVVhkT1JYaG9ZbFpDVW1SNVNYTkpibWRwVDJsS1YyTXlaR0ZNVjBVMFYwUnNZV1JIT1c1aE1WWlZXa1JDZWxNd05XbFZWMnhyWlVkTmVWTlZWalpqUm5CV1YxVktiRTFFWkZCTk0xVXdTV2wzYVdWVFNUWkpiVkV4VDBaU1ZVMUdSakJoTTFZMFZETldSMWRWTkhoVU1uQlBZa2RrTmxKV1ZrVmlWbVIwVjFkc2RsRlljRUpUYlZKYVdtcG9iV1JGTUdsbVVTSjkuZXlKcGMzTWlPaUprYVdRNmFuZHJPbVY1U25Ka1NHdHBUMmxLUmxGNVNYTkpiVTU1WkdsSk5rbHNRWFJOYWxVeVNXbDNhV0V5Ykd0SmFtOXBaVlZLV2s5WFVsSmpWa2t3VDFSc01GVXhValJaTUU1dVVucG9TMXBWYnpWVk1XeDZVa1p3VkZsWFdsSk5WRkYzVGtWNGFHSldRbEprZVVselNXNW5hVTlwU2xkak1tUmhURmRGTkZkRWJHRmtSemx1WVRGV1ZWcEVRbnBUTURWcFZWZHNhMlZIVFhsVFZWWTJZMFp3VmxkVlNteE5SR1JRVFROVk1FbHBkMmxsVTBrMlNXMVJNVTlHVWxWTlJrWXdZVE5XTkZRelZrZFhWVFI0VkRKd1QySkhaRFpTVmxaRllsWmtkRmRYYkhaUldIQkNVMjFTV2xwcWFHMWtSVEJwWmxFaUxDSnpkV0lpT2lKa2FXUTZhbmRyT21WNVNuSmtTR3RwVDJsS1VGTXhRV2xNUTBwcVkyNVphVTlwU2taYVJFa3hUbFJGTlVscGQybGhNbXhyU1dwdmFWbFdRbFJVUm1oVlUxVTFSMlJGV1RKT1JXeEtZbXBzYTAxdVFraFhSRkp6V1cxT2Rsa3lhRnBSTTFwT1VucEtXVkpIV2tsa1YyY3hWMU5KYzBsdVoybFBhVXAxVWtoV2JHTXdaRmxWUlc4d1RsZGFVMDVVVG1oT1ZHeFVXVmRzVW1Gc1NtcGtiVFZwVEZSR2RHUlhTazVoYlZab1VraG9NMkZWZEVwSmJqQWlMQ0oyWXlJNmV5SkFZMjl1ZEdWNGRDSTZXeUpvZEhSd2N6b3ZMM2QzZHk1M015NXZjbWN2TWpBeE9DOWpjbVZrWlc1MGFXRnNjeTkyTVNKZExDSnBaQ0k2SW5WeWJqcDFkV2xrT2pZM1pXRmxaV1JqTFRNNU56Y3RORGRrT1MxaFltWXpMV1JtWXpNMk1USm1ObUpsWmlJc0luUjVjR1VpT2xzaVZtVnlhV1pwWVdKc1pVTnlaV1JsYm5ScFlXd2lMQ0pUZDJsemMwMWxaR2xqWVd4UWNtVnpZM0pwY0hScGIyNGlYU3dpYVhOemRXVnlJanA3SW1sa0lqb2laR2xrT21wM2F6cGxlVXB5WkVocmFVOXBTa1pSZVVselNXMU9lV1JwU1RaSmJFRjBUV3BWTWtscGQybGhNbXhyU1dwdmFXVlZTbHBQVjFKU1kxWkpNRTlVYkRCVk1WSTBXVEJPYmxKNmFFdGFWVzgxVlRGc2VsSkdjRlJaVjFwU1RWUlJkMDVGZUdoaVZrSlNaSGxKYzBsdVoybFBhVXBYWXpKa1lVeFhSVFJYUkd4aFpFYzVibUV4VmxWYVJFSjZVekExYVZWWGJHdGxSMDE1VTFWV05tTkdjRlpYVlVwc1RVUmtVRTB6VlRCSmFYZHBaVk5KTmtsdFVURlBSbEpWVFVaR01HRXpWalJVTTFaSFYxVTBlRlF5Y0U5aVIyUTJVbFpXUldKV1pIUlhWMngyVVZod1FsTnRVbHBhYW1odFpFVXdhV1pSSWl3aWFXMWhaMlVpT2lKb2RIUndjem92TDJOa2JpMXBZMjl1Y3kxd2JtY3VabkpsWlhCcGF5NWpiMjB2TlRFeUx6RXhORFV2TVRFME5UYzROUzV3Ym1jaUxDSnVZVzFsSWpvaVEwaEZUVVZFTVRaQklHVlFjbVZ6WTNKcGNIUnBiMjRpTENKMWNtd2lPaUpvZEhSd2N6b3ZMMlZ0WldScGNHeGhiaTVqYUM4aWZTd2lhWE56ZFdGdVkyVkVZWFJsSWpvaU1qQXlOQzB3Tmkwd09WUXdPVG8xTnpveE5TNHpOek00TnpreU56WmFJaXdpYVhOemRXVmtJam9pTWpBeU5DMHdOaTB3T1ZRd09UbzFOem94TlM0ek56TTVOalU0TVRsYUlpd2laWGh3YVhKaGRHbHZia1JoZEdVaU9pSXlNREkxTFRBMkxUQTVWREE1T2pVM09qRTFMak0zTkRBd05EUXpNbG9pTENKamNtVmtaVzUwYVdGc1UzVmlhbVZqZENJNmV5SnBaQ0k2SW1ScFpEcHFkMnM2WlhsS2NtUklhMmxQYVVwUVV6RkJhVXhEU21wamJsbHBUMmxLUmxwRVNURk9WRVUxU1dsM2FXRXliR3RKYW05cFdWWkNWRlJHYUZWVFZUVkhaRVZaTWs1RmJFcGlhbXhyVFc1Q1NGZEVVbk5aYlU1MldUSm9XbEV6V2s1U2VrcFpVa2RhU1dSWFp6RlhVMGx6U1c1bmFVOXBTblZTU0Zac1l6QmtXVlZGYnpCT1YxcFRUbFJPYUU1VWJGUlpWMnhTWVd4S2FtUnROV2xNVkVaMFpGZEtUbUZ0Vm1oU1NHZ3pZVlYwU2tsdU1DSXNJbkJ5WlhOamNtbHdkR2x2YmlJNmV5Sk5aV1JVZVhCbElqb3pMQ0pKWkNJNklqUmtZVGxsWlRJd0xUSXdOemt0TkRjeVppMDRNMkZsTFdZNE5qZGpaVGs1WTJJd1pTSXNJa0YxZEdnaU9pSkhURTQxTkRNeU1UQWlMQ0phYzNJaU9tNTFiR3dzSWtSMElqb2lNakF5TkMwd05pMHdPVlF4TVRvMU5qb3pPQ3N3TWpvd01DSXNJbEp0YXlJNmJuVnNiQ3dpVFdWa2FXTmhiV1Z1ZEhNaU9sdDdJa2xrSWpvaU56WTRNRFkxT1RNeE1ESXdOU0lzSWtsa1ZIbHdaU0k2TW4xZExDSlFZWFJwWlc1MElqcDdJa1pPWVcxbElqb2lSbkpsWkdSNUlpd2lURTVoYldVaU9pSkRjbTlqYTJWMElpd2lRa1IwSWpvaU1UazRPUzB3TmkweU1pSXNJa2RsYm1SbGNpSTZNU3dpU1dSeklqcGJleUpVZVhCbElqb3lMQ0pXWVd3aU9pSXpJbjFkZlgxOWZTd2lhblJwSWpvaWRYSnVPblYxYVdRNk5qZGxZV1ZsWkdNdE16azNOeTAwTjJRNUxXRmlaak10Wkdaak16WXhNbVkyWW1WbUlpd2laWGh3SWpveE56UTVORFl6TURNMUxDSnBZWFFpT2pFM01UYzVNamN3TXpVc0ltNWlaaUk2TVRjeE56a3lOekF6TlgwLjRxRDNyN0xyaGlBNzk5aEhwZHlFQXNkZ2tsdmJSQTNMY256eS1qcmRMSTB4U2ZSSkZIUHBSTjNJdFgtTTdFUEI0X3JCVXBoWkdvQkZORV9QNDNWSW93Il19fQ.YaqV7uIc1w_QyomlLJ9uCG4Gedqy6M51cDLNhNlHZ2CluJJd5L3P5jWGZnyROpze2vs2TTKTi7tp8C0dglRoBw",
+    "presentation_submission": {
+      "id": "1",
+      "definition_id": "1",
+      "descriptor_map": [
+        {
+          "id": "SwissMedicalPrescription",
+          "format": "jwt_vp",
+          "path": "$",
+          "path_nested": {
+            "id": "SwissMedicalPrescription",
+            "format": "jwt_vc_json",
+            "path": "$.verifiableCredential[0]"
+          }
+        }
+      ]
+    },
+    "state": "iNTR2aZek3g1"
+  },
   "verificationResult": true,
   "policyResults": {
     "results": [
@@ -10,7 +57,28 @@
             "policy": "signature",
             "description": "Checks a JWT credential by verifying its cryptographic signature using the key referenced by the DID in `iss`.",
             "is_success": true,
-            "result": {}
+            "result": {
+              "sub": "did:jwk:eyJrdHkiOiJPS1AiLCJjcnYiOiJFZDI1NTE5Iiwia2lkIjoiYVBTTFhUSU5GdEY2NElJbjlkMnBHWDRsYmNvY2hZQ3ZNRzJYRGZIdWg1WSIsIngiOiJuRHVlc0dYUEo0NWZSNTNhNTlTYWlRalJjdm5iLTFtdWJNamVhRHh3aUtJIn0",
+              "nbf": 1718020812,
+              "iat": 1718020872,
+              "jti": "1",
+              "iss": "did:jwk:eyJrdHkiOiJPS1AiLCJjcnYiOiJFZDI1NTE5Iiwia2lkIjoiYVBTTFhUSU5GdEY2NElJbjlkMnBHWDRsYmNvY2hZQ3ZNRzJYRGZIdWg1WSIsIngiOiJuRHVlc0dYUEo0NWZSNTNhNTlTYWlRalJjdm5iLTFtdWJNamVhRHh3aUtJIn0",
+              "nonce": "",
+              "aud": "",
+              "vp": {
+                "@context": [
+                  "https://www.w3.org/2018/credentials/v1"
+                ],
+                "type": [
+                  "VerifiablePresentation"
+                ],
+                "id": "1",
+                "holder": "did:jwk:eyJrdHkiOiJPS1AiLCJjcnYiOiJFZDI1NTE5Iiwia2lkIjoiYVBTTFhUSU5GdEY2NElJbjlkMnBHWDRsYmNvY2hZQ3ZNRzJYRGZIdWg1WSIsIngiOiJuRHVlc0dYUEo0NWZSNTNhNTlTYWlRalJjdm5iLTFtdWJNamVhRHh3aUtJIn0",
+                "verifiableCredential": [
+                  "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRpZDpqd2s6ZXlKcmRIa2lPaUpGUXlJc0ltTnlkaUk2SWxBdE1qVTJJaXdpYTJsa0lqb2llVUpaT1dSUmNWSTBPVGwwVTFSNFkwTm5SemhLWlVvNVUxbHpSRnBUWVdaUk1UUXdORXhoYlZCUmR5SXNJbmdpT2lKV2MyZGFMV0U0V0RsYWRHOW5hMVZVWkRCelMwNWlVV2xrZUdNeVNVVjZjRnBWV1VKbE1EZFBNM1UwSWl3aWVTSTZJbVExT0ZSVU1GRjBhM1Y0VDNWR1dVNHhUMnBPYkdkNlJWVkViVmR0V1dsdlFYcEJTbVJaWmpobWRFMGlmUSJ9.eyJpc3MiOiJkaWQ6andrOmV5SnJkSGtpT2lKRlF5SXNJbU55ZGlJNklsQXRNalUySWl3aWEybGtJam9pZVVKWk9XUlJjVkkwT1RsMFUxUjRZME5uUnpoS1pVbzVVMWx6UkZwVFlXWlJNVFF3TkV4aGJWQlJkeUlzSW5naU9pSldjMmRhTFdFNFdEbGFkRzluYTFWVVpEQnpTMDVpVVdsa2VHTXlTVVY2Y0ZwVldVSmxNRGRQTTNVMElpd2llU0k2SW1RMU9GUlVNRkYwYTNWNFQzVkdXVTR4VDJwT2JHZDZSVlZFYlZkdFdXbHZRWHBCU21SWlpqaG1kRTBpZlEiLCJzdWIiOiJkaWQ6andrOmV5SnJkSGtpT2lKUFMxQWlMQ0pqY25ZaU9pSkZaREkxTlRFNUlpd2lhMmxrSWpvaVlWQlRURmhVU1U1R2RFWTJORWxKYmpsa01uQkhXRFJzWW1OdlkyaFpRM1pOUnpKWVJHWklkV2cxV1NJc0luZ2lPaUp1UkhWbGMwZFlVRW8wTldaU05UTmhOVGxUWVdsUmFsSmpkbTVpTFRGdGRXSk5hbVZoUkhoM2FVdEpJbjAiLCJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJpZCI6InVybjp1dWlkOjY3ZWFlZWRjLTM5NzctNDdkOS1hYmYzLWRmYzM2MTJmNmJlZiIsInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJTd2lzc01lZGljYWxQcmVzY3JpcHRpb24iXSwiaXNzdWVyIjp7ImlkIjoiZGlkOmp3azpleUpyZEhraU9pSkZReUlzSW1OeWRpSTZJbEF0TWpVMklpd2lhMmxrSWpvaWVVSlpPV1JSY1ZJME9UbDBVMVI0WTBOblJ6aEtaVW81VTFselJGcFRZV1pSTVRRd05FeGhiVkJSZHlJc0luZ2lPaUpXYzJkYUxXRTRXRGxhZEc5bmExVlVaREJ6UzA1aVVXbGtlR015U1VWNmNGcFZXVUpsTURkUE0zVTBJaXdpZVNJNkltUTFPRlJVTUZGMGEzVjRUM1ZHV1U0eFQycE9iR2Q2UlZWRWJWZHRXV2x2UVhwQlNtUlpaamhtZEUwaWZRIiwiaW1hZ2UiOiJodHRwczovL2Nkbi1pY29ucy1wbmcuZnJlZXBpay5jb20vNTEyLzExNDUvMTE0NTc4NS5wbmciLCJuYW1lIjoiQ0hFTUVEMTZBIGVQcmVzY3JpcHRpb24iLCJ1cmwiOiJodHRwczovL2VtZWRpcGxhbi5jaC8ifSwiaXNzdWFuY2VEYXRlIjoiMjAyNC0wNi0wOVQwOTo1NzoxNS4zNzM4NzkyNzZaIiwiaXNzdWVkIjoiMjAyNC0wNi0wOVQwOTo1NzoxNS4zNzM5NjU4MTlaIiwiZXhwaXJhdGlvbkRhdGUiOiIyMDI1LTA2LTA5VDA5OjU3OjE1LjM3NDAwNDQzMloiLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDpqd2s6ZXlKcmRIa2lPaUpQUzFBaUxDSmpjbllpT2lKRlpESTFOVEU1SWl3aWEybGtJam9pWVZCVFRGaFVTVTVHZEVZMk5FbEpiamxrTW5CSFdEUnNZbU52WTJoWlEzWk5SekpZUkdaSWRXZzFXU0lzSW5naU9pSnVSSFZsYzBkWVVFbzBOV1pTTlROaE5UbFRZV2xSYWxKamRtNWlMVEZ0ZFdKTmFtVmhSSGgzYVV0SkluMCIsInByZXNjcmlwdGlvbiI6eyJNZWRUeXBlIjozLCJJZCI6IjRkYTllZTIwLTIwNzktNDcyZi04M2FlLWY4NjdjZTk5Y2IwZSIsIkF1dGgiOiJHTE41NDMyMTAiLCJac3IiOm51bGwsIkR0IjoiMjAyNC0wNi0wOVQxMTo1NjozOCswMjowMCIsIlJtayI6bnVsbCwiTWVkaWNhbWVudHMiOlt7IklkIjoiNzY4MDY1OTMxMDIwNSIsIklkVHlwZSI6Mn1dLCJQYXRpZW50Ijp7IkZOYW1lIjoiRnJlZGR5IiwiTE5hbWUiOiJDcm9ja2V0IiwiQkR0IjoiMTk4OS0wNi0yMiIsIkdlbmRlciI6MSwiSWRzIjpbeyJUeXBlIjoyLCJWYWwiOiIzIn1dfX19fSwianRpIjoidXJuOnV1aWQ6NjdlYWVlZGMtMzk3Ny00N2Q5LWFiZjMtZGZjMzYxMmY2YmVmIiwiZXhwIjoxNzQ5NDYzMDM1LCJpYXQiOjE3MTc5MjcwMzUsIm5iZiI6MTcxNzkyNzAzNX0.4qD3r7LrhiA799hHpdyEAsdgklvbRA3Lcnzy-jrdLI0xSfRJFHPpRN3ItX-M7EPB4_rBUphZGoBFNE_P43VIow"
+                ]
+              }
+            }
           }
         ]
       },
@@ -21,13 +89,68 @@
             "policy": "signature",
             "description": "Checks a JWT credential by verifying its cryptographic signature using the key referenced by the DID in `iss`.",
             "is_success": true,
-            "result": {}
+            "result": {
+              "iss": "did:jwk:eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2Iiwia2lkIjoieUJZOWRRcVI0OTl0U1R4Y0NnRzhKZUo5U1lzRFpTYWZRMTQwNExhbVBRdyIsIngiOiJWc2daLWE4WDladG9na1VUZDBzS05iUWlkeGMySUV6cFpVWUJlMDdPM3U0IiwieSI6ImQ1OFRUMFF0a3V4T3VGWU4xT2pObGd6RVVEbVdtWWlvQXpBSmRZZjhmdE0ifQ",
+              "sub": "did:jwk:eyJrdHkiOiJPS1AiLCJjcnYiOiJFZDI1NTE5Iiwia2lkIjoiYVBTTFhUSU5GdEY2NElJbjlkMnBHWDRsYmNvY2hZQ3ZNRzJYRGZIdWg1WSIsIngiOiJuRHVlc0dYUEo0NWZSNTNhNTlTYWlRalJjdm5iLTFtdWJNamVhRHh3aUtJIn0",
+              "vc": {
+                "@context": [
+                  "https://www.w3.org/2018/credentials/v1"
+                ],
+                "id": "urn:uuid:67eaeedc-3977-47d9-abf3-dfc3612f6bef",
+                "type": [
+                  "VerifiableCredential",
+                  "SwissMedicalPrescription"
+                ],
+                "issuer": {
+                  "id": "did:jwk:eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2Iiwia2lkIjoieUJZOWRRcVI0OTl0U1R4Y0NnRzhKZUo5U1lzRFpTYWZRMTQwNExhbVBRdyIsIngiOiJWc2daLWE4WDladG9na1VUZDBzS05iUWlkeGMySUV6cFpVWUJlMDdPM3U0IiwieSI6ImQ1OFRUMFF0a3V4T3VGWU4xT2pObGd6RVVEbVdtWWlvQXpBSmRZZjhmdE0ifQ",
+                  "image": "https://cdn-icons-png.freepik.com/512/1145/1145785.png",
+                  "name": "CHEMED16A ePrescription",
+                  "url": "https://emediplan.ch/"
+                },
+                "issuanceDate": "2024-06-09T09:57:15.373879276Z",
+                "issued": "2024-06-09T09:57:15.373965819Z",
+                "expirationDate": "2025-06-09T09:57:15.374004432Z",
+                "credentialSubject": {
+                  "id": "did:jwk:eyJrdHkiOiJPS1AiLCJjcnYiOiJFZDI1NTE5Iiwia2lkIjoiYVBTTFhUSU5GdEY2NElJbjlkMnBHWDRsYmNvY2hZQ3ZNRzJYRGZIdWg1WSIsIngiOiJuRHVlc0dYUEo0NWZSNTNhNTlTYWlRalJjdm5iLTFtdWJNamVhRHh3aUtJIn0",
+                  "prescription": {
+                    "MedType": 3,
+                    "Id": "4da9ee20-2079-472f-83ae-f867ce99cb0e",
+                    "Auth": "GLN543210",
+                    "Zsr": null,
+                    "Dt": "2024-06-09T11:56:38+02:00",
+                    "Rmk": null,
+                    "Medicaments": [
+                      {
+                        "Id": "7680659310205",
+                        "IdType": 2
+                      }
+                    ],
+                    "Patient": {
+                      "FName": "Freddy",
+                      "LName": "Crocket",
+                      "BDt": "1989-06-22",
+                      "Gender": 1,
+                      "Ids": [
+                        {
+                          "Type": 2,
+                          "Val": "3"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "jti": "urn:uuid:67eaeedc-3977-47d9-abf3-dfc3612f6bef",
+              "exp": 1749463035,
+              "iat": 1717927035,
+              "nbf": 1717927035
+            }
           }
         ]
       }
     ],
     "success": true,
-    "time": "0.0130s",
+    "time": "0.0073s",
     "policies_run": 2,
     "policies_failed": 0,
     "policies_succeeded": 2

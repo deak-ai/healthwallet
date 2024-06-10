@@ -2,6 +2,9 @@ package ch.healthwallet.repo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 @Serializable
 data class VerifyRequest(
@@ -57,4 +60,23 @@ data class Policy(
     val result: JsonObject
 )
 
+
+// TODO: implement
+fun extractPrescription(vsc: VerifierStatusCallback):String? {
+     vsc.policyResults.results.forEach {
+         if(isSwissMedicalPrescription(it)) {
+             val prescription = it.policies[0].result
+                 .get("vc")?.jsonObject
+                 ?.get("credentialSubject")?.jsonObject
+                 ?.get("prescription")?.jsonObject
+
+
+         }
+     }
+    return "TODO"
+}
+
+fun isSwissMedicalPrescription(r: Result):Boolean {
+    return r.credential == AppPrefs.DEFAULT_VC_NAME
+}
 

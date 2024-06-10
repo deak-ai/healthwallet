@@ -8,6 +8,7 @@ import ch.healthwallet.web.routes.vpRouting
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.autohead.*
+import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
@@ -20,6 +21,13 @@ import java.sql.SQLException
 fun Application.configureRouting() {
     install(AutoHeadResponse)
     install(DoubleReceive)
+    install(CORS) {
+        allowHost("0.0.0.0:8080")
+        allowHost("localhost:8080")
+        allowHeader(HttpHeaders.ContentType)
+        allowHeader(HttpHeaders.Authorization)
+        allowHeader(HttpHeaders.AcceptEncoding)
+    }
     routing {
         get("/") {
             call.respondText("Welcome to the HealthSSI PIS API")
