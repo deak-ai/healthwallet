@@ -77,8 +77,7 @@ fun Route.vpRouting() {
             val callbackPaylod = call.receive<String>()
             println("Received callback on /vp/status")
             println("Payload:\n$callbackPaylod")
-            println("Call details:\n:$call")
-            vpm.broadcast("foo", callbackPaylod)
+            vpm.handleCallback(callbackPaylod)
             call.respond(HttpStatusCode.OK)
         }
 

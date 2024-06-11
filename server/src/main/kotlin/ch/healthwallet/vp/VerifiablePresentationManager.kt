@@ -11,6 +11,8 @@ interface VerifiablePresentationManager {
 
     fun removeWebSocketSession(stateId: String, session: WebSocketSession)
 
+    suspend fun handleCallback(callbackPayload: String)
+
     suspend fun broadcast(stateId: String, message: String)
 
 }

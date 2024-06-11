@@ -55,6 +55,6 @@ fun koinModule(config: ApplicationConfig) = module {
     }
 
     single<VerifiablePresentationManager> {
-        VerifiablePresentationManagerImpl(get())
+        VerifiablePresentationManagerImpl(get(),get())
     }
 }

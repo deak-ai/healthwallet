@@ -1,4 +1,5 @@
 package ch.healthwallet.repo
+import ch.healthwallet.data.chmed16a.MedicamentRefDataDTO
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
@@ -61,19 +62,74 @@ data class Policy(
 )
 
 
+@Serializable
+data class PrescriptionData(
+    val stateId: String,
+    val issuanceDate: String?,
+    val expirationDate: String?,
+    val doctor: String?,
+    val doctorDid: String?,
+    val patientFirstName: String?,
+    val patientLastName: String?,
+    val patientBirthDate: String?,
+    val patientDid: String?,
+    val prescriptionId: String?,
+    val medicationId: String?,
+    val medicationRefData: MedicamentRefDataDTO?,
+    val verificationSuccess: Boolean = false
+)
+
 // TODO: implement
-fun extractPrescription(vsc: VerifierStatusCallback):String? {
-     vsc.policyResults.results.forEach {
+fun extractPrescription(vsc: VerifierStatusCallback):PrescriptionData? {
+    vsc.policyResults.results.forEach {
          if(isSwissMedicalPrescription(it)) {
-             val prescription = it.policies[0].result
+             val vc = it.policies[0].result
                  .get("vc")?.jsonObject
+
+             val issuerDid = vc?.get("issuer")?.jsonObject
+                 ?.get("id")?.jsonPrimitive?.content
+
+             val issuanceDate = vc?.get("issuanceDate")?.jsonPrimitive?.content
+             val expirationDate = vc?.get("expirationDate")?.jsonPrimitive?.content
+
+             val credentialSubject = vc
                  ?.get("credentialSubject")?.jsonObject
+
+             val patientDid = credentialSubject?.get("id")?.jsonPrimitive?.content
+
+             val prescription = credentialSubject
                  ?.get("prescription")?.jsonObject
 
+             val doctor = prescription?.get("Auth")?.jsonPrimitive?.content
 
+             val prescriptionId = prescription?.get("Id")?.jsonPrimitive?.content
+
+             val patient = prescription?.get("Patient")?.jsonObject
+             val patientFirstName = patient?.get("FName")?.jsonPrimitive?.content
+             val patientLastName = patient?.get("LName")?.jsonPrimitive?.content
+             val patientBirthDate = patient?.get("BDt")?.jsonPrimitive?.content
+
+             val medicationId = prescription?.get("Medicaments")?.jsonArray?.get(0)
+                 ?.jsonObject?.get("Id")?.jsonPrimitive?.content
+
+             return PrescriptionData(
+                 stateId = vsc.id,
+                 issuanceDate = issuanceDate,
+                 expirationDate = expirationDate,
+                 doctor = doctor,
+                 doctorDid = issuerDid,
+                 patientFirstName = patientFirstName,
+                 patientLastName = patientLastName,
+                 patientBirthDate = patientBirthDate,
+                 patientDid = patientDid,
+                 prescriptionId = prescriptionId,
+                 medicationId = medicationId,
+                 medicationRefData = null, // to be enriched later
+                 verificationSuccess = vsc.policyResults.success
+             )
          }
      }
-    return "TODO"
+    return null
 }
 
 fun isSwissMedicalPrescription(r: Result):Boolean {

@@ -22,8 +22,9 @@ fun Application.configureRouting() {
     install(AutoHeadResponse)
     install(DoubleReceive)
     install(CORS) {
-        allowHost("0.0.0.0:8080")
-        allowHost("localhost:8080")
+//        allowHost("0.0.0.0:8080")
+//        allowHost("localhost:8080")
+        anyHost()
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Authorization)
         allowHeader(HttpHeaders.AcceptEncoding)
