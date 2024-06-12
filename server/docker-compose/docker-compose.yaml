@@ -7,11 +7,10 @@ services:
       POSTGRES_PASSWORD: healthwalletdbpassword
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
-#    ports:
-#      - "5432:5432"
 
   healthwallet-pis:
     image: ctodeakai/healthwallet-pis:latest
+    pull_policy: always
     environment:
       DB_URL: "jdbc:postgresql://postgresdb:5432/healthwalletdb"
       DB_USER: "healthwalletuser"
@@ -20,8 +19,10 @@ services:
       HTTP_PORT: 7004
     depends_on:
       - postgresdb
-#    ports:
-#      - "7004:7004"
+
+  healthssi-pharmacy:
+    image: ctodeakai/healthssi-pharmacy
+    pull_policy: always
 
   wallet-api:
     image: docker.io/waltid/wallet-api:${VERSION_TAG:-latest}
@@ -116,6 +117,12 @@ services:
         published: $HEALTHWALLET_PIS_PORT # healthwallet-pis
         protocol: tcp
         mode: host
+
+      - target: $HEALTHSSI_PHARMACY_PORT
+        published: $HEALTHSSI_PHARMACY_PORT # healthssi-pharmacy
+        protocol: tcp
+        mode: host
+
 
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
