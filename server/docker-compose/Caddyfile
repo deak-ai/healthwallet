@@ -34,7 +34,12 @@
     reverse_proxy http://vc-repo:{$VC_REPO_PORT}
 }
 
-# VC Repo
+# HealthWallet PIS
 :{$HEALTHWALLET_PIS_PORT} {
     reverse_proxy http://healthwallet-pis:{$HEALTHWALLET_PIS_PORT}
+}
+
+# HealthSSI Pharmacy
+:{$HEALTHSSI_PHARMACY_PORT} {
+    reverse_proxy http://healthssi-pharmacy:{$HEALTHSSI_PHARMACY_NGINX_PORT}
 }

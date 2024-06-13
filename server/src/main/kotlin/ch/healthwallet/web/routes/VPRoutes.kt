@@ -6,6 +6,7 @@ import ch.healthwallet.repo.VerifyRequest
 import ch.healthwallet.repo.WaltIdVerifierRepository
 import ch.healthwallet.vc.PrescriptionVCIssuanceService
 import ch.healthwallet.vc.VerificationCallbackHandler
+import ch.healthwallet.vp.VerifiablePresentationManager
 import io.github.smiley4.ktorswaggerui.dsl.post
 import io.github.smiley4.ktorswaggerui.dsl.route
 import io.ktor.client.request.*
@@ -21,7 +22,7 @@ import java.util.*
 fun Route.vpRouting() {
     //val verificationCallbackHandler by inject<VerificationCallbackHandler>()
     val waltIdVerifierRepository by inject<WaltIdVerifierRepository>()
-
+    val vpm by inject<VerifiablePresentationManager>()
     route("/vp", {
         tags = listOf("Prescription VC Verification API")
     }) {
@@ -49,14 +50,16 @@ fun Route.vpRouting() {
             }
         }) {
             val verifyRequest = call.receive<VerifyRequest>()
-            val openId4VpAuthorizeUrl = waltIdVerifierRepository.verify(verifyRequest).
+
+            val openId4VpAuthorizeUrl = vpm.startVerification(verifyRequest).
+            //val openId4VpAuthorizeUrl = waltIdVerifierRepository.verify(verifyRequest).
                 getOrElse { exception ->
                     call.respondText(
                     exception.message!!,
                     status = HttpStatusCode.InternalServerError
                 )
             }
-            call.respond(openId4VpAuthorizeUrl.toString())
+            call.respond(openId4VpAuthorizeUrl)
         }
 
         post("/status", {
@@ -74,7 +77,7 @@ fun Route.vpRouting() {
             val callbackPaylod = call.receive<String>()
             println("Received callback on /vp/status")
             println("Payload:\n$callbackPaylod")
-            println("Call details:\n:$call")
+            vpm.handleCallback(callbackPaylod)
             call.respond(HttpStatusCode.OK)
         }
 

@@ -5,6 +5,7 @@ import ch.healthwallet.web.di.koinModule
 import ch.healthwallet.web.plugins.configureOpenApi
 import ch.healthwallet.web.plugins.configureRouting
 import ch.healthwallet.web.plugins.configureSerialization
+import ch.healthwallet.web.plugins.configureWebsockets
 import io.ktor.server.application.*
 import org.koin.ktor.plugin.Koin
 
@@ -20,6 +21,8 @@ fun Application.module() {
     configureDb()
 
     configureRouting()
+
+    configureWebsockets()
 
     configureSerialization()
 

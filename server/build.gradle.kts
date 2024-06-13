@@ -25,6 +25,8 @@ dependencies {
     implementation(libs.ktor.server.double.receive)
     implementation(libs.ktor.server.config.yaml)
     implementation(libs.ktor.server.status.pages)
+    implementation(libs.ktor.server.cors)
+    implementation(libs.ktor.server.websockets)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.kotlinx.serialization.json)

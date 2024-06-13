@@ -9,6 +9,8 @@ import ch.healthwallet.repo.WaltIdVerifierRepository
 import ch.healthwallet.repo.WaltIdVerifierRepositoryImpl
 import ch.healthwallet.vc.PrescriptionVCIssuanceService
 import ch.healthwallet.vc.PrescriptionVCIssuanceServiceImpl
+import ch.healthwallet.vp.VerifiablePresentationManager
+import ch.healthwallet.vp.VerifiablePresentationManagerImpl
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.serialization.kotlinx.json.*
@@ -52,4 +54,7 @@ fun koinModule(config: ApplicationConfig) = module {
         WaltIdVerifierRepositoryImpl(get(), appPrefsVerifier)
     }
 
+    single<VerifiablePresentationManager> {
+        VerifiablePresentationManagerImpl(get(),get())
+    }
 }
