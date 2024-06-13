@@ -25,7 +25,7 @@ fun Application.configureRouting() {
         allowHost(
             host= "healthwallet.li",
             schemes = listOf("https"),
-            subDomains = listOf("pharmacy")
+            subDomains = listOf("pharmacy", "pis")
         )
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Authorization)
