@@ -14,8 +14,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7555FF7A242A565900829871"
-               BuildableName = "HealthWallet.app"
-               BlueprintName = "iosApp"
+               BuildableName = "SSIHealthWallet.app"
+               BlueprintName = "SSIHealthWallet"
                ReferencedContainer = "container:iosApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,8 +44,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7555FF7A242A565900829871"
-            BuildableName = "HealthWallet.app"
-            BlueprintName = "iosApp"
+            BuildableName = "SSIHealthWallet.app"
+            BlueprintName = "SSIHealthWallet"
             ReferencedContainer = "container:iosApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

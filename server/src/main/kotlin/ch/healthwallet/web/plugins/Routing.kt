@@ -2,6 +2,7 @@ package ch.healthwallet.web.plugins
 
 import ch.healthwallet.web.routes.medicationRouting
 import ch.healthwallet.web.routes.patientRouting
+import ch.healthwallet.web.routes.staticsRouting
 import ch.healthwallet.web.routes.utilsRouting
 import ch.healthwallet.web.routes.vcRouting
 import ch.healthwallet.web.routes.vpRouting
@@ -40,6 +41,7 @@ fun Application.configureRouting() {
         vcRouting()
         vpRouting()
         utilsRouting()
+        staticsRouting()
     }
     install(StatusPages) {
         exception<SQLException> { call, cause ->

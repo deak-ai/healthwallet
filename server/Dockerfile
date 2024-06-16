@@ -33,6 +33,7 @@ COPY --from=buildstage /work/server/build/install/server /app
 COPY --from=buildstage /work/server/src/main/resources/application-test.yaml /app/config/
 COPY --from=buildstage /work/server/src/main/resources/application.yaml /app/config/
 COPY --from=buildstage /work/server/src/main/resources/refdata/Articles_ALL_ALL_20240429170557.xml /app/config/
+COPY --from=buildstage /work/server/src/main/resources/healthssi-privacy-policy_de.pdf /app/config/
 
 # Standard setup for the runtime environment
 WORKDIR /app
