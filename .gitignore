@@ -28,3 +28,4 @@ out/
 
 server/docker-compose/postgres-data
 
+composeApp/release/
