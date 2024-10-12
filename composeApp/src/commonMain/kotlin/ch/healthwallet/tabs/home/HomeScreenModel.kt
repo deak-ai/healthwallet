@@ -3,21 +3,22 @@ package ch.healthwallet.tabs.home
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import ch.healthwallet.data.chmed16a.MedicamentRefDataDTO
-import ch.healthwallet.data.chmed16a.extractMedicamentId
-import ch.healthwallet.data.chmed16a.isPrescription
 import ch.healthwallet.repo.AppPrefs
 import ch.healthwallet.prefs.AppPrefsRepository
 import ch.healthwallet.repo.CredentialsQuery
-import ch.healthwallet.repo.PisServerRepository
 import ch.healthwallet.repo.VerifiableCredential
 import ch.healthwallet.repo.WaltIdWalletRepository
 import ch.healthwallet.util.RefDataCache
+import ch.healthwallet.util.decodeJwtPayload
+import ch.healthwallet.util.extractMedicamentId
+import ch.healthwallet.util.isPrescription
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.jvm.Synchronized
+
+
 
 
 class HomeScreenModel(
@@ -107,12 +108,15 @@ class HomeScreenModel(
     private suspend fun filterPrescriptions(credentials: List<VerifiableCredential>):
         List<MedicamentRefDataDTO> {
         return credentials.filter {
-            isPrescription(it)
+            val payload = decodeJwtPayload(it.document) ?: return@filter false
+            isPrescription(payload)
         }.map {
-            val gtin = extractMedicamentId(it)!!
+            val payload = decodeJwtPayload(it.document) ?: return@map null
+            val gtin = extractMedicamentId(payload)!!
             refDataCache.get(gtin)
-        }
+        }.filterNotNull()
     }
+
 
 
     override fun onDispose() {

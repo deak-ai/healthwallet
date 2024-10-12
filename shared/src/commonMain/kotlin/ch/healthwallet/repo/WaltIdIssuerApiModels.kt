@@ -13,10 +13,21 @@ data class OpenId4VcJwtIssueRequest(
     val mapping: Mapping = Mapping()
 )
 
+
 @Serializable
 data class IssuerKey(
     val type: String = "jwk",
-    val jwk: String
+    val jwk: Jwk,
+)
+
+@Serializable
+data class Jwk(
+    val crv: String,
+    val d: String,
+    val kid: String,
+    val kty: String,
+    val x: String,
+    val y: String,
 )
 
 @Serializable

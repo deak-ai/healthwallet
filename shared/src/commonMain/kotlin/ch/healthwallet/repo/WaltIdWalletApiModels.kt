@@ -77,9 +77,9 @@ data class VerifiableCredential(
     @SerialName("wallet")
     val walletId: String,
     val addedOn: String,
-    val pending: Boolean,
+    val pending: Boolean? = null,
     val document: String,
-    val parsedDocument: JsonObject
+    val parsedDocument: JsonObject? = null,
     // val deletedOn: Any,
     // val disclosures: Any,
     //  val manifest: Any,

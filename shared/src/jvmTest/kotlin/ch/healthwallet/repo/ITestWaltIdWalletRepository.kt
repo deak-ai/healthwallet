@@ -1,15 +1,24 @@
 package ch.healthwallet.repo
 
+import ch.healthwallet.util.decodeJwtPayload
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.client.plugins.logging.DEFAULT
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.logging.SIMPLE
+
 import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.toMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 import kotlin.Result
 import java.util.UUID
 import kotlin.test.Ignore
@@ -18,6 +27,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
+
+import saschpe.kase64.*
+
 
 class ITestWaltIdWalletRepository {
 
@@ -36,7 +48,10 @@ class ITestWaltIdWalletRepository {
                     ignoreUnknownKeys = true
                 })
             }
-
+            install(Logging) {
+                level = LogLevel.ALL // Log everything (headers, body, etc.)
+                logger = Logger.SIMPLE
+            }
         }
 
         val repo: WaltIdWalletRepository = WaltIdWalletRepositoryImpl(
@@ -117,6 +132,7 @@ class ITestWaltIdWalletRepository {
 
     @Test
     fun `Calling getWallets when logged in succeeds and returns wallet list`() = runTest {
+        //repo.login()
         val result = repo.getWallets()
         assertTrue(result.isSuccess)
         println(result.getOrNull())
@@ -124,6 +140,7 @@ class ITestWaltIdWalletRepository {
 
     @Test
     fun `Calling getDids when logged in succeeds and returns list of DIDDetail`() = runTest {
+        repo.login()
         val walletId = getWalletId()
         val result = repo.getDids(walletId)
         assertTrue(result.isSuccess)
@@ -132,12 +149,21 @@ class ITestWaltIdWalletRepository {
 
     @Test
     fun `Calling queryCredentials returns parsed list of verified credentials`() = runTest {
+        repo.login()
         val walletId = getWalletId()
 
         val result = repo.queryCredentials(CredentialsQuery(walletId = walletId))
-        println(result.getOrNull())
-        assertTrue(result.isSuccess)
+        val map: List<JsonObject> = result.getOrThrow().map { vc ->
+            decodeJwtPayload(vc.document)
+        }
+        println(map.map {
+            Json.encodeToString(it)
+        })
+
+
+
     }
+
 
     @Test
     fun `Calling getCredential with valid parameters returns verified credential`() {

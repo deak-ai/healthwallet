@@ -2,6 +2,7 @@ package ch.healthwallet.vc
 
 import ch.healthwallet.db.PisDbRepository
 import ch.healthwallet.repo.*
+import kotlinx.serialization.json.Json
 import java.util.*
 import kotlin.Result
 
@@ -19,12 +20,21 @@ class PrescriptionVCIssuanceServiceImpl(
             val issueRequest = OpenId4VcJwtIssueRequest(
                 // TODO: integrate HashiCorp Vault TSE and implement DID management
                 issuerKey = IssuerKey(
-                    jwk = "{\"kty\":\"EC\"," +
-                            "\"d\":\"LOcVh6_257_Sp7wT3QoW68aBxiTiQPvROMAgXf_OiK4\"," +
-                            "\"crv\":\"P-256\"," +
-                            "\"kid\":\"yBY9dQqR499tSTxcCgG8JeJ9SYsDZSafQ1404LamPQw\"," +
-                            "\"x\":\"VsgZ-a8X9ZtogkUTd0sKNbQidxc2IEzpZUYBe07O3u4\"," +
-                            "\"y\":\"d58TT0QtkuxOuFYN1OjNlgzEUDmWmYioAzAJdYf8ftM\"}"
+//                            jwk = "{\"kty\":\"EC\"," +
+//                            "\"d\":\"LOcVh6_257_Sp7wT3QoW68aBxiTiQPvROMAgXf_OiK4\"," +
+//                            "\"crv\":\"P-256\"," +
+//                            "\"kid\":\"yBY9dQqR499tSTxcCgG8JeJ9SYsDZSafQ1404LamPQw\"," +
+//                            "\"x\":\"VsgZ-a8X9ZtogkUTd0sKNbQidxc2IEzpZUYBe07O3u4\"," +
+//                            "\"y\":\"d58TT0QtkuxOuFYN1OjNlgzEUDmWmYioAzAJdYf8ftM\"}"
+
+                    jwk = Jwk(
+                        crv = "P-256",
+                        d = "LOcVh6_257_Sp7wT3QoW68aBxiTiQPvROMAgXf_OiK4",
+                        kid = "yBY9dQqR499tSTxcCgG8JeJ9SYsDZSafQ1404LamPQw",
+                        kty = "EC",
+                        x = "VsgZ-a8X9ZtogkUTd0sKNbQidxc2IEzpZUYBe07O3u4",
+                        y = "d58TT0QtkuxOuFYN1OjNlgzEUDmWmYioAzAJdYf8ftM"
+                    )
                 ),
                 issuerDid = "did:jwk:eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2Iiwia2lkIjoieUJ" +
                         "ZOWRRcVI0OTl0U1R4Y0NnRzhKZUo5U1lzRFpTYWZRMTQwNExhbVBRdyIsIng" +
@@ -36,6 +46,7 @@ class PrescriptionVCIssuanceServiceImpl(
                     )
                 )
             )
+            println("Issuing VC for prescription $mediationUUID")
             return waltIdIssuerRepo.openId4VcJwtIssue(issueRequest)
         } catch (t: Throwable) {
             Result.failure(t)

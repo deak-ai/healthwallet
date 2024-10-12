@@ -3,7 +3,6 @@ package ch.healthwallet.tabs.vc
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import ch.healthwallet.data.chmed16a.MedicamentRefDataDTO
-import ch.healthwallet.data.chmed16a.extractMedicamentId
 import ch.healthwallet.repo.CredentialRequest
 import ch.healthwallet.repo.OfferRequest
 import ch.healthwallet.repo.UsePresentationRequest
@@ -11,6 +10,8 @@ import ch.healthwallet.repo.VerifiableCredential
 import ch.healthwallet.repo.WalletList
 import ch.healthwallet.repo.WaltIdWalletRepository
 import ch.healthwallet.util.RefDataCache
+import ch.healthwallet.util.decodeJwtPayload
+import ch.healthwallet.util.extractMedicamentId
 import io.ktor.http.Parameters
 import io.ktor.http.Url
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -122,7 +123,7 @@ class VCScreenModel(
                     it.credentialId,
                     url,
                     refDataCache.get(
-                        extractMedicamentId(it)
+                        extractMedicamentId(decodeJwtPayload(it.document))
                         ?: throw IllegalStateException("No medicament id found")
                 ))
             }
@@ -166,7 +167,7 @@ class VCScreenModel(
                 .first()
             val credentialId = vc.credentialId
 
-            val gtin = extractMedicamentId(vc)
+            val gtin = extractMedicamentId(decodeJwtPayload(vc.document))
             val medRefData = gtin?.let {
                 refDataCache.get(gtin)
             } ?: throw IllegalStateException("No medicament id found")

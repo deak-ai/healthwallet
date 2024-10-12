@@ -22,7 +22,18 @@ data class VerifyRequest(
 @Serializable
 data class PresentationDefinition(
     @SerialName("request_credentials")
-    val requestCredentials: List<String> = listOf(AppPrefs.DEFAULT_VC_NAME)
+    val requestCredentials: List<CredentialDescriptor> = listOf(
+        CredentialDescriptor(
+            AppPrefs.DEFAULT_VC_FORMAT,
+            AppPrefs.DEFAULT_VC_NAME
+        )
+    )
+)
+
+@Serializable
+data class CredentialDescriptor(
+    val format: String,
+    val type: String
 )
 
 
@@ -35,25 +46,25 @@ data class VerifierStatusCallback(
 
 @Serializable
 data class PolicyResults(
-    @SerialName("policies_failed")
-    val policiesFailed: Int,
-    @SerialName("policies_run")
+//    @SerialName("policies_run")
     val policiesRun: Int,
-    @SerialName("policies_succeeded")
-    val policiesSucceeded: Int,
+//    @SerialName("policies_failed")
+//    val policiesFailed: Int,
+//    @SerialName("policies_succeeded")
+//    val policiesSucceeded: Int,
     val results: List<Result>,
-    val success: Boolean,
+//    val success: Boolean,
     val time: String
 )
 
 @Serializable
 data class Result(
     val credential: String,
-    val policies: List<Policy>
+    val policyResults: List<PolicyResult>
 )
 
 @Serializable
-data class Policy(
+data class PolicyResult(
     val description: String,
     @SerialName("is_success")
     val isSuccess: Boolean,
@@ -83,7 +94,9 @@ data class PrescriptionData(
 fun extractPrescription(vsc: VerifierStatusCallback):PrescriptionData? {
     vsc.policyResults.results.forEach {
          if(isSwissMedicalPrescription(it)) {
-             val vc = it.policies[0].result
+             val policyResult = it.policyResults[0]
+
+             val vc = policyResult.result
                  .get("vc")?.jsonObject
 
              val issuerDid = vc?.get("issuer")?.jsonObject
@@ -125,7 +138,7 @@ fun extractPrescription(vsc: VerifierStatusCallback):PrescriptionData? {
                  prescriptionId = prescriptionId,
                  medicationId = medicationId,
                  medicationRefData = null, // to be enriched later
-                 verificationSuccess = vsc.policyResults.success
+                 verificationSuccess = policyResult.isSuccess
              )
          }
      }

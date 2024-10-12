@@ -2,7 +2,6 @@ package ch.healthwallet.vp
 
 import ch.healthwallet.db.PisDbRepository
 import ch.healthwallet.repo.PrescriptionData
-import ch.healthwallet.repo.VerifiableCredential
 import ch.healthwallet.repo.VerifierStatusCallback
 import ch.healthwallet.repo.VerifyRequest
 import ch.healthwallet.repo.WaltIdVerifierRepository
@@ -10,9 +9,6 @@ import ch.healthwallet.repo.extractPrescription
 import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -89,20 +85,6 @@ class VerifiablePresentationManagerImpl(
                 }
             }
         }
-    }
-
-    fun extractMedicamentId(vc: VerifiableCredential):String? {
-        return vc.parsedDocument["credentialSubject"]?.jsonObject
-            ?.get("prescription")?.jsonObject
-            ?.get("Medicaments")?.jsonArray
-            ?.get(0)?.jsonObject
-            ?.get("Id")?.jsonPrimitive
-            ?.content
-    }
-
-    fun isPrescription(vc: VerifiableCredential):Boolean {
-        return vc.parsedDocument["credentialSubject"]?.jsonObject
-            ?.get("prescription") != null
     }
 
 }

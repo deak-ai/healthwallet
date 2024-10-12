@@ -33,6 +33,7 @@ kotlinx-datetime = "0.6.0"
 qrcode-kotlin = "4.1.1"
 xmlutil = "0.86.3"
 mssql = "12.6.2.jre11"
+kase64 = "1.2.0"
 
 
 [libraries]
@@ -72,6 +73,7 @@ ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negoti
 ktor-client-android  = { module = "io.ktor:ktor-client-android", version.ref = "ktor"}
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor"}
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor"}
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor"}
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel"}
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
@@ -99,6 +101,7 @@ qrcode-kotlin = { module = "io.github.g0dkar:qrcode-kotlin", version.ref = "qrco
 xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core", version.ref = "xmlutil"}
 xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil"}
 mssql-jdbc = { module = "com.microsoft.sqlserver:mssql-jdbc", version.ref = "mssql"}
+kase64 = { module = "de.peilicke.sascha:kase64", version.ref = "kase64" }
 
 
 [plugins]

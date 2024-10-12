@@ -23,10 +23,11 @@ fun Application.configureRouting() {
     install(AutoHeadResponse)
     install(DoubleReceive)
     install(CORS) {
+        anyHost()
         allowHost(
             host= "healthwallet.li",
             schemes = listOf("https"),
-            subDomains = listOf("pharmacy", "pis")
+            subDomains = listOf("pharmacy", "pharmacy2", "pis", "pis2")
         )
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Authorization)

@@ -49,3 +49,4 @@ ENTRYPOINT ["sh", "-c", "./bin/server -config=$CONFIG_FILE"]
 # docker buildx build -f server/Dockerfile -t healthwallet-pis:latest .
 # docker tag healthwallet-pis:latest ctodeakai/healthwallet-pis:latest
 # docker push ctodeakai/healthwallet-pis:latest
+

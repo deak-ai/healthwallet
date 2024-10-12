@@ -37,10 +37,14 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.qrcode.kotlin)
+            implementation(libs.kase64)
         }
         jvmMain.dependencies {
             implementation(libs.xmlutil.core)
             implementation(libs.xmlutil.serialization)
+        }
+        jvmTest.dependencies {
+            implementation(libs.ktor.client.logging)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -48,6 +52,7 @@ kotlin {
             implementation(libs.ktor.client.cio)
         }
     }
+
 }
 
 android {

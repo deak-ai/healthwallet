@@ -8,7 +8,10 @@ object VPExamples {
             "statusCallbackUri": "https://pis.healthwallet.li/vp/status",
             "presentationDefinition": {
                 "request_credentials": [
-                    "SwissMedicalPrescription"
+                    {
+                      "format": "jwt_vc_json",
+                      "type": "SwissMedicalPrescription"
+                    }
                 ]
             }
         }
@@ -25,7 +28,10 @@ object VPExamples {
             "stateId": null,
             "presentationDefinition": {
                 "request_credentials": [
-                    "SwissMedicalPrescription"
+                    {
+                      "format": "jwt_vc_json",
+                      "type": "SwissMedicalPrescription"
+                    }
                 ]
             }
         }
