@@ -15,8 +15,7 @@ HealthWallet currently implements the features described in https://github.com/A
 1. Go to https://web.healthwallet.li and create an account on the hosted wallet
 * no need to use a real email and simple password also fine for testing
 2. Install mobile app
-* For iOS there is a public testing link here: https://testflight.apple.com/join/rysqNrU1
-* For Android need to contact cto@deak.ai to be added to testing group
+* Either build yourself or contact cto@deak.ai
 3. Configure mobile app in the settings field
 * use default wallet destination (https://wallet.healthwallet.li)
 * enter email and password created on hosted wallet
