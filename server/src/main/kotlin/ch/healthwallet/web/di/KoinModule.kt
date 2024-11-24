@@ -7,8 +7,8 @@ import ch.healthwallet.repo.WaltIdIssuerRepositoryImpl
 import ch.healthwallet.repo.AppPrefs
 import ch.healthwallet.repo.WaltIdVerifierRepository
 import ch.healthwallet.repo.WaltIdVerifierRepositoryImpl
-import ch.healthwallet.vc.PrescriptionVCIssuanceService
-import ch.healthwallet.vc.PrescriptionVCIssuanceServiceImpl
+import ch.healthwallet.vc.VCIssuanceService
+import ch.healthwallet.vc.VCIssuanceServiceImpl
 import ch.healthwallet.vp.VerifiablePresentationManager
 import ch.healthwallet.vp.VerifiablePresentationManagerImpl
 import io.ktor.client.plugins.contentnegotiation.*
@@ -44,8 +44,8 @@ fun koinModule(config: ApplicationConfig) = module {
     }
 
     // issuer service
-    single<PrescriptionVCIssuanceService> {
-        PrescriptionVCIssuanceServiceImpl(get(), get()) }
+    single<VCIssuanceService> {
+        VCIssuanceServiceImpl(get(), get()) }
 
     // verifier repo
     val verifierBaseUrl = config.property("services.verifier").getString()

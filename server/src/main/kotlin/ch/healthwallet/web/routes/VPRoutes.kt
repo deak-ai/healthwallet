@@ -1,22 +1,16 @@
 package ch.healthwallet.web.routes
 
-import ch.healthwallet.data.chmed16a.MedicationDTO
-import ch.healthwallet.qr.generateQRCode
 import ch.healthwallet.repo.VerifyRequest
 import ch.healthwallet.repo.WaltIdVerifierRepository
-import ch.healthwallet.vc.PrescriptionVCIssuanceService
-import ch.healthwallet.vc.VerificationCallbackHandler
 import ch.healthwallet.vp.VerifiablePresentationManager
 import io.github.smiley4.ktorswaggerui.dsl.post
 import io.github.smiley4.ktorswaggerui.dsl.route
-import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import java.util.*
 
 
 fun Route.vpRouting() {

@@ -1,10 +1,8 @@
 package ch.healthwallet.web.routes
 
-import ch.healthwallet.qr.generateQRCode
-import ch.healthwallet.vc.PrescriptionVCIssuanceService
+import ch.healthwallet.vc.VCIssuanceService
 import io.github.smiley4.ktorswaggerui.dsl.post
 import io.github.smiley4.ktorswaggerui.dsl.route
-import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -16,7 +14,7 @@ import java.util.*
 
 fun Route.vcRouting() {
 
-    val issuanceService by inject<PrescriptionVCIssuanceService>()
+    val issuanceService by inject<VCIssuanceService>()
 
     route("/vc", {
         tags = listOf("Prescription VC Issuance API")

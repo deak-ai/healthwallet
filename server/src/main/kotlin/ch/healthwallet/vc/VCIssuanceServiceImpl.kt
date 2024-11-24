@@ -2,14 +2,13 @@ package ch.healthwallet.vc
 
 import ch.healthwallet.db.PisDbRepository
 import ch.healthwallet.repo.*
-import kotlinx.serialization.json.Json
 import java.util.*
 import kotlin.Result
 
-class PrescriptionVCIssuanceServiceImpl(
+class VCIssuanceServiceImpl(
     private val waltIdIssuerRepo: WaltIdIssuerRepository,
     private val pisDbRepo: PisDbRepository
-) : PrescriptionVCIssuanceService {
+) : VCIssuanceService {
 
     override suspend fun issuePrescriptionVc(mediationUUID: UUID): Result<String> {
         return try {
@@ -51,6 +50,10 @@ class PrescriptionVCIssuanceServiceImpl(
         } catch (t: Throwable) {
             Result.failure(t)
         }
+    }
+
+    override suspend fun issueFhirBundleVc(patientId: String): Result<String> {
+        TODO("Not yet implemented")
     }
 
 
