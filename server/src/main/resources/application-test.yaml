@@ -5,8 +5,8 @@ ktor:
     modules:
       - ch.healthwallet.web.ApplicationKt.module
 services:
-  issuer: "https://issuer2.healthwallet.li"
-  verifier: "https://verifier2.healthwallet.li"
+  issuer: "$ISSUER_URL:https://issuer.healthwallet.li"
+  verifier: "$VERIFIER_URL:https://verifier.healthwallet.li"
 db:
   url: "$DB_URL:jdbc:postgresql://localhost:5432/healthssi_pis"
   driver: "$DB_DRIVER:org.postgresql.Driver"

@@ -9,6 +9,8 @@ services:
       DB_PASSWORD: $DB_PASSWORD
       DB_MEDREFDATA: "config/Articles_ALL_ALL_20240429170557.xml"
       HTTP_PORT: 7004
+      ISSUER_URL: https://issuer.healthwallet.li
+      VERIFIER_URL: https://verifier.healthwallet.li
     depends_on:
       postgres:
         condition: service_healthy
