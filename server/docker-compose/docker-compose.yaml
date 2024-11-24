@@ -196,6 +196,17 @@ services:
         protocol: tcp
         mode: host
 
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+
+      - target: 8800
+        published: 8800
+        protocol: tcp
+        mode: host
+
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
+      - /Users/oli/devel/projects/ssi/healthwallet-datasets:/srv/healthwallet-datasets
 

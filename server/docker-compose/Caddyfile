@@ -1,5 +1,4 @@
 {
-	auto_https off
 	admin off
 }
 
@@ -54,4 +53,18 @@
 :{$HEALTHWALLET_PIS_PORT} {
     reverse_proxy http://healthwallet-pis:{$HEALTHWALLET_PIS_PORT}
 }
+
+# Serve static files over HTTPS (localhost with self-signed certificates)
+:443 {
+    root * /srv/healthwallet-datasets
+    file_server
+    tls internal  # Enable self-signed certificates for local development
+}
+
+# Serve static files over HTTPS (localhost with self-signed certificates)
+:8800 {
+    root * /srv/healthwallet-datasets
+    file_server
+}
+
 
