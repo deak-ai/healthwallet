@@ -22,3 +22,9 @@ fun isPrescription(payload: JsonObject): Boolean {
         ?.get("credentialSubject")?.jsonObject
         ?.get("prescription") != null
 }
+
+fun isSmartHealthCard(payload: JsonObject): Boolean {
+    return payload["vc"]?.jsonObject
+        ?.get("credentialSubject")?.jsonObject
+        ?.get("fhirVersion") != null
+}

@@ -33,3 +33,18 @@ e.g. for test use -config=application-test.yaml.
 Make sure to provide any environment variables required by the config file 
 (e.g. $DB_USER/$DB_PASSWORD) in the run configuration.
 
+
+
+## setup of pgvector:
+
+CREATE EXTENSION IF NOT EXISTS vector;
+create table public.medicamentsrefdata_embedding
+(
+id        integer not null
+primary key,
+embedding vector(1536)
+);
+
+create index medicamentsrefdata_embedding_embeddings_idx
+on public.medicamentsrefdata_embedding using hnsw (embedding public.vector_l2_ops);
+_

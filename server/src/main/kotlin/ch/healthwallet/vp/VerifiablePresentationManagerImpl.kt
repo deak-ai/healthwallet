@@ -1,16 +1,13 @@
 package ch.healthwallet.vp
 
 import ch.healthwallet.db.PisDbRepository
-import ch.healthwallet.repo.PrescriptionData
-import ch.healthwallet.repo.VerifierStatusCallback
-import ch.healthwallet.repo.VerifyRequest
-import ch.healthwallet.repo.WaltIdVerifierRepository
-import ch.healthwallet.repo.extractPrescription
+import ch.healthwallet.repo.*
 import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
 import kotlinx.serialization.json.Json
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.Result
 
 class VerifiablePresentationManagerImpl(
     private val waltIdVerifierRepository: WaltIdVerifierRepository,
@@ -47,15 +44,17 @@ class VerifiablePresentationManagerImpl(
     override suspend fun handleCallback(callbackPayload: String) {
         try {
             val vsc = json.decodeFromString<VerifierStatusCallback>(callbackPayload)
+            println("Received verifier status callback for stateId=${vsc.id}")
             val pd = extractPrescription(vsc)
             if (pd != null) {
+                println("Found ${AppPrefs.DEFAULT_VC_NAME}, enriching with medical reference data")
                 val pde = enrichWithMedicationRefData(pd)
-
                 val pdes = json.encodeToString(PrescriptionData.serializer(), pde)
-
+                println("Broadcasting Prescription data to WebSocket listeners")
                 broadcast(pde.stateId, pdes)
             } else {
-                println("No prescription found on callback")
+                println("Broadcasting VerifierStatusCallback data to WebSocket listeners")
+                broadcast(vsc.id, callbackPayload)
             }
         } catch (e: Exception) {
             println("Failed to parse callback as VerifierStatusCallback: $e")

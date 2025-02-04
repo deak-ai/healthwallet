@@ -3,10 +3,7 @@ package ch.healthwallet.repo
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.expectSuccess
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
+import io.ktor.client.request.*
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.Url
@@ -40,7 +37,7 @@ class WaltIdWalletRepositoryImpl(
         return try {
             val appPrefs = prefsFlow.value
             val baseUrl = appPrefs.waltIdWalletApi
-            httpClient.post("$baseUrl/wallet-api/auth/create") {
+            httpClient.post("$baseUrl/wallet-api/auth/register") {
                 contentType(ContentType.Application.Json)
                 // using email also as username
                 setBody(CreateUserRequest(appPrefs.waltIdEmail, appPrefs.waltIdEmail,appPrefs.waltIdPassword))
@@ -249,6 +246,22 @@ class WaltIdWalletRepositoryImpl(
             Result.failure(t)
         }
     }
+
+    override suspend fun deleteCredential(walletId: String, credentialId: String): Result<Boolean> {
+        return try {
+            val baseUrl = prefsFlow.value.waltIdWalletApi
+            val response = httpClient.delete(
+                "$baseUrl/wallet-api/wallet/$walletId" +
+                        "/credentials/$credentialId"
+            ) {
+                expectSuccess = true
+            }
+            Result.success(true)
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
+
 
 
 }

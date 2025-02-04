@@ -37,6 +37,8 @@ interface WaltIdWalletRepository {
     suspend fun usePresentationRequest(
         walletId: String, usePresentationRequest: UsePresentationRequest ) : Result<String>
 
+    suspend fun deleteCredential(walletId: String, credentialId: String): Result<Boolean>
+
 }
 
 

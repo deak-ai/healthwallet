@@ -10,6 +10,7 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.ClassDiscriminatorMode
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -29,26 +30,30 @@ class ITestWaltIdIssuerRepository {
                 json(Json {
                     encodeDefaults = true
                     ignoreUnknownKeys = true
+                    classDiscriminatorMode = ClassDiscriminatorMode.NONE
                 })
             }
 
         }
+        val jwk = Jwk(
+            kty = "EC",
+            d = "LOcVh6_257_Sp7wT3QoW68aBxiTiQPvROMAgXf_OiK4",
+            crv = "P-256",
+            kid = "yBY9dQqR499tSTxcCgG8JeJ9SYsDZSafQ1404LamPQw",
+            x = "VsgZ-a8X9ZtogkUTd0sKNbQidxc2IEzpZUYBe07O3u4",
+            y = "d58TT0QtkuxOuFYN1OjNlgzEUDmWmYioAzAJdYf8ftM"
+        )
         val issueRequest =
-            OpenId4VcJwtIssueRequest(
+            SwissMedicalPrescriptionIssueRequest(
                 issuerKey = IssuerKey(
-                    jwk = "{\"kty\":\"EC\"," +
-                            "\"d\":\"LOcVh6_257_Sp7wT3QoW68aBxiTiQPvROMAgXf_OiK4\"," +
-                            "\"crv\":\"P-256\"," +
-                            "\"kid\":\"yBY9dQqR499tSTxcCgG8JeJ9SYsDZSafQ1404LamPQw\"," +
-                            "\"x\":\"VsgZ-a8X9ZtogkUTd0sKNbQidxc2IEzpZUYBe07O3u4\"," +
-                            "\"y\":\"d58TT0QtkuxOuFYN1OjNlgzEUDmWmYioAzAJdYf8ftM\"}"
+                    jwk = jwk
                 ),
                 issuerDid = "did:jwk:eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2Iiwia2lkIjoieUJ" +
                         "ZOWRRcVI0OTl0U1R4Y0NnRzhKZUo5U1lzRFpTYWZRMTQwNExhbVBRdyIsIng" +
                         "iOiJWc2daLWE4WDladG9na1VUZDBzS05iUWlkeGMySUV6cFpVWUJlMDdPM3U0I" +
                         "iwieSI6ImQ1OFRUMFF0a3V4T3VGWU4xT2pObGd6RVVEbVdtWWlvQXpBSmRZZjhmdE0ifQ",
-                credentialData = CredentialDataV1(
-                    credentialSubject = CredentialSubject(
+                credentialData = SwissMedicalPrescriptionCredentialData(
+                    credentialSubject = SwissMedicalPrescriptionSubject(
                         prescription = MedicationDTO(
                             medType = 3,
                             medId = "13dc576f-e7a6-4abd-a2c5-81e3d49d8487",
@@ -75,6 +80,8 @@ class ITestWaltIdIssuerRepository {
     @Test
     fun `Calling openId4VcJwtIssue with valid request returns 200 and credential offer`() {
         runTest {
+
+            println("tesing issue request")
             val result = repo.openId4VcJwtIssue(issueRequest)
             assertTrue(result.isSuccess)
             val credentialOffer = result.getOrNull()
@@ -86,7 +93,7 @@ class ITestWaltIdIssuerRepository {
     @Test
     fun `Calling openId4VcJwtIssue with invalid issuerKey returns failure result`() {
         runTest {
-            val invalidRequest = issueRequest.copy(IssuerKey(jwk = "dummy"))
+            val invalidRequest = issueRequest.copy(issuerKey = IssuerKey("jwk",jwk.copy(crv = "bla")))
             val result = repo.openId4VcJwtIssue(invalidRequest)
             assertTrue(result.isFailure)
             val exception = result.exceptionOrNull()

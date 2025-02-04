@@ -2,6 +2,7 @@ package ch.healthwallet.web.di
 
 import ch.healthwallet.db.PisDbRepository
 import ch.healthwallet.db.PisDbRepositoryImpl
+import ch.healthwallet.db.RefDataRAG
 import ch.healthwallet.repo.WaltIdIssuerRepository
 import ch.healthwallet.repo.WaltIdIssuerRepositoryImpl
 import ch.healthwallet.repo.AppPrefs
@@ -17,19 +18,21 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.config.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.json.ClassDiscriminatorMode
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 fun koinModule(config: ApplicationConfig) = module {
 
     single<PisDbRepository> { PisDbRepositoryImpl() }
-
+    single<RefDataRAG> { RefDataRAG(config.property("openai.key").getString())}
     single {
         io.ktor.client.HttpClient {
             install(ContentNegotiation) {
                 json(Json {
                     encodeDefaults = true
                     ignoreUnknownKeys = true
+                    classDiscriminatorMode = ClassDiscriminatorMode.NONE
                 })
             }
             install(HttpCookies)

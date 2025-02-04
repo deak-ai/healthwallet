@@ -6,6 +6,7 @@ import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.ClassDiscriminatorMode
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
@@ -21,6 +22,7 @@ class ITestCredentialOfferFlow {
                 json(Json {
                     encodeDefaults = true
                     ignoreUnknownKeys = true
+                    classDiscriminatorMode = ClassDiscriminatorMode.NONE
                 })
             }
         }

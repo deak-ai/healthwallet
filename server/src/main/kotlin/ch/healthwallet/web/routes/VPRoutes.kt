@@ -47,7 +47,6 @@ fun Route.vpRouting() {
             val verifyRequest = call.receive<VerifyRequest>()
             println("Parsed verifyRequest:\n$verifyRequest")
             val openId4VpAuthorizeUrl = vpm.startVerification(verifyRequest).
-            //val openId4VpAuthorizeUrl = waltIdVerifierRepository.verify(verifyRequest).
                 getOrElse { exception ->
                     call.respondText(
                     exception.message!!,

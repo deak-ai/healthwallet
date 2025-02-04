@@ -1,5 +1,6 @@
 package ch.healthwallet.web.routes
 
+import ch.healthwallet.repo.SwissEidDetail
 import ch.healthwallet.vc.VCIssuanceService
 import io.github.smiley4.ktorswaggerui.dsl.post
 import io.github.smiley4.ktorswaggerui.dsl.route
@@ -62,6 +63,44 @@ fun Route.vcRouting() {
             }
             call.respond(HttpStatusCode.OK, credentialOffer)
         }
+
+
+        // ------------------------
+
+        post("/issue/swisseid", {
+            summary = "Issue a swiss e-id VC"
+            description = "Issue a swiss e-id credential using OIDC4VP"
+            request {
+                body<SwissEidDetail>() {
+                    description = "A "
+                    example("Minimum verify request", VCExamples.swissEidDetailExampleRequest)
+                    required = true
+                }
+            }
+            response {
+                HttpStatusCode.OK to {
+                    description = "OpenID4VP authorization URL"
+                    body<String> {
+                        example("OpenID4VP authorization URL",
+                            VCExamples.vcIssueResponse
+                        )
+                    }
+                }
+            }
+        }) {
+            println("Received POST on /vc/issue/swisseid")
+            val issueRequest = call.receive<SwissEidDetail>()
+            println("Parsed SwissEidDetail:\n$issueRequest")
+            val credentialOfferResult = issuanceService.issueSwissEid(issueRequest)
+            val credentialOffer = credentialOfferResult.getOrElse { exception ->
+                call.respondText(
+                    exception.message!!,
+                    status = HttpStatusCode.InternalServerError
+                )
+            }
+            call.respond(HttpStatusCode.OK, credentialOffer)
+        }
+
 
     }
 }

@@ -156,7 +156,6 @@ fun MedicamentRefDataDAO.toDTO(): MedicamentRefDataDTO {
         atc = this.atc,
         authHolderName = this.authHolderName,
         authHolderGln = this.authHolderGln,
-        date = this.dt.toJavaLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-
+        date = this.dt.toJavaLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
     )
 }

@@ -34,6 +34,7 @@ services:
       - .env
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      - "wase:host-gateway"
     volumes:
       - ./wallet-api/config:/waltid-wallet-api/config
       - ./wallet-api/walt.yaml:/waltid-wallet-api/walt.yaml
@@ -121,7 +122,7 @@ services:
       PORT: $VC_REPO_PORT
 
   postgres:
-    image: postgres
+    image: pgvector/pgvector:0.8.0-pg17
     profiles:
       - postgres
     healthcheck:
@@ -210,5 +211,5 @@ services:
 
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
-      - /Users/oli/devel/projects/ssi/healthwallet-datasets:/srv/healthwallet-datasets
+      - $HEALTHWALLET_DATASETS:/srv/healthwallet-datasets
 

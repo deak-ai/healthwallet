@@ -1,6 +1,7 @@
 package ch.healthwallet.web.routes
 
 import ch.healthwallet.db.PisDbRepository
+import ch.healthwallet.db.RefDataRAG
 import io.github.smiley4.ktorswaggerui.dsl.get
 import io.github.smiley4.ktorswaggerui.dsl.route
 import io.ktor.http.*
@@ -13,6 +14,8 @@ import org.koin.ktor.ext.inject
 fun Route.medicationRouting() {
 
     val pisDbRepo by inject<PisDbRepository>()
+
+    val refDataRAG by inject<RefDataRAG>()
 
     route("/medications", {
         tags = listOf("Medication API")
@@ -56,6 +59,71 @@ fun Route.medicationRouting() {
                 status = HttpStatusCode.NotFound
             )
             call.respond(refData)
+        }
+        get("/refdata/findmed", {
+            summary = "Gets a medication refdata based on substring of the medication name"
+            request {
+                queryParameter<String>("subString") { required = true }
+            }
+        }) {
+            val subString = call.request.queryParameters["subString"] ?: return@get call.respondText(
+                "Missing substring",
+                status = HttpStatusCode.BadRequest
+            )
+            val refData = pisDbRepo.findMedicamentRefDataBySubstring(subString)
+                if (refData.isEmpty())  {
+                    return@get call.respondText(
+                        "No medication refdata with substring $subString",
+                        status = HttpStatusCode.NotFound
+                    )
+                }
+            call.respond(refData)
+        }
+        get("/refdata/count", {
+            summary = "Gets the number of items in the medication refdata embeddings table"
+        }) {
+            val refData = refDataRAG.countEmbeddings()
+            call.respond(refData)
+        }
+        get("/refdata/embeddings", {
+            summary = "Gets a medication embedding based on a string"
+            request {
+                queryParameter<String>("text") { required = true }
+            }
+        }) {
+            val text = call.request.queryParameters["text"] ?: return@get call.respondText(
+                "Missing text",
+                status = HttpStatusCode.BadRequest
+            )
+
+            val embedding = refDataRAG.getEmbedding(text)
+            if (embedding.isEmpty())  {
+                return@get call.respondText(
+                    "No medication refdata with substring $text",
+                    status = HttpStatusCode.NotFound
+                )
+            }
+            call.respond(embedding)
+        }
+        get("/refdata/search", {
+            summary = "Gets a list of medications closest to a string"
+            request {
+                queryParameter<String>("text") { required = true }
+            }
+        }) {
+            val text = call.request.queryParameters["text"] ?: return@get call.respondText(
+                "Missing text",
+                status = HttpStatusCode.BadRequest
+            )
+
+            val results = refDataRAG.searchSimilarMedicaments(text, 3)
+            if (results.isEmpty())  {
+                return@get call.respondText(
+                    "No medication refdata found that is similar to $text",
+                    status = HttpStatusCode.NotFound
+                )
+            }
+            call.respond(results)
         }
     }
 }

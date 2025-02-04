@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.xmlutil.core)
     implementation(libs.xmlutil.serialization)
     implementation(libs.mssql.jdbc)
+    implementation(libs.openai.client)
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)
     testImplementation(libs.junit.jupiter.api)

@@ -22,7 +22,7 @@ fun Route.utilsRouting() {
                     description = "Request to convert a credential offer to a QR code"
                     example(
                         "Credential Offer Example",
-                        VCExamples.vcPrescriptionIssueResponse
+                        VCExamples.vcIssueResponse
                     )
                     required = true
                 }

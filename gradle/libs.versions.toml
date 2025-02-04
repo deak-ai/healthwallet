@@ -34,6 +34,7 @@ qrcode-kotlin = "4.1.1"
 xmlutil = "0.86.3"
 mssql = "12.6.2.jre11"
 kase64 = "1.2.0"
+openai-kotlin = "3.8.2"
 
 
 [libraries]
@@ -102,6 +103,7 @@ xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core", version.ref = "xmlu
 xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil"}
 mssql-jdbc = { module = "com.microsoft.sqlserver:mssql-jdbc", version.ref = "mssql"}
 kase64 = { module = "de.peilicke.sascha:kase64", version.ref = "kase64" }
+openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openai-kotlin" }
 
 
 [plugins]

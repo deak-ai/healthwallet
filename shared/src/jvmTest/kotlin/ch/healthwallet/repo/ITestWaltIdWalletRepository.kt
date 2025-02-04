@@ -1,6 +1,6 @@
 package ch.healthwallet.repo
 
-import ch.healthwallet.util.decodeJwtPayload
+import ch.healthwallet.util.*
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.HttpCookies
@@ -57,6 +57,25 @@ class ITestWaltIdWalletRepository {
         val repo: WaltIdWalletRepository = WaltIdWalletRepositoryImpl(
             httpClient, appPrefs.asStateFlow()
         )
+    }
+    
+
+
+    @Test
+    fun `Deleting all smart health card credentials work`() = runTest {
+        val walletId = getWalletId()
+        val credentials = repo.queryCredentials(CredentialsQuery(walletId = walletId))
+            .getOrElse { fail("Unable to find credentials") }
+        if (credentials.isNotEmpty()) {
+            for (credential in credentials) {
+                println("Credential: $credential")
+                val credentialId = credential.credentialId
+                val payload = decodeJwtPayload(credential.document)
+                if (isSmartHealthCard(payload)) {
+                    repo.deleteCredential(walletId, credentialId)
+                }
+            }
+        }
     }
 
     @Test
@@ -132,7 +151,7 @@ class ITestWaltIdWalletRepository {
 
     @Test
     fun `Calling getWallets when logged in succeeds and returns wallet list`() = runTest {
-        //repo.login()
+        repo.login()
         val result = repo.getWallets()
         assertTrue(result.isSuccess)
         println(result.getOrNull())

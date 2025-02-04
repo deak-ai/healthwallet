@@ -5,6 +5,7 @@ import ch.healthwallet.data.chmed16a.MedicationDTO
 import ch.healthwallet.data.chmed16a.PatientDTO
 import ch.healthwallet.data.chmed16a.PatientIdDTO
 import ch.healthwallet.util.createTimestampWithTimeZone
+import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -141,7 +142,7 @@ class PisDbRepositoryImpl() :PisDbRepository {
 
     override fun findMedicamentRefDataBySubstring(substring: String): List<MedicamentRefDataDTO> {
         return transaction {
-            MedicamentRefDataDAO.find { MedicamentsRefDataTable.nameDe like "%$substring%" }
+            MedicamentRefDataDAO.find { MedicamentsRefDataTable.nameDe.lowerCase() like "%${substring.lowercase()}%" }
                 .map { it.toDTO() }
         }
     }

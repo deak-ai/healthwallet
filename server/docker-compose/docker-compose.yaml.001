@@ -1,0 +1,215 @@
+services:
+
+  healthwallet-pis:
+    image: ctodeakai/healthwallet-pis:${HEALTHSSI_VERSION:-latest}
+    pull_policy: always
+    environment:
+      DB_URL: "jdbc:postgresql://postgres:5432/$DB_NAME"
+      DB_USER: $DB_USERNAME
+      DB_PASSWORD: $DB_PASSWORD
+      DB_MEDREFDATA: "config/Articles_ALL_ALL_20240429170557.xml"
+      HTTP_PORT: 7004
+      ISSUER_URL: https://issuer.healthwallet.li
+      VERIFIER_URL: https://verifier.healthwallet.li
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  healthssi-pharmacy:
+    image: ctodeakai/healthssi-pharmacy:${HEALTHSSI_VERSION:-latest}
+    pull_policy: always
+
+  wallet-api:
+    image: docker.io/waltid/wallet-api:${VERSION_TAG:-latest}
+    pull_policy: always
+    build:
+      context: ../
+      dockerfile: waltid-services/waltid-wallet-api/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      caddy:
+        condition: service_started
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "wase:host-gateway"
+    volumes:
+      - ./wallet-api/config:/waltid-wallet-api/config
+      - ./wallet-api/walt.yaml:/waltid-wallet-api/walt.yaml
+      - ./wallet-api/data:/waltid-wallet-api/data
+
+  issuer-api:
+    platform: linux/x86_64
+    image: docker.io/waltid/issuer-api:${VERSION_TAG:-latest}
+    pull_policy: always
+    build:
+      context: ../
+      dockerfile: waltid-services/waltid-issuer-api/Dockerfile
+    depends_on:
+      - caddy
+    env_file:
+      - .env
+    volumes:
+      - ./issuer-api/config:/waltid-issuer-api/config
+
+  verifier-api:
+    platform: linux/x86_64
+    image: docker.io/waltid/verifier-api:${VERSION_TAG:-latest}
+    pull_policy: always
+    build:
+      context: ../
+      dockerfile: waltid-services/waltid-verifier-api/Dockerfile
+    depends_on:
+      - caddy
+    env_file:
+      - .env
+    volumes:
+      - ./verifier-api/config:/waltid-verifier-api/config
+
+  waltid-demo-wallet:
+    image: docker.io/waltid/waltid-demo-wallet:${VERSION_TAG:-latest}
+    pull_policy: always
+    build:
+      context: ../
+      dockerfile: waltid-applications/waltid-web-wallet/apps/waltid-demo-wallet/Dockerfile
+    depends_on:
+      - wallet-api
+      - caddy
+    environment:
+      NUXT_PUBLIC_ISSUER_CALLBACK_URL: "http://localhost:$DEMO_WALLET_FRONTEND_PORT"
+      NUXT_PUBLIC_DEV_WALLET_URL: "http://localhost:$DEV_WALLET_FRONTEND_PORT"
+      PORT: $DEMO_WALLET_FRONTEND_PORT
+
+  waltid-dev-wallet:
+    image: docker.io/waltid/waltid-dev-wallet:${VERSION_TAG:-latest}
+    pull_policy: always
+    build:
+      context: ../
+      dockerfile: waltid-applications/waltid-web-wallet/apps/waltid-dev-wallet/Dockerfile
+    depends_on:
+      - wallet-api
+      - caddy
+    environment:
+      NUXT_PUBLIC_ISSUER_CALLBACK_URL: "http://localhost:$DEV_WALLET_FRONTEND_PORT"
+      NUXT_PUBLIC_DEMO_WALLET_URL: "http://localhost:$DEMO_WALLET_FRONTEND_PORT"
+      PORT: $DEV_WALLET_FRONTEND_PORT
+
+  web-portal:
+    platform: linux/x86_64
+    image: docker.io/waltid/portal:${VERSION_TAG:-latest}
+    pull_policy: always
+    build:
+      context: ../
+      dockerfile: waltid-applications/waltid-web-portal/Dockerfile
+    depends_on:
+      - caddy
+    environment:
+      NEXT_PUBLIC_VC_REPO: "http://host.docker.internal:$VC_REPO_PORT"
+      NEXT_PUBLIC_ISSUER: "http://host.docker.internal:$ISSUER_API_PORT"
+      NEXT_PUBLIC_VERIFIER: "http://host.docker.internal:$VERIFIER_API_PORT"
+      NEXT_PUBLIC_WALLET: "http://host.docker.internal:$DEMO_WALLET_FRONTEND_PORT"
+      PORT: $WEB_PORTAL_PORT
+
+  vc-repo:
+    platform: linux/x86_64
+    image: docker.io/waltid/vc-repository:latest
+    pull_policy: always
+    depends_on:
+      - caddy
+    environment:
+      PORT: $VC_REPO_PORT
+
+  postgres:
+    image: postgres
+    profiles:
+      - postgres
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-U", "$DB_USERNAME" ]
+      interval: 5s
+      timeout: 1s
+      retries: 5
+    restart: always
+    environment:
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USERNAME
+      POSTGRES_PASSWORD: $DB_PASSWORD
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - $POSTGRES_DB_PORT:5432 #TODO: tcp/udp proxy with caddy
+
+  caddy:
+    image: docker.io/caddy:2
+    restart: unless-stopped
+    env_file:
+      - .env
+    cap_add:
+      - NET_ADMIN
+    ports:
+
+      - target: "$WALLET_BACKEND_PORT"
+        published: $WALLET_BACKEND_PORT # wallet-api
+        protocol: tcp
+        mode: host
+
+      - target: "$ISSUER_API_PORT"
+        published: $ISSUER_API_PORT # issuer-api
+        protocol: tcp
+        mode: host
+
+      - target: "$VERIFIER_API_PORT"
+        published: $VERIFIER_API_PORT # verifier-api
+        protocol: tcp
+        mode: host
+
+      - target: "$DEMO_WALLET_FRONTEND_PORT"
+        published: $DEMO_WALLET_FRONTEND_PORT # waltid-demo-wallet
+        protocol: tcp
+        mode: host
+
+      - target: "$DEV_WALLET_FRONTEND_PORT"
+        published: $DEV_WALLET_FRONTEND_PORT # waltid-dev-wallet
+        protocol: tcp
+        mode: host
+
+      - target: "$WEB_PORTAL_PORT"
+        published: $WEB_PORTAL_PORT # web-portal
+        protocol: tcp
+        mode: host
+
+      - target: "$VC_REPO_PORT"
+        published: $VC_REPO_PORT # vc-repo
+        protocol: tcp
+        mode: host
+
+      - target: "$PG_ADMIN_PORT"
+        published: $PG_ADMIN_PORT # pg-admin
+        protocol: tcp
+        mode: host
+
+      - target: $HEALTHWALLET_PIS_PORT
+        published: $HEALTHWALLET_PIS_PORT # healthwallet-pis
+        protocol: tcp
+        mode: host
+
+      - target: $HEALTHSSI_PHARMACY_PORT
+        published: $HEALTHSSI_PHARMACY_PORT # healthssi-pharmacy
+        protocol: tcp
+        mode: host
+
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+
+      - target: 8800
+        published: 8800
+        protocol: tcp
+        mode: host
+
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - /Users/oli/devel/git/healthwallet-datasets:/srv/healthwallet-datasets
+
